@@ -248,7 +248,7 @@ app.post('/api/auth/register', async (req, res, next) => {
     res.setHeader('Set-Cookie', sessionCookie(sessionId, sessionTtlDays * 86400));
     res.status(201).json({ user: { id: user.id, phone: user.phone, name: user.name, role: user.role } });
   } catch (error) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Проверьте введённые данные' });
+    if (error?.name === 'ZodError') return res.status(400).json({ error: 'Проверьте введённые данные' });
     next(error);
   }
 });
@@ -272,7 +272,7 @@ app.post('/api/auth/login', async (req, res, next) => {
     res.setHeader('Set-Cookie', sessionCookie(sessionId, sessionTtlDays * 86400));
     res.json({ user: { id: user.id, phone: user.phone, name: user.name, role: user.role } });
   } catch (error) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Проверьте введённые данные' });
+    if (error?.name === 'ZodError') return res.status(400).json({ error: 'Проверьте введённые данные' });
     next(error);
   }
 });
@@ -322,7 +322,7 @@ app.patch('/api/users/:id', requireAuth, requireRole('admin'), async (req, res, 
     if (!result.rowCount) return res.status(404).json({ error: 'Пользователь не найден' });
     res.json({ user: result.rows[0] });
   } catch (error) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Некорректное изменение пользователя' });
+    if (error?.name === 'ZodError') return res.status(400).json({ error: 'Некорректное изменение пользователя' });
     next(error);
   }
 });
@@ -337,7 +337,7 @@ app.post('/api/users/:id/reset-pin', requireAuth, requireRole('admin'), async (r
     if (!result.rowCount) return res.status(404).json({ error: 'Пользователь не найден' });
     res.status(204).end();
   } catch (error) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'PIN должен содержать минимум четыре цифры' });
+    if (error?.name === 'ZodError') return res.status(400).json({ error: 'PIN должен содержать минимум четыре цифры' });
     next(error);
   }
 });
@@ -372,7 +372,7 @@ app.put('/api/state', requireAuth, async (req, res, next) => {
     );
     res.status(204).end();
   } catch (error) {
-    if (error instanceof z.ZodError) return res.status(400).json({ error: 'Некорректное состояние приложения' });
+    if (error?.name === 'ZodError') return res.status(400).json({ error: 'Некорректное состояние приложения' });
     next(error);
   }
 });
