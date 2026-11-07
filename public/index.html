@@ -339,6 +339,33 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     <div id="jobsList"></div>
   </section>
 
+  <section class="tab hid" data-tab="attendance">
+    <div class="card">
+      <h3>📱 Отметка рабочего места</h3>
+      <p class="muted">Устройство определяется по вашей активной сессии. Повторный PIN нужен только после выхода или истечения сессии.</p>
+      <div id="attendanceCurrent"></div>
+      <div class="meta" style="margin-top:12px">
+        <label class="f"><span class="f__l">Где вы работаете</span>
+          <select id="attendanceMode" class="f__i">
+            <option value="field">На выезде</option>
+            <option value="workshop">В цеху</option>
+          </select>
+        </label>
+        <label class="f"><span class="f__l">Объект</span>
+          <select id="attendanceObject" class="f__i"></select>
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button type="button" class="btn btn--p" id="btnAttendanceStart">Отметиться</button>
+        <button type="button" class="btn" id="btnAttendanceStop">Завершить отметку</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>История за сегодня</h3>
+      <div id="attendanceHistory"></div>
+    </div>
+  </section>
+
   <section class="tab hid" data-tab="workshop">
     <div class="kpis" id="shopKpis"></div>
     <div class="filter-bar no-print">
@@ -452,6 +479,8 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
   <nav class="bottom-nav no-print" id="bottomNav">
     <button type="button" class="bottom-nav__btn" data-tab-btn="jobs">
       <span class="i">🚚</span><span>Выезды</span></button>
+    <button type="button" class="bottom-nav__btn" data-tab-btn="attendance">
+      <span class="i">📱</span><span>Отметка</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="workshop">
       <span class="i">🏭</span><span>Цех</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="objects">
@@ -493,12 +522,12 @@ const ROLES = {
 };
 const ROLE_KEYS = Object.keys(ROLES).sort((a,b)=>ROLES[b].rank-ROLES[a].rank);
 const PERMS = {
-  admin:      ['jobs','workshop','objects','finance','admin'],
+  admin:      ['jobs','attendance','workshop','objects','finance','admin'],
   accountant: ['objects','finance'],
-  manager:    ['jobs','workshop','objects'],
-  workshopChief: ['workshop'],
-  field:      ['jobs','objects'],
-  workshop:   ['workshop','objects'],
+  manager:    ['jobs','attendance','workshop','objects'],
+  workshopChief: ['attendance','workshop'],
+  field:      ['jobs','attendance','objects'],
+  workshop:   ['workshop','attendance','objects'],
 };
 const can = (user, tab) => !!user && (PERMS[user.role]||[]).includes(tab);
 const roleRank = r => ROLES[r]?.rank ?? 0;
@@ -638,6 +667,7 @@ function newState(){
     employees: [],
     jobs: [],
     shifts: [],
+    attendance: [],
     rates: { ...DEFAULT_RATES },
     meta: { createdAt: Date.now(), managerRateVersion: 1 },
   };
@@ -723,6 +753,13 @@ function sanitizeState(p){
         completedById: sh.completedById||null,
       };
     }).filter(Boolean);
+  }
+  if(Array.isArray(p.attendance)){
+    s.attendance = p.attendance.filter(item=>item && item.employeeId && validDate(item.date)).map(item=>({
+      id: item.id||uid(), employeeId: String(item.employeeId), mode: item.mode==='workshop'?'workshop':'field',
+      objectId: item.objectId||null, date: item.date, startedAt: String(item.startedAt||''),
+      endedAt: item.endedAt ? String(item.endedAt) : null,
+    }));
   }
   if(p.rates && typeof p.rates==='object'){
     ['visit','resp','service','shopShift','manager'].forEach(k=>{
@@ -1259,6 +1296,36 @@ function renderAdmin(){
   }).join('') : '<div class="empty" style="padding:20px">Пользователей нет</div>';
 }
 
+function renderAttendance(){
+  const employee = myEmployee();
+  const today = todayISO();
+  const records = App.state.attendance.filter(item=>item.employeeId===employee?.id && item.date===today);
+  const current = records.find(item=>!item.endedAt);
+  const objects = App.state.objects.filter(item=>item.status==='active');
+  const objectSelect = $('#attendanceObject');
+  if(objectSelect){
+    objectSelect.innerHTML = `<option value="">Без конкретного объекта</option>${
+      objects.map(item=>`<option value="${item.id}">${esc(item.code ? `${item.code} — ${item.name}` : item.name)}</option>`).join('')
+    }`;
+    if(current?.objectId) objectSelect.value = current.objectId;
+  }
+  $('#attendanceCurrent').innerHTML = current
+    ? `<div class="b b--ok">Сейчас отмечено: ${current.mode==='workshop'?'в цеху':'на выезде'}${current.objectId ? ` — ${esc(objName(current.objectId))}` : ''}<br><span class="muted">${esc(current.startedAt)}</span></div>`
+    : '<div class="muted">Активной отметки нет</div>';
+  $('#btnAttendanceStart').disabled = !!current;
+  $('#btnAttendanceStop').disabled = !current;
+  $('#attendanceHistory').innerHTML = records.length
+    ? records.slice().reverse().map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+        <b>${item.mode==='workshop'?'В цеху':'На выезде'}</b>${item.objectId ? ` — ${esc(objName(item.objectId))}` : ''}
+        <div class="muted">${esc(item.startedAt)} — ${esc(item.endedAt||'идёт')}</div>
+      </div>`).join('')
+    : '<div class="empty">Сегодня отметок ещё нет</div>';
+}
+
+function attendanceNow(){
+  return new Date().toLocaleString('ru-RU');
+}
+
 /* ============================================================
    NAV
    ============================================================ */
@@ -1272,6 +1339,7 @@ function switchTab(name){
 }
 function renderCurrent(){
   if(App.tab==='jobs') renderJobs();
+  else if(App.tab==='attendance') renderAttendance();
   else if(App.tab==='workshop') renderWorkshop();
   else if(App.tab==='objects') renderObjects();
   else if(App.tab==='finance') renderFinance();
@@ -1948,6 +2016,26 @@ document.addEventListener('click', async e=>{
   if(t.id==='btnNewJob'){ modalNewJob(); return; }
   if(t.id==='btnNewShift'){ modalNewShift(); return; }
   if(t.id==='btnNewObj'){ modalNewObject(); return; }
+  if(t.id==='btnAttendanceStart'){
+    const employee = myEmployee();
+    if(!employee){ toast('Для аккаунта не найден сотрудник','err'); return; }
+    if(App.state.attendance.some(item=>item.employeeId===employee.id && !item.endedAt)){
+      toast('Сначала завершите текущую отметку','err'); return;
+    }
+    App.state.attendance.push({
+      id: uid(), employeeId: employee.id, mode: $('#attendanceMode').value,
+      objectId: $('#attendanceObject').value || null, date: todayISO(),
+      startedAt: attendanceNow(), endedAt: null,
+    });
+    saveState(); renderAttendance(); toast('Отметка сохранена'); return;
+  }
+  if(t.id==='btnAttendanceStop'){
+    const employee = myEmployee();
+    const current = App.state.attendance.find(item=>item.employeeId===employee?.id && !item.endedAt);
+    if(!current){ toast('Активной отметки нет','err'); return; }
+    current.endedAt = attendanceNow();
+    saveState(); renderAttendance(); toast('Отметка завершена'); return;
+  }
 
   const vo = t.closest('[data-view-obj]');
   if(vo){ e.preventDefault(); modalViewObject(vo.dataset.viewObj); return; }
@@ -2380,6 +2468,9 @@ async function startApp(user, remoteState){
   try{ savedTab = localStorage.getItem(KS.tab) || 'jobs'; }catch(_){}
   const allowed = PERMS[user.role] || [];
   if(!allowed.includes(savedTab)) savedTab = allowed[0] || 'jobs';
+  if(new URLSearchParams(location.search).get('mode')==='attendance' && allowed.includes('attendance')){
+    savedTab = 'attendance';
+  }
   switchTab(savedTab);
 }
 
