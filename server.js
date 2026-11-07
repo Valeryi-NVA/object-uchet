@@ -27,8 +27,6 @@ app.disable('x-powered-by');
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '1mb' }));
 
-const roles = new Set(['admin', 'accountant', 'manager', 'field', 'workshop']);
-const roleRanks = { admin: 100, accountant: 80, manager: 60, field: 20, workshop: 20 };
 
 const authSchema = z.object({
   phone: z.string().min(10).max(20),
@@ -146,6 +144,30 @@ function sameJson(left, right) {
 
 function canUpdateState(user, previous, next) {
   if (['admin', 'manager'].includes(user.role)) return true;
+  if (user.role === 'workshopChief') {
+    if (!sameJson(previous.objects, next.objects)
+      || !sameJson(previous.employees, next.employees)
+      || !sameJson(previous.jobs, next.jobs)
+      || !sameJson(previous.rates, next.rates)
+      || !sameJson(previous.meta, next.meta)
+      || previous.shifts.length !== next.shifts.length) return false;
+    const employee = previous.employees.find((item) => item.phone === user.phone);
+    if (!employee) return false;
+    const previousById = new Map(previous.shifts.map((shift) => [shift.id, shift]));
+    const editableShiftKeys = new Set(['completed', 'completedAt', 'completedById']);
+    for (const shift of next.shifts) {
+      const oldShift = previousById.get(shift.id);
+      if (!oldShift) return false;
+      if (sameJson(oldShift, shift)) continue;
+      for (const key of new Set([...Object.keys(oldShift), ...Object.keys(shift)])) {
+        if (editableShiftKeys.has(key)) continue;
+        if (!sameJson(oldShift[key], shift[key])) return false;
+      }
+      if (shift.completed && shift.completedById !== employee.id) return false;
+      if (!shift.completed && shift.completedById !== null && shift.completedById !== undefined) return false;
+    }
+    return true;
+  }
   if (user.role !== 'field') return false;
   if (!sameJson(previous.objects, next.objects)
     || !sameJson(previous.employees, next.employees)
@@ -162,7 +184,7 @@ function canUpdateState(user, previous, next) {
     if (!oldJob) return false;
     if (sameJson(oldJob, job)) continue;
     if (!Array.isArray(oldJob.assignees) || !oldJob.assignees.includes(employee.id)) return false;
-    const allowed = ['checkin', 'checkout', 'photos', 'expenses'];
+    const allowed = new Set(['checkin', 'checkout', 'photos', 'expenses']);
     for (const key of Object.keys(oldJob)) {
       if (!allowed.includes(key) && !sameJson(oldJob[key], job[key])) return false;
     }
@@ -174,7 +196,7 @@ async function initializeDatabase() {
   const schema = `
     CREATE TABLE IF NOT EXISTS users (
       id UUID PRIMARY KEY, phone TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
-      pin_hash TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN ('admin','accountant','manager','field','workshop')),
+      pin_hash TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN ('admin','accountant','manager','workshopChief','field','workshop')),
       status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','blocked')),
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
@@ -189,6 +211,8 @@ async function initializeDatabase() {
     );
   `;
   await pool.query(schema);
+  await pool.query('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check');
+  await pool.query("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin','accountant','manager','workshopChief','field','workshop'))");
 }
 
 app.get('/health', async (_req, res, next) => {
@@ -223,7 +247,7 @@ app.post('/api/auth/register', async (req, res, next) => {
     );
     const defaultState = {
       objects: [], employees: [], jobs: [], shifts: [],
-      rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 60000 },
+      rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 0 },
       meta: { createdAt: Date.now() },
     };
     const stateResult = await pool.query('SELECT state FROM app_state WHERE id = TRUE');
@@ -232,7 +256,7 @@ app.post('/api/auth/register', async (req, res, next) => {
     state.employees.push({
       id: newId(),
       name: user.name,
-      role: user.role === 'admin' ? 'manager' : 'field',
+      role: user.role === 'admin' ? 'manager' : user.role,
       phone: user.phone,
       email: '',
       salary: 0,
@@ -306,7 +330,7 @@ app.get('/api/users', requireAuth, requireRole('admin'), async (_req, res, next)
 app.patch('/api/users/:id', requireAuth, requireRole('admin'), async (req, res, next) => {
   try {
     const input = z.object({
-      role: z.enum(['admin', 'accountant', 'manager', 'field', 'workshop']).optional(),
+      role: z.enum(['admin', 'accountant', 'manager', 'workshopChief', 'field', 'workshop']).optional(),
       status: z.enum(['active', 'blocked']).optional(),
     }).refine((value) => value.role || value.status, 'No changes supplied').parse(req.body);
     if (req.params.id === req.user.id && input.status === 'blocked') {
@@ -345,11 +369,21 @@ app.post('/api/users/:id/reset-pin', requireAuth, requireRole('admin'), async (r
 app.get('/api/state', requireAuth, async (_req, res, next) => {
   try {
     const result = await pool.query('SELECT state FROM app_state WHERE id = TRUE');
-    res.json(result.rows[0]?.state || {
+    const state = result.rows[0]?.state || {
       objects: [], employees: [], jobs: [], shifts: [],
-      rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 60000 },
-      meta: { createdAt: Date.now() },
-    });
+      rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 0 },
+      meta: { createdAt: Date.now(), managerRateVersion: 1 },
+    };
+    if (!state.meta?.managerRateVersion) {
+      state.rates = { ...(state.rates || {}), manager: 0 };
+      state.meta = { ...(state.meta || {}), managerRateVersion: 1 };
+      await pool.query(
+        `INSERT INTO app_state (id, state, updated_at) VALUES (TRUE, $1, now())
+         ON CONFLICT (id) DO UPDATE SET state = EXCLUDED.state, updated_at = now()`,
+        [JSON.stringify(state)],
+      );
+    }
+    res.json(state);
   } catch (error) {
     next(error);
   }
