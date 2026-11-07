@@ -280,7 +280,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     <form class="auth__form" id="loginForm" novalidate>
       <label class="auth__f"><span>Телефон</span>
         <input type="tel" id="loginPhone" placeholder="+7 999 123-45-67" required></label>
-      <label class="auth__f"><span>PIN</span>
+      <label class="auth__f"><span>Пароль</span>
         <input type="password" id="loginPin" inputmode="numeric" minlength="4" required></label>
       <div class="auth__err" id="loginErr"></div>
       <button type="submit" class="btn btn--p auth__submit">Войти</button>
@@ -290,9 +290,9 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
         <input type="tel" id="regPhone" placeholder="+7 999 123-45-67" required></label>
       <label class="auth__f"><span>Имя и фамилия</span>
         <input type="text" id="regName" placeholder="Иванов Иван" maxlength="100" required></label>
-      <label class="auth__f"><span>PIN (мин. 4 цифры)</span>
+      <label class="auth__f"><span>Пароль (минимум 4 символа)</span>
         <input type="password" id="regPin" inputmode="numeric" minlength="4" required></label>
-      <label class="auth__f"><span>Повторите PIN</span>
+      <label class="auth__f"><span>Повторите пароль</span>
         <input type="password" id="regPin2" inputmode="numeric" minlength="4" required></label>
       <div class="auth__err" id="regErr"></div>
       <button type="submit" class="btn btn--p auth__submit">Зарегистрироваться</button>
@@ -342,7 +342,8 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
   <section class="tab hid" data-tab="attendance">
     <div class="card">
       <h3>📱 Отметка рабочего места</h3>
-      <p class="muted">Устройство определяется по вашей активной сессии. Повторный PIN нужен только после выхода или истечения сессии.</p>
+      <p class="muted">Устройство определяется по вашей активной сессии. Повторный пароль нужен только после выхода или истечения сессии.</p>
+      <div id="personalQr"></div>
       <div id="attendanceCurrent"></div>
       <div class="meta" style="margin-top:12px">
         <label class="f"><span class="f__l">Где вы работаете</span>
@@ -363,6 +364,24 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     <div class="card">
       <h3>История за сегодня</h3>
       <div id="attendanceHistory"></div>
+    </div>
+    <div class="card" id="chiefStatusPanel" style="display:none">
+      <h3>Статусы рабочих</h3>
+      <div id="chiefStatusList"></div>
+    </div>
+  </section>
+
+  <section class="tab hid" data-tab="timesheet">
+    <div class="card">
+      <h3>📋 Электронный табель</h3>
+      <div id="timesheetList"></div>
+    </div>
+  </section>
+
+  <section class="tab hid" data-tab="audit">
+    <div class="card">
+      <h3>🧾 Журнал аудита</h3>
+      <div id="auditList"></div>
     </div>
   </section>
 
@@ -458,9 +477,6 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
         <select id="empNewRole" class="f__i" style="flex:1;min-width:130px">
           <option value="field">Выездной</option>
           <option value="workshop">Цех</option>
-          <option value="workshopChief">Начальник цеха</option>
-          <option value="manager">Менеджер</option>
-          <option value="accountant">Бухгалтер</option>
         </select>
         <button type="button" class="btn btn--p" id="empNewAdd">+</button>
       </div>
@@ -481,6 +497,10 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
       <span class="i">🚚</span><span>Выезды</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="attendance">
       <span class="i">📱</span><span>Отметка</span></button>
+    <button type="button" class="bottom-nav__btn" data-tab-btn="timesheet">
+      <span class="i">📋</span><span>Табель</span></button>
+    <button type="button" class="bottom-nav__btn" data-tab-btn="audit">
+      <span class="i">🧾</span><span>Аудит</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="workshop">
       <span class="i">🏭</span><span>Цех</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="objects">
@@ -515,23 +535,30 @@ const API_BASE = '/api';
 const ROLES = {
   admin:      {label:'Администратор', rank:100, cls:'user-badge--admin'},
   accountant: {label:'Бухгалтер',      rank:80,  cls:'user-badge--accountant'},
+  employee:   {label:'Сотрудник',      rank:20,  cls:'user-badge--field'},
   manager:    {label:'Менеджер',       rank:60,  cls:'user-badge--manager'},
   workshopChief:{label:'Начальник цеха',rank:50, cls:'user-badge--workshop-chief'},
   field:      {label:'Выездной',       rank:20,  cls:'user-badge--field'},
   workshop:   {label:'Цех',            rank:20,  cls:'user-badge--workshop'},
 };
 const ROLE_KEYS = Object.keys(ROLES).sort((a,b)=>ROLES[b].rank-ROLES[a].rank);
+const USER_ROLE_KEYS = ['admin','accountant','employee','workshopChief','manager'];
 const PERMS = {
-  admin:      ['jobs','attendance','workshop','objects','finance','admin'],
-  accountant: ['objects','finance'],
-  manager:    ['jobs','attendance','workshop','objects'],
-  workshopChief: ['attendance','workshop'],
+  admin:      ['jobs','attendance','timesheet','audit','workshop','objects','finance','admin'],
+  accountant: ['timesheet'],
+  manager:    ['objects'],
+  workshopChief: ['attendance','timesheet','audit','workshop'],
   field:      ['jobs','attendance','objects'],
   workshop:   ['workshop','attendance','objects'],
 };
-const can = (user, tab) => !!user && (PERMS[user.role]||[]).includes(tab);
+const userRoles = user => Array.isArray(user?.roles) && user.roles.length ? user.roles : (user?.role ? [user.role] : []);
+const can = (user, tab) => userRoles(user).some(role=>(PERMS[role]||[]).includes(tab));
 const roleRank = r => ROLES[r]?.rank ?? 0;
-const isAtLeast = (user, role) => !!user && roleRank(user.role) >= roleRank(role);
+const isAtLeast = (user, role) => userRoles(user).some(value=>roleRank(value) >= roleRank(role));
+function normalizeUser(user){
+  const roles = userRoles(user).map(role=>role==='field'||role==='workshop'?'employee':role);
+  return {...user, roles:[...new Set(roles)], role:roles[0] || 'employee'};
+}
 
 const OBJ_TYPES = {
   office:    {label:'Офис',        ico:'🏢', color:'#2563eb'},
@@ -642,7 +669,9 @@ async function saveUsers(users){
       const old = previous.find(item=>item.id===user.id || item.phone===user.phone);
       if(!old) return null;
       const changes = {};
-      if(old.role !== user.role) changes.role = user.role;
+      if(JSON.stringify(old.roles||[old.role]) !== JSON.stringify(user.roles||[user.role])) {
+        changes.roles = user.roles;
+      }
       if(old.status !== user.status) changes.status = user.status;
       if(!Object.keys(changes).length) return null;
       return api(`/users/${encodeURIComponent(user.id)}`, {
@@ -668,15 +697,16 @@ function newState(){
     jobs: [],
     shifts: [],
     attendance: [],
+    audit: [],
     rates: { ...DEFAULT_RATES },
-    meta: { createdAt: Date.now(), managerRateVersion: 1 },
+    meta: { createdAt: Date.now(), managerRateVersion: 1, workflowVersion: 2 },
   };
 }
 function sanitizeState(p){
   if(!p || typeof p!=='object') return null;
   const s = newState();
   const isLegacyManagerRate = !p.meta || p.meta.managerRateVersion !== 1;
-  s.meta = { ...s.meta, ...(p.meta||{}), managerRateVersion: 1 };
+  s.meta = { ...s.meta, ...(p.meta||{}), managerRateVersion: 1, workflowVersion: 2 };
   if(Array.isArray(p.objects)){
     s.objects = p.objects.filter(o=>o && o.name).map(o=>({
       id: o.id||uid(), code: String(o.code||''), name: String(o.name),
@@ -692,9 +722,9 @@ function sanitizeState(p){
   if(Array.isArray(p.employees)){
     s.employees = p.employees.filter(e=>e && e.name).map(e=>({
       id: e.id||uid(), name: String(e.name),
-      role: ROLES[e.role] && e.role!=='admin' && e.role!=='accountant' ? e.role :
-            (e.role==='admin'?'admin':e.role==='accountant'?'accountant':
-              (ROLES[e.role] ? e.role : 'field')),
+      role: e.type==='workshop' || e.role==='workshop' ? 'workshop' : 'field',
+      type: e.type==='workshop' || e.role==='workshop' ? 'workshop' : 'field',
+      workerStatus: ['responsible','worker','trainee'].includes(e.workerStatus) ? e.workerStatus : 'worker',
       phone: String(e.phone||''), email: String(e.email||''),
       salary: num(e.salary)||0, hireDate: validDate(e.hireDate)?e.hireDate:todayISO(),
       active: e.active !== false,
@@ -760,6 +790,9 @@ function sanitizeState(p){
       objectId: item.objectId||null, date: item.date, startedAt: String(item.startedAt||''),
       endedAt: item.endedAt ? String(item.endedAt) : null,
     }));
+  }
+  if(Array.isArray(p.audit)){
+    s.audit = p.audit.slice(-500);
   }
   if(p.rates && typeof p.rates==='object'){
     ['visit','resp','service','shopShift','manager'].forEach(k=>{
@@ -927,10 +960,9 @@ function shiftCrewBadges(shift){
    VIEWS — JOBS (Выезды)
    ============================================================ */
 function renderJobs(){
-  const role = App.user?.role;
   const me = myEmployee();
   let list = App.state.jobs.slice();
-  if(role==='field') list = list.filter(j=>isInJob(j, me?.id));
+  if(me?.type==='field' && userRoles(App.user).includes('employee')) list = list.filter(j=>isInJob(j, me?.id));
 
   const q = ($('#jobSearch')?.value || '').toLowerCase().trim();
   const pF = $('#jobPeriodFilter')?.value || 'all';
@@ -1004,10 +1036,9 @@ function renderJobs(){
    VIEWS — WORKSHOP
    ============================================================ */
 function renderWorkshop(){
-  const role = App.user?.role;
   const me = myEmployee();
   let shifts = App.state.shifts.slice();
-  if(role==='workshop'){
+  if(me?.type==='workshop' && userRoles(App.user).includes('employee')){
     shifts = shifts.filter(s=>isInShift(s, me?.id));
   }
 
@@ -1053,7 +1084,7 @@ function renderWorkshop(){
     let actions = isAtLeast(App.user,'manager')
       ? `<button class="btn btn--xs icobtn--d" data-del-shift="${sh.id}">✕</button>`
       : '';
-    if(isAtLeast(App.user,'manager') || App.user?.role==='workshopChief'){
+    if(isAtLeast(App.user,'manager') || userRoles(App.user).includes('workshopChief')){
       actions = `<button class="btn btn--xs" data-complete-shift="${sh.id}">${sh.completed?'Вернуть':'Выполнено'}</button>` + actions;
     }
     return `<tr>
@@ -1271,25 +1302,29 @@ function renderAdmin(){
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <input type="text" class="f__i" style="flex:2;min-width:140px" value="${esc(e.name)}" data-emp-name="${e.id}">
       <select class="f__i" style="flex:1;min-width:110px" data-emp-role="${e.id}">
-        ${['field','workshop','workshopChief','manager','accountant'].map(k=>`<option value="${k}" ${e.role===k?'selected':''}>${ROLES[k].label}</option>`).join('')}
+        <option value="field" ${e.type==='field'?'selected':''}>Монтажник</option>
+        <option value="workshop" ${e.type==='workshop'?'selected':''}>Сотрудник цеха</option>
+      </select>
+      <select class="f__i" style="flex:1;min-width:120px" data-emp-status="${e.id}">
+        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${e.workerStatus===value?'selected':''}>${label}</option>`).join('')}
       </select>
       <button type="button" class="btn btn--xs icobtn--d" data-del-emp="${e.id}">✕</button>
     </div>
   </div>`).join('') : '<div class="empty" style="padding:20px">Сотрудников нет</div>';
 
   const users = loadUsers();
-  users.sort((a,b)=>roleRank(b.role)-roleRank(a.role)||a.name.localeCompare(b.name));
+  users.sort((a,b)=>Math.max(...userRoles(b).map(roleRank))-Math.max(...userRoles(a).map(roleRank))||a.name.localeCompare(b.name));
   $('#usersList').innerHTML = users.length ? users.map(u=>{
     const isMe = u.phone === App.user?.phone;
-    const roleOpts = ROLE_KEYS.map(k=>`<option value="${k}" ${u.role===k?'selected':''}>${ROLES[k].label}</option>`).join('');
+    const roleOpts = USER_ROLE_KEYS.map(k=>`<option value="${k}" ${userRoles(u).includes(k)?'selected':''}>${ROLES[k].label}</option>`).join('');
     return `<div class="card" style="margin:0 0 6px;padding:10px">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <div style="flex:2;min-width:150px">
           <div style="font-weight:700">${esc(u.name)}${isMe?' <span class="b b--info">Вы</span>':''}</div>
           <div style="font-size:12px;color:var(--muted)">${esc(u.phone)}</div>
         </div>
-        <select class="f__i" style="flex:1;min-width:120px" data-user-role="${esc(u.phone)}" ${isMe?'disabled':''}>${roleOpts}</select>
-        <button type="button" class="btn btn--xs" data-reset-pin="${esc(u.phone)}">🔑 PIN</button>
+        <select class="f__i" multiple style="flex:1;min-width:160px" data-user-roles="${esc(u.phone)}" ${isMe?'disabled':''}>${roleOpts}</select>
+        <button type="button" class="btn btn--xs" data-reset-pin="${esc(u.phone)}">🔑 Пароль</button>
         ${isMe ? '' : `<button type="button" class="btn btn--xs ${u.status==='blocked'?'btn--ok':'icobtn--d'}" data-block-user="${esc(u.phone)}">${u.status==='blocked'?'Разблок.':'Блок.'}</button>`}
       </div>
     </div>`;
@@ -1297,6 +1332,7 @@ function renderAdmin(){
 }
 
 function renderAttendance(){
+  renderPersonalQr();
   const employee = myEmployee();
   const today = todayISO();
   const records = App.state.attendance.filter(item=>item.employeeId===employee?.id && item.date===today);
@@ -1320,10 +1356,73 @@ function renderAttendance(){
         <div class="muted">${esc(item.startedAt)} — ${esc(item.endedAt||'идёт')}</div>
       </div>`).join('')
     : '<div class="empty">Сегодня отметок ещё нет</div>';
+  const canEditStatuses = userRoles(App.user).includes('admin') || userRoles(App.user).includes('workshopChief');
+  $('#chiefStatusPanel').style.display = canEditStatuses ? '' : 'none';
+  if(canEditStatuses){
+    $('#chiefStatusList').innerHTML = App.state.employees.map(item=>`<div style="display:flex;gap:8px;align-items:center;margin:6px 0">
+      <span style="flex:1">${esc(item.name)}</span>
+      <select class="f__i" data-chief-status="${item.id}">
+        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${item.workerStatus===value?'selected':''}>${label}</option>`).join('')}
+      </select>
+    </div>`).join('');
+  }
+}
+
+async function renderPersonalQr(){
+  const host = $('#personalQr');
+  if(!host || !userRoles(App.user).includes('employee')) return;
+  try {
+    const {link, image} = await api('/auth/attendance-qr');
+    host.innerHTML = `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <img src="${esc(image)}" alt="Персональный QR-код" width="160" height="160">
+      <div><b>Ваш персональный QR</b><div class="muted" style="max-width:360px;word-break:break-all">${esc(link)}</div></div>
+    </div>`;
+  } catch(error) {
+    host.textContent = error.message;
+  }
 }
 
 function attendanceNow(){
   return new Date().toLocaleString('ru-RU');
+}
+
+function closeExpiredAttendance(){
+  const today = todayISO();
+  let changed = false;
+  App.state.attendance.forEach(item=>{
+    if(item.date < today && !item.endedAt){
+      item.endedAt = 'Закрыта автоматически';
+      changed = true;
+    }
+  });
+  if(changed) saveState();
+}
+
+function renderTimesheet(){
+  const rows = App.state.attendance.slice().sort((a,b)=>`${b.date} ${b.startedAt}`.localeCompare(`${a.date} ${a.startedAt}`));
+  $('#timesheetList').innerHTML = rows.length ? `<div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Дата</th><th>Сотрудник</th><th>Где работает</th><th>Объект</th><th>Статус рабочего</th><th>Время</th></tr></thead>
+    <tbody>${rows.map(item=>{
+      const employee = empById(item.employeeId);
+      return `<tr><td>${fmtDate(item.date)}</td><td>${esc(employee?.name||'—')}</td>
+        <td>${item.mode==='workshop'?'Цех':'Монтаж'}</td><td>${esc(objName(item.objectId))}</td>
+        <td>${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].find(([value])=>value===employee?.workerStatus)?.[1]||'—'}</td>
+        <td>${esc(item.startedAt)} — ${esc(item.endedAt||'открыта')}</td></tr>`;
+    }).join('')}</tbody>
+  </table></div>` : '<div class="empty">Записей табеля нет</div>';
+}
+
+async function renderAudit(){
+  try {
+    const result = await api('/audit');
+    const rows = result.audit || [];
+    $('#auditList').innerHTML = rows.length ? rows.map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+      <b>${esc(item.action)}</b><div class="muted">${esc(item.created_at||'')} · ${esc(item.actor_name||'—')} → ${esc(item.target_name||'система')}</div>
+      <div>${esc(JSON.stringify(item.details||{}))}</div>
+    </div>`).join('') : '<div class="empty">Записей аудита нет</div>';
+  } catch(error) {
+    toast(error.message,'err');
+  }
 }
 
 /* ============================================================
@@ -1340,6 +1439,8 @@ function switchTab(name){
 function renderCurrent(){
   if(App.tab==='jobs') renderJobs();
   else if(App.tab==='attendance') renderAttendance();
+  else if(App.tab==='timesheet') renderTimesheet();
+  else if(App.tab==='audit') renderAudit();
   else if(App.tab==='workshop') renderWorkshop();
   else if(App.tab==='objects') renderObjects();
   else if(App.tab==='finance') renderFinance();
@@ -1348,10 +1449,12 @@ function renderCurrent(){
 
 function applyUserUI(){
   const badge = $('#userBadge');
-  const role = ROLES[App.user.role] || ROLES.field;
-  badge.textContent = `${App.user.name} · ${role.label}`;
+  const roles = userRoles(App.user);
+  const role = ROLES[roles[0]] || ROLES.employee;
+  badge.textContent = `${App.user.name} · ${roles.map(value=>ROLES[value]?.label||value).join(', ')}`;
   badge.className = 'user-badge ' + (role.cls || '');
   badge.onclick = showMyStats;
+  $('#btnLogout').classList.toggle('hid', userRoles(App.user).includes('admin'));
   $$('.bottom-nav__btn').forEach(b=>{
     b.classList.toggle('hid', !can(App.user, b.dataset.tabBtn));
   });
@@ -2003,7 +2106,7 @@ document.addEventListener('click', async e=>{
   const cs = t.closest('[data-complete-shift]');
   if(cs){
     const shift = shiftById(cs.dataset.completeShift);
-    if(!shift || !(isAtLeast(App.user,'manager') || App.user?.role==='workshopChief')) return;
+    if(!shift || !(isAtLeast(App.user,'manager') || userRoles(App.user).includes('workshopChief'))) return;
     const employee = myEmployee();
     shift.completed = !shift.completed;
     shift.completedAt = shift.completed ? todayISO() : null;
@@ -2112,7 +2215,7 @@ document.addEventListener('click', async e=>{
     if(!name){ toast('Введите ФИО','err'); return; }
     if(App.state.employees.some(e=>normName(e.name)===normName(name))){ toast('Уже существует','err'); return; }
     App.state.employees.push({
-      id: uid(), name, role, phone:'', email:'', salary:0,
+      id: uid(), name, role, type: role, workerStatus:'worker', phone:'', email:'', salary:0,
       hireDate: todayISO(), active: true,
     });
     saveState(); $('#empNewName').value=''; renderAdmin(); toast('Добавлено'); return;
@@ -2146,12 +2249,12 @@ document.addEventListener('click', async e=>{
     const users = loadUsers();
     const u = users.find(x=>x.phone===rp.dataset.resetPin);
     if(!u) return;
-    const newPin = prompt(`Новый PIN для «${u.name}»:`);
-    if(!newPin || newPin.length<4){ toast('Слишком короткий','err'); return; }
+    const newPassword = prompt(`Новый пароль для «${u.name}»:`);
+    if(!newPassword || newPassword.length<4){ toast('Слишком короткий пароль','err'); return; }
     try{
       await api(`/users/${encodeURIComponent(u.id)}/reset-pin`, {
         method:'POST',
-        body:JSON.stringify({pin:newPin}),
+        body:JSON.stringify({password:newPassword}),
       });
       toast('PIN обновлён');
     }catch(err){ toast('Ошибка: '+(err.message||err),'err'); }
@@ -2243,21 +2346,62 @@ document.addEventListener('change', async e=>{
     return;
   }
 
-  const er = t.closest('[data-emp-role]');
-  if(er){
-    const emp = App.state.employees.find(x=>x.id===er.dataset.empRole);
-    if(emp){ emp.role = er.value; saveState(); renderAdmin(); toast('Роль обновлена'); }
+  const cs = t.closest('[data-chief-status]');
+  if(cs){
+    if(!userRoles(App.user).includes('admin') && !userRoles(App.user).includes('workshopChief')) return;
+    const emp = App.state.employees.find(x=>x.id===cs.dataset.chiefStatus);
+    if(!emp || emp.workerStatus===cs.value) return;
+    const oldStatus = emp.workerStatus;
+    emp.workerStatus = cs.value;
+    App.state.audit.push({
+      id: uid(), action:'worker.status.changed', actorId:App.user?.id||null,
+      targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
+    });
+    saveState(); renderAttendance(); toast('Статус рабочего обновлён');
     return;
   }
 
-  const ur = t.closest('[data-user-role]');
+  const er = t.closest('[data-emp-role]');
+  if(er){
+    const emp = App.state.employees.find(x=>x.id===er.dataset.empRole);
+    if(emp){
+      emp.type = er.value;
+      emp.role = er.value;
+      saveState(); renderAdmin(); toast('Тип сотрудника обновлён');
+      const account = App.users.find(user=>user.phone===emp.phone);
+      if(account && userRoles(App.user).includes('admin')){
+        api(`/users/${encodeURIComponent(account.id)}/regenerate-qr`, {method:'POST'})
+          .catch(error=>toast(error.message,'err'));
+      }
+    }
+    return;
+  }
+
+  const es = t.closest('[data-emp-status]');
+  if(es){
+    const emp = App.state.employees.find(x=>x.id===es.dataset.empStatus);
+    if(emp){
+      const oldStatus = emp.workerStatus;
+      emp.workerStatus = es.value;
+      App.state.audit.push({
+        id: uid(), action:'worker.status.changed', actorId: App.user?.id||null,
+        targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
+      });
+      saveState(); renderAdmin(); toast('Статус рабочего обновлён');
+    }
+    return;
+  }
+
+  const ur = t.closest('[data-user-roles]');
   if(ur){
-    const phone = ur.dataset.userRole;
+    const phone = ur.dataset.userRoles;
     const users = loadUsers().map(user=>({...user}));
     const u = users.find(x=>x.phone===phone);
     if(!u) return;
-    if(u.phone===App.user.phone){ ur.value = u.role; return; }
-    u.role = ur.value;
+    if(u.phone===App.user.phone) return;
+    u.roles = [...ur.selectedOptions].map(option=>option.value);
+    if(!u.roles.length){ renderAdmin(); toast('Назначьте хотя бы одну роль','err'); return; }
+    u.role = u.roles[0];
     try {
       await saveUsers(users);
       renderAdmin();
@@ -2418,11 +2562,11 @@ $('#loginForm').onsubmit = async (e)=>{
   e.preventDefault();
   const err = $('#loginErr'); err.textContent = '';
   const phone = normalizePhone($('#loginPhone').value);
-  const pin = $('#loginPin').value;
+  const password = $('#loginPin').value;
   if(!phone){ err.textContent = 'Некорректный телефон'; return; }
-  if(!pin || pin.length<4){ err.textContent = 'PIN — минимум 4 цифры'; return; }
+  if(!password || password.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
   try{
-    const result = await api('/auth/login', {method:'POST', body:JSON.stringify({phone, pin})});
+    const result = await api('/auth/login', {method:'POST', body:JSON.stringify({phone, password})});
     const state = await api('/state');
     await startApp(result.user, state);
   }catch(ex){ err.textContent = ex.message; return; }
@@ -2437,10 +2581,10 @@ $('#registerForm').onsubmit = async (e)=>{
   const p2 = $('#regPin2').value;
   if(!phone){ err.textContent = 'Некорректный телефон'; return; }
   if(!name){ err.textContent = 'Введите имя'; return; }
-  if(p1.length<4){ err.textContent = 'PIN — минимум 4 цифры'; return; }
-  if(p1!==p2){ err.textContent = 'PIN не совпадает'; return; }
+  if(p1.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
+  if(p1!==p2){ err.textContent = 'Пароль не совпадает'; return; }
   try{
-    const result = await api('/auth/register', {method:'POST', body:JSON.stringify({phone, name, pin:p1})});
+    const result = await api('/auth/register', {method:'POST', body:JSON.stringify({phone, name, password:p1})});
     const state = await api('/state');
     await startApp(result.user, state);
     toast(result.user.role==='admin' ? 'Вы первый — назначен Администратор' : 'Регистрация успешна');
@@ -2451,10 +2595,20 @@ $('#registerForm').onsubmit = async (e)=>{
    START
    ============================================================ */
 async function startApp(user, remoteState){
-  App.user = user;
+  App.user = normalizeUser(user);
+  const qrToken = new URLSearchParams(location.search).get('qr');
+  if(qrToken){
+    await api('/auth/attendance-token/verify', {
+      method:'POST',
+      body:JSON.stringify({token:qrToken}),
+    });
+  }
   App.remoteState = remoteState || await api('/state');
-  App.users = user.role === 'admin' ? (await api('/users')).users : [user];
+  App.users = userRoles(App.user).includes('admin')
+    ? (await api('/users')).users.map(normalizeUser)
+    : [App.user];
   App.state = loadState();
+  closeExpiredAttendance();
   const now = new Date();
   if(!App.period.start || !App.period.end){
     App.period.start = iso(new Date(now.getFullYear(), now.getMonth(), 1));
@@ -2466,7 +2620,7 @@ async function startApp(user, remoteState){
 
   let savedTab = 'jobs';
   try{ savedTab = localStorage.getItem(KS.tab) || 'jobs'; }catch(_){}
-  const allowed = PERMS[user.role] || [];
+  const allowed = [...new Set(userRoles(App.user).flatMap(role=>PERMS[role]||[]))];
   if(!allowed.includes(savedTab)) savedTab = allowed[0] || 'jobs';
   if(new URLSearchParams(location.search).get('mode')==='attendance' && allowed.includes('attendance')){
     savedTab = 'attendance';
