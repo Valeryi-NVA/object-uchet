@@ -384,6 +384,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
 app.use((error, _req, res, _next) => {
   console.error(error);
+  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+    return res.status(400).json({ error: 'Некорректный JSON' });
+  }
   res.status(500).json({ error: 'Внутренняя ошибка сервера' });
 });
 
