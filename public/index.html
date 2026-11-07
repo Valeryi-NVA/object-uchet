@@ -328,6 +328,11 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
         <option value="future">Предстоящие</option>
         <option value="past">Завершённые</option>
       </select>
+      <select id="jobArchiveFilter">
+        <option value="active">Текущие</option>
+        <option value="archived">Архив</option>
+        <option value="all">Все</option>
+      </select>
       <div class="sp"></div>
       <button type="button" class="btn btn--p" id="btnNewJob">+ Выезд</button>
     </div>
@@ -338,6 +343,11 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     <div class="kpis" id="shopKpis"></div>
     <div class="filter-bar no-print">
       <input type="search" id="shiftSearch" placeholder="🔍 Поиск по объекту или сотруднику...">
+      <select id="shiftArchiveFilter">
+        <option value="active">Текущие</option>
+        <option value="completed">Выполненные</option>
+        <option value="all">Все</option>
+      </select>
       <div class="sp"></div>
       <button type="button" class="btn btn--p" id="btnNewShift">+ Смена</button>
     </div>
@@ -405,12 +415,12 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
           <input type="number" id="rateService" class="f__i" min="0" step="100"></label>
         <label class="f"><span class="f__l">Цех, ₽/смена</span>
           <input type="number" id="rateShopShift" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Менеджер, ₽/мес</span>
-          <input type="number" id="rateManager" class="f__i" min="0" step="1000"></label>
+        <label class="f"><span class="f__l">Менеджер, ₽/день</span>
+          <input type="number" id="rateManager" class="f__i" min="0" step="100"></label>
       </div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         <button type="button" class="btn btn--p" id="btnSaveRates">Сохранить ставки</button>
-        <button type="button" class="btn" id="btnResetRates">Сбросить к 4000/5000/3000/4000/60000</button>
+        <button type="button" class="btn" id="btnResetRates">Сбросить к 4000/5000/3000/4000/0</button>
       </div>
     </div>
 
@@ -421,6 +431,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
         <select id="empNewRole" class="f__i" style="flex:1;min-width:130px">
           <option value="field">Выездной</option>
           <option value="workshop">Цех</option>
+          <option value="workshopChief">Начальник цеха</option>
           <option value="manager">Менеджер</option>
           <option value="accountant">Бухгалтер</option>
         </select>
@@ -476,6 +487,7 @@ const ROLES = {
   admin:      {label:'Администратор', rank:100, cls:'user-badge--admin'},
   accountant: {label:'Бухгалтер',      rank:80,  cls:'user-badge--accountant'},
   manager:    {label:'Менеджер',       rank:60,  cls:'user-badge--manager'},
+  workshopChief:{label:'Начальник цеха',rank:50, cls:'user-badge--workshop-chief'},
   field:      {label:'Выездной',       rank:20,  cls:'user-badge--field'},
   workshop:   {label:'Цех',            rank:20,  cls:'user-badge--workshop'},
 };
@@ -484,6 +496,7 @@ const PERMS = {
   admin:      ['jobs','workshop','objects','finance','admin'],
   accountant: ['objects','finance'],
   manager:    ['jobs','workshop','objects'],
+  workshopChief: ['workshop'],
   field:      ['jobs','objects'],
   workshop:   ['workshop','objects'],
 };
@@ -509,7 +522,7 @@ const EXP_STATUS = {
   rejected:['Отклонено','err'],
 };
 const EXP_CATEGORIES = ['Транспорт','Материалы','Расходники','Питание','Проживание','Связь','Прочее'];
-const DEFAULT_RATES = { visit:4000, resp:5000, service:3000, shopShift:4000, manager:60000 };
+const DEFAULT_RATES = { visit:4000, resp:5000, service:3000, shopShift:4000, manager:0 };
 
 /* ============================================================
    UTILS
@@ -590,21 +603,31 @@ function loadUsers(){
   if(Array.isArray(App.users)) return App.users;
   return [];
 }
-function saveUsers(users){
-  const previous = Array.isArray(App.users) ? App.users : [];
+async function saveUsers(users){
+  const previous = Array.isArray(App.users)
+    ? App.users.map(user=>({...user}))
+    : [];
   App.users = users;
-  for(const user of users){
-    const old = previous.find(item=>item.id===user.id || item.phone===user.phone);
-    if(!old) continue;
-    const changes = {};
-    if(old.role !== user.role) changes.role = user.role;
-    if(old.status !== user.status) changes.status = user.status;
-    if(Object.keys(changes).length){
-      api(`/users/${encodeURIComponent(user.id)}`, {method:'PATCH', body:JSON.stringify(changes)})
-        .catch(error=>toast(error.message,'err'));
-    }
+  try {
+    await Promise.all(users.map(user=>{
+      const old = previous.find(item=>item.id===user.id || item.phone===user.phone);
+      if(!old) return null;
+      const changes = {};
+      if(old.role !== user.role) changes.role = user.role;
+      if(old.status !== user.status) changes.status = user.status;
+      if(!Object.keys(changes).length) return null;
+      return api(`/users/${encodeURIComponent(user.id)}`, {
+        method:'PATCH',
+        body:JSON.stringify(changes),
+      }).then(payload=>{
+        Object.assign(user, payload.user);
+      });
+    }));
+  } catch(error) {
+    App.users = previous;
+    throw error;
   }
-  return true;
+  return App.users;
 }
 /* ============================================================
    STORE — выезд без status
@@ -616,12 +639,14 @@ function newState(){
     jobs: [],
     shifts: [],
     rates: { ...DEFAULT_RATES },
-    meta: { createdAt: Date.now() },
+    meta: { createdAt: Date.now(), managerRateVersion: 1 },
   };
 }
 function sanitizeState(p){
   if(!p || typeof p!=='object') return null;
   const s = newState();
+  const isLegacyManagerRate = !p.meta || p.meta.managerRateVersion !== 1;
+  s.meta = { ...s.meta, ...(p.meta||{}), managerRateVersion: 1 };
   if(Array.isArray(p.objects)){
     s.objects = p.objects.filter(o=>o && o.name).map(o=>({
       id: o.id||uid(), code: String(o.code||''), name: String(o.name),
@@ -638,7 +663,8 @@ function sanitizeState(p){
     s.employees = p.employees.filter(e=>e && e.name).map(e=>({
       id: e.id||uid(), name: String(e.name),
       role: ROLES[e.role] && e.role!=='admin' && e.role!=='accountant' ? e.role :
-            (e.role==='admin'?'admin':e.role==='accountant'?'accountant':'field'),
+            (e.role==='admin'?'admin':e.role==='accountant'?'accountant':
+              (ROLES[e.role] ? e.role : 'field')),
       phone: String(e.phone||''), email: String(e.email||''),
       salary: num(e.salary)||0, hireDate: validDate(e.hireDate)?e.hireDate:todayISO(),
       active: e.active !== false,
@@ -656,7 +682,10 @@ function sanitizeState(p){
         date: j.date, title: String(j.title||''),
         type: j.type==='service' ? 'service' : 'visit',
         priority: PRIORITY[j.priority] ? j.priority : 'normal',
-        // status — НЕ переносим
+        archived: j.archived === true,
+        archivedAt: validDate(j.archivedAt) ? j.archivedAt : null,
+        managerBonus: num(j.managerBonus)||0,
+        managerBonusNote: String(j.managerBonusNote||''),
         checkin: j.checkin && typeof j.checkin==='object' ? {
           time: String(j.checkin.time||''), lat: num(j.checkin.lat), lng: num(j.checkin.lng),
           byId: j.checkin.byId||null,
@@ -668,7 +697,7 @@ function sanitizeState(p){
         expenses: Array.isArray(j.expenses)?j.expenses.filter(e=>e&&typeof e==='object').map(e=>({
           id: e.id||uid(),
           category: EXP_CATEGORIES.includes(e.category)?e.category:'Прочее',
-          amount: num(e.amount)||0, comment: String(e.comment||''),
+          amount: 0, comment: String(e.comment||''),
           status: EXP_STATUS[e.status] ? e.status : 'pending',
           date: validDate(e.date)?e.date:todayISO(),
           byId: e.byId||null,
@@ -687,7 +716,12 @@ function sanitizeState(p){
       if(!employeeIds.length && sh.employeeId) employeeIds = [sh.employeeId];
       employeeIds = [...new Set(employeeIds)];
       if(!objectId || !employeeIds.length) return null;
-      return { id: sh.id||uid(), date: sh.date, objectId, employeeIds, notes: String(sh.notes||'') };
+      return {
+        id: sh.id||uid(), date: sh.date, objectId, employeeIds,
+        notes: String(sh.notes||''), completed: sh.completed === true,
+        completedAt: validDate(sh.completedAt) ? sh.completedAt : null,
+        completedById: sh.completedById||null,
+      };
     }).filter(Boolean);
   }
   if(p.rates && typeof p.rates==='object'){
@@ -696,6 +730,7 @@ function sanitizeState(p){
       if(isFinite(v) && v>=0) s.rates[k] = v;
     });
   }
+  if(isLegacyManagerRate) s.rates.manager = 0;
   return s;
 }
 function loadState(){
@@ -751,14 +786,34 @@ function isInShift(shift, empId){
 function calcPayroll(periodStart, periodEnd){
   const {start, end} = normalizePeriod(periodStart, periodEnd);
   const rows = [];
+  const jobsByEmployee = new Map();
+  const shiftsByEmployee = new Map();
+  const periodJobs = App.state.jobs.filter(j=>j.date>=start && j.date<=end);
+  const periodShifts = App.state.shifts.filter(s=>s.date>=start && s.date<=end);
+
+  periodJobs.forEach(job=>{
+    (job.assignees||[]).forEach(employeeId=>{
+      const jobs = jobsByEmployee.get(employeeId) || [];
+      jobs.push(job);
+      jobsByEmployee.set(employeeId, jobs);
+    });
+  });
+  periodShifts.forEach(shift=>{
+    (shift.employeeIds||[]).forEach(employeeId=>{
+      const shifts = shiftsByEmployee.get(employeeId) || [];
+      shifts.push(shift);
+      shiftsByEmployee.set(employeeId, shifts);
+    });
+  });
+  const managerBonuses = periodJobs
+    .filter(job=>num(job.managerBonus)>0)
+    .reduce((sum, job)=>sum+num(job.managerBonus), 0);
 
   for(const emp of App.state.employees){
     if(!emp.active) continue;
 
     if(emp.role==='field'){
-      const empJobs = App.state.jobs.filter(j=>
-        isInJob(j, emp.id) && j.date>=start && j.date<=end
-      );
+      const empJobs = jobsByEmployee.get(emp.id) || [];
       let visitDays=0, respVisitDays=0, serviceDays=0;
       empJobs.forEach(j=>{
         if(j.type==='service') serviceDays++;
@@ -773,16 +828,16 @@ function calcPayroll(periodStart, periodEnd){
                   + respVisitDays*App.state.rates.resp;
       rows.push({emp, serviceDays, visitDays:visitNonResp, respVisitDays, shiftsCount:0, total});
     } else if(emp.role==='workshop'){
-      const empShifts = App.state.shifts.filter(s=>
-        isInShift(s, emp.id) && s.date>=start && s.date<=end
-      );
+      const empShifts = shiftsByEmployee.get(emp.id) || [];
       const shiftsCount = empShifts.length;
       const total = shiftsCount * App.state.rates.shopShift;
       rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount, total});
-    } else {
+    } else if(emp.role==='manager'){
       const days = daysBetween(start, end);
-      const total = Math.round(App.state.rates.manager / 30 * days);
-      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount:0, total});
+      const total = days * App.state.rates.manager + managerBonuses;
+      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount:0, bonuses:managerBonuses, total});
+    } else {
+      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount:0, bonuses:0, total:0});
     }
   }
   return rows;
@@ -842,7 +897,10 @@ function renderJobs(){
 
   const q = ($('#jobSearch')?.value || '').toLowerCase().trim();
   const pF = $('#jobPeriodFilter')?.value || 'all';
+  const archiveF = $('#jobArchiveFilter')?.value || 'active';
   if(pF !== 'all') list = list.filter(j => vyezdDayStatus(j) === pF);
+  if(archiveF === 'active') list = list.filter(j => !j.archived);
+  if(archiveF === 'archived') list = list.filter(j => j.archived);
   if(q) list = list.filter(j=>{
     const o = objById(j.objectId);
     const crewStr = (j.assignees||[]).map(id=>empName(id)).join(' ');
@@ -873,9 +931,9 @@ function renderJobs(){
     }
     actions += `<button class="btn btn--xs" data-view-job="${j.id}">👁</button>`;
     if(isAtLeast(App.user,'manager')){
+      actions += `<button class="btn btn--xs" data-archive-job="${j.id}">${j.archived?'Вернуть':'В архив'}</button>`;
       actions += `<button class="btn btn--xs icobtn--d" data-del-job="${j.id}">✕</button>`;
     }
-    const expSum = (j.expenses||[]).reduce((s,e)=>s+num(e.amount),0);
     const expCnt = (j.expenses||[]).length;
     return `<tr>
       <td>
@@ -889,7 +947,7 @@ function renderJobs(){
         <div style="margin-top:3px">${vyezdDayBadge(daySt)}</div>
       </td>
       <td><span class="b b--muted">${typeLbl}</span></td>
-      <td class="right">${expCnt ? `<div><b>${money(expSum)}</b></div><div class="sub">${expCnt} шт.</div>` : '—'}</td>
+      <td class="right">${expCnt ? `${expCnt} шт.` : '—'}</td>
       <td class="actions">${actions}</td>
     </tr>`;
   }).join('');
@@ -917,6 +975,9 @@ function renderWorkshop(){
   }
 
   const q = ($('#shiftSearch')?.value || '').toLowerCase().trim();
+  const archiveF = $('#shiftArchiveFilter')?.value || 'active';
+  if(archiveF === 'active') shifts = shifts.filter(s=>!s.completed);
+  if(archiveF === 'completed') shifts = shifts.filter(s=>s.completed);
   if(q) shifts = shifts.filter(s=>{
     const crew = (s.employeeIds||[]).map(id=>empName(id)).join(' ');
     return (objName(s.objectId)+' '+crew).toLowerCase().includes(q);
@@ -955,6 +1016,9 @@ function renderWorkshop(){
     let actions = isAtLeast(App.user,'manager')
       ? `<button class="btn btn--xs icobtn--d" data-del-shift="${sh.id}">✕</button>`
       : '';
+    if(isAtLeast(App.user,'manager') || App.user?.role==='workshopChief'){
+      actions = `<button class="btn btn--xs" data-complete-shift="${sh.id}">${sh.completed?'Вернуть':'Выполнено'}</button>` + actions;
+    }
     return `<tr>
       <td>${fmtDate(sh.date)}</td>
       <td>
@@ -1046,10 +1110,6 @@ function renderFinance(){
   const approvedExp = allExpenses.filter(x=>x.status==='approved');
   const paidExp = allExpenses.filter(x=>x.status==='paid');
 
-  const pendingSum = pendingExp.reduce((a,x)=>a+num(x.amount),0);
-  const approvedSum = approvedExp.reduce((a,x)=>a+num(x.amount),0);
-  const paidSum = paidExp.reduce((a,x)=>a+num(x.amount),0);
-
   const shopPersonShifts = App.state.shifts
     .filter(sh=>sh.date>=s && sh.date<=e)
     .reduce((a,sh)=>a + (sh.employeeIds?.length||0), 0);
@@ -1058,10 +1118,10 @@ function renderFinance(){
   const payroll = calcPayroll(s, e);
   const payrollSum = payroll.reduce((a,r)=>a+r.total,0);
 
-  const totalCost = paidSum + approvedSum + shopCost + payrollSum;
+  const totalCost = shopCost + payrollSum;
 
   $('#finKpis').innerHTML = `
-    <div class="kpi"><div class="kpi__l">Оплачено расходов</div><div class="kpi__v err">${money(paidSum)}</div></div>
+    <div class="kpi"><div class="kpi__l">Расходов оплачено</div><div class="kpi__v err">${paidExp.length}</div></div>
     <div class="kpi"><div class="kpi__l">ФОТ за период</div><div class="kpi__v">${money(payrollSum)}</div></div>
     <div class="kpi"><div class="kpi__l">Цех (${shopPersonShifts} чел-смен)</div><div class="kpi__v">${money(shopCost)}</div></div>
     <div class="kpi"><div class="kpi__l">Итого затрат</div><div class="kpi__v">${money(totalCost)}</div></div>
@@ -1075,7 +1135,6 @@ function renderFinance(){
         <td>${fmtDate(x.jobDate)}</td>
         <td><b>${esc(x.category)}</b><div class="sub">${esc(x.comment||'')}</div></td>
         <td>${esc(o?.name||'—')}<div class="sub">${esc(x.jobTitle||'')}</div></td>
-        <td class="right"><b>${money(x.amount)}</b></td>
         <td class="actions">
           <button class="btn btn--xs btn--ok" data-approve="${x.jobId}|${x.id}">✓</button>
           <button class="btn btn--xs icobtn--d" data-reject="${x.jobId}|${x.id}">✕</button>
@@ -1083,7 +1142,7 @@ function renderFinance(){
       </tr>`;
     }).join('');
   } else {
-    pendingHtml = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Нет расходов на утверждении</td></tr>';
+    pendingHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет расходов на утверждении</td></tr>';
   }
 
   let approvedHtml = '';
@@ -1094,14 +1153,13 @@ function renderFinance(){
         <td>${fmtDate(x.jobDate)}</td>
         <td>${esc(x.category)}<div class="sub">${esc(x.comment||'')}</div></td>
         <td>${esc(o?.name||'—')}</td>
-        <td class="right"><b>${money(x.amount)}</b></td>
         <td class="actions">
           <button class="btn btn--xs btn--p" data-pay-exp="${x.jobId}|${x.id}">Оплатить</button>
         </td>
       </tr>`;
     }).join('');
   } else {
-    approvedHtml = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Нет утверждённых расходов</td></tr>';
+    approvedHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет утверждённых расходов</td></tr>';
   }
 
   const payrollHtml = payroll.filter(r=>r.total>0).map(r=>{
@@ -1114,8 +1172,10 @@ function renderFinance(){
       detail = parts.join(' · ') || '—';
     } else if(r.emp.role==='workshop'){
       detail = `${r.shiftsCount} × ${money(App.state.rates.shopShift)}`;
+    } else if(r.emp.role==='manager'){
+      detail = `${daysBetween(s,e)} × ${money(App.state.rates.manager)}${r.bonuses ? ` · Доплаты: ${money(r.bonuses)}` : ''}`;
     } else {
-      detail = 'Фикс. ставка за период';
+      detail = 'Без ставки';
     }
     const roleLbl = ROLES[r.emp.role]?.label || r.emp.role;
     return `<tr>
@@ -1127,17 +1187,17 @@ function renderFinance(){
 
   $('#financeContent').innerHTML = `
     <div class="card no-print">
-      <h3>⏳ На утверждении (${pendingExp.length}) — ${money(pendingSum)}</h3>
+      <h3>⏳ На утверждении (${pendingExp.length})</h3>
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья</th><th>Объект</th><th>Сумма</th><th></th></tr></thead>
+        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
         <tbody>${pendingHtml}</tbody>
       </table></div>
     </div>
 
     <div class="card no-print">
-      <h3>✅ Утверждено (${approvedExp.length}) — сумма ${money(approvedSum)}</h3>
+      <h3>✅ Утверждено (${approvedExp.length})</h3>
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья</th><th>Объект</th><th>Сумма</th><th></th></tr></thead>
+        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
         <tbody>${approvedHtml}</tbody>
       </table></div>
     </div>
@@ -1174,7 +1234,7 @@ function renderAdmin(){
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <input type="text" class="f__i" style="flex:2;min-width:140px" value="${esc(e.name)}" data-emp-name="${e.id}">
       <select class="f__i" style="flex:1;min-width:110px" data-emp-role="${e.id}">
-        ${['field','workshop','manager','accountant'].map(k=>`<option value="${k}" ${e.role===k?'selected':''}>${ROLES[k].label}</option>`).join('')}
+        ${['field','workshop','workshopChief','manager','accountant'].map(k=>`<option value="${k}" ${e.role===k?'selected':''}>${ROLES[k].label}</option>`).join('')}
       </select>
       <button type="button" class="btn btn--xs icobtn--d" data-del-emp="${e.id}">✕</button>
     </div>
@@ -1332,6 +1392,12 @@ function modalNewJob(preObjId){
             <option value="urgent">Срочно</option>
           </select></label>
       </div>
+      ${isAtLeast(App.user,'manager') ? `<div class="meta" style="margin-bottom:12px">
+        <label class="f"><span class="f__l">Доплата менеджеру, ₽</span>
+          <input type="number" id="njManagerBonus" class="f__i" min="0" step="100" value="0"></label>
+        <label class="f"><span class="f__l">Основание доплаты</span>
+          <input type="text" id="njManagerBonusNote" class="f__i" placeholder="Описание дополнительной работы"></label>
+      </div>` : ''}
       <div class="f">
         <span class="f__l">Заметки</span>
         <textarea id="njNotes" class="f__i" placeholder="Пропуск, особенности, что взять с собой..."></textarea>
@@ -1363,6 +1429,8 @@ function modalNewJob(preObjId){
       title: $('#njTitle').value.trim() || 'Работы на объекте',
       type: $('#njType').value,
       priority: $('#njPriority').value,
+      managerBonus: num($('#njManagerBonus')?.value),
+      managerBonusNote: $('#njManagerBonusNote')?.value.trim() || '',
       checkin: null, checkout: null, photos: [], expenses: [],
       notes: $('#njNotes').value.trim(),
       history: [
@@ -1383,14 +1451,12 @@ function modalViewJob(id){
   const me = myEmployee();
   const meInGroup = isInJob(j, me?.id);
   const daySt = vyezdDayStatus(j);
-  const expSum = (j.expenses||[]).reduce((s,e)=>s+num(e.amount),0);
   const expHtml = (j.expenses||[]).length
     ? j.expenses.map(x=>{
         const st = EXP_STATUS[x.status];
         return `<div class="exp-item">
           <span style="font-weight:600;flex:1">${esc(x.category)}</span>
           <span class="muted" style="flex:1;font-size:12px">${esc(x.comment||'')}</span>
-          <span style="font-weight:700;white-space:nowrap">${money(x.amount)}</span>
           <span class="b b--${st[1]}" style="flex-shrink:0">${st[0]}</span>
           ${x.status==='pending' && meInGroup && daySt==='today' ? `<button class="btn btn--xs icobtn--d" data-del-exp="${j.id}|${x.id}">✕</button>` : ''}
         </div>`;
@@ -1448,8 +1514,11 @@ function modalViewJob(id){
       ${j.checkin ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:12.5px">🕐 Чек-ин: ${esc(j.checkin.time)} ${j.checkin.byId?`<span class="muted">(${esc(empName(j.checkin.byId))})</span>`:''} <span class="muted">(${j.checkin.lat.toFixed(3)}, ${j.checkin.lng.toFixed(3)})</span></div>` : ''}
       ${j.checkout ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:12.5px">✅ Чек-аут: ${esc(j.checkout.time)} ${j.checkout.byId?`<span class="muted">(${esc(empName(j.checkout.byId))})</span>`:''}</div>` : ''}
       ${j.notes ? `<div style="padding:10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">${esc(j.notes)}</div>` : ''}
+      ${j.managerBonus ? `<div style="padding:10px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:8px;margin-bottom:14px;font-size:13px">
+        <b>Доплата менеджеру:</b> ${money(j.managerBonus)}${j.managerBonusNote ? `<div class="muted" style="margin-top:4px">${esc(j.managerBonusNote)}</div>` : ''}
+      </div>` : ''}
 
-      <div class="f__l" style="margin-bottom:6px">Расходы (${(j.expenses||[]).length}) — ${money(expSum)}</div>
+      <div class="f__l" style="margin-bottom:6px">Расходы (${(j.expenses||[]).length})</div>
       ${expHtml}
       ${canAddExp ? `<button type="button" class="btn btn--sm" style="margin-top:8px" data-add-exp="${j.id}">+ Добавить расход</button>` : ''}
 
@@ -1489,7 +1558,6 @@ function modalViewObject(id){
   const shifts = App.state.shifts.filter(s=>s.objectId===id);
   const today = todayISO();
   const todayJobs = jobs.filter(j => j.date === today).length;
-  const expSum = jobs.reduce((a,j)=>a+(j.expenses||[]).reduce((s,x)=>s+num(x.amount),0),0);
   const shopPersonShifts = shifts.reduce((a,s)=>a + (s.employeeIds?.length||0), 0);
   const shopCost = shopPersonShifts * App.state.rates.shopShift;
 
@@ -1521,7 +1589,7 @@ function modalViewObject(id){
         </div>
         <div style="padding:10px;background:var(--soft);border-radius:8px">
           <div class="f__l">Расходы выездов</div>
-          <div style="font-size:14px;font-weight:800;color:var(--danger)">${money(expSum)}</div>
+          <div style="font-size:14px;font-weight:800;color:var(--danger)">${jobs.reduce((sum,j)=>sum+(j.expenses||[]).length,0)} шт.</div>
         </div>
         <div style="padding:10px;background:var(--soft);border-radius:8px">
           <div class="f__l">Смен цеха / стоимость</div>
@@ -1576,17 +1644,15 @@ function modalAddExpense(jobId){
     <div class="modal__h"><h3>Расход по выезду</h3>
       <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
     <div class="modal__b">
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Статья *</span>
-          <select id="expCat" class="f__i">
-            ${EXP_CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('')}
-          </select></label>
-        <label class="f"><span class="f__l">Сумма ₽ *</span>
-          <input type="number" id="expAmt" class="f__i" min="0" step="0.01" value="0"></label>
+      <div class="f" style="margin-bottom:12px">
+        <span class="f__l">Статья *</span>
+        <select id="expCat" class="f__i">
+          ${EXP_CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('')}
+        </select>
       </div>
       <div class="f">
-        <span class="f__l">Комментарий</span>
-        <input type="text" id="expNote" class="f__i" placeholder="Что именно">
+        <span class="f__l">Описание для утверждения *</span>
+        <textarea id="expNote" class="f__i" placeholder="Что было сделано или приобретено, для какого объекта и зачем"></textarea>
       </div>
     </div>
     <div class="modal__f">
@@ -1595,15 +1661,15 @@ function modalAddExpense(jobId){
     </div>
   `);
   $('#expSave').onclick = () => {
-    const amt = num($('#expAmt').value);
-    if(amt<=0){ toast('Укажите сумму','err'); return; }
+    const comment = $('#expNote').value.trim();
+    if(!comment){ toast('Добавьте описание','err'); return; }
     const jj = jobById(jobId);
     jj.expenses = jj.expenses||[];
     jj.expenses.push({
       id: uid(),
       category: $('#expCat').value,
-      amount: amt,
-      comment: $('#expNote').value.trim(),
+      amount: 0,
+      comment,
       status: 'pending',
       date: todayISO(),
       byId: me?.id || null,
@@ -1847,11 +1913,36 @@ document.addEventListener('click', async e=>{
     saveState(); renderJobs(); closeModal(); toast('Удалено'); return;
   }
 
+  const aj = t.closest('[data-archive-job]');
+  if(aj){
+    const job = jobById(aj.dataset.archiveJob);
+    if(!job || !isAtLeast(App.user,'manager')) return;
+    job.archived = !job.archived;
+    job.archivedAt = job.archived ? todayISO() : null;
+    job.history = job.history||[];
+    job.history.push({when:todayISO(), what: job.archived ? 'Выезд перенесён в архив' : 'Выезд возвращён из архива'});
+    saveState(); renderJobs(); toast(job.archived ? 'Выезд в архиве' : 'Выезд восстановлен');
+    return;
+  }
+
   const ds = t.closest('[data-del-shift]');
   if(ds){
     if(!confirm('Удалить смену?')) return;
     App.state.shifts = App.state.shifts.filter(s=>s.id!==ds.dataset.delShift);
     saveState(); renderWorkshop(); toast('Удалено'); return;
+  }
+
+  const cs = t.closest('[data-complete-shift]');
+  if(cs){
+    const shift = shiftById(cs.dataset.completeShift);
+    if(!shift || !(isAtLeast(App.user,'manager') || App.user?.role==='workshopChief')) return;
+    const employee = myEmployee();
+    shift.completed = !shift.completed;
+    shift.completedAt = shift.completed ? todayISO() : null;
+    shift.completedById = shift.completed ? (employee?.id || null) : null;
+    saveState(); renderWorkshop();
+    toast(shift.completed ? 'Объект отмечен выполненным' : 'Объект возвращён в работу');
+    return;
   }
 
   if(t.id==='btnNewJob'){ modalNewJob(); return; }
@@ -1948,12 +2039,18 @@ document.addEventListener('click', async e=>{
 
   const bu = t.closest('[data-block-user]');
   if(bu){
-    const users = loadUsers();
+    const users = loadUsers().map(user=>({...user}));
     const u = users.find(x=>x.phone===bu.dataset.blockUser);
     if(!u || u.phone===App.user.phone) return;
     if(!confirm(`${u.status==='blocked'?'Разблокировать':'Заблокировать'} ${u.name}?`)) return;
     u.status = u.status==='blocked' ? 'active' : 'blocked';
-    saveUsers(users); renderAdmin(); toast(u.status==='blocked'?'Заблокирован':'Разблокирован'); return;
+    try {
+      await saveUsers(users);
+      renderAdmin(); toast(u.status==='blocked'?'Заблокирован':'Разблокирован');
+    } catch(error) {
+      renderAdmin(); toast(error.message,'err');
+    }
+    return;
   }
 
   const rp = t.closest('[data-reset-pin]');
@@ -2044,7 +2141,8 @@ document.addEventListener('input', e=>{
 
 document.addEventListener('change', async e=>{
   const t = e.target;
-  if(t.id==='jobPeriodFilter'){ renderJobs(); return; }
+  if(t.id==='jobPeriodFilter' || t.id==='jobArchiveFilter'){ renderJobs(); return; }
+  if(t.id==='shiftArchiveFilter'){ renderWorkshop(); return; }
   if(t.id==='objTypeFilter'){ renderObjects(); return; }
 
   if(t.id==='periodStart' || t.id==='periodEnd'){
@@ -2067,13 +2165,19 @@ document.addEventListener('change', async e=>{
   const ur = t.closest('[data-user-role]');
   if(ur){
     const phone = ur.dataset.userRole;
-    const users = loadUsers();
+    const users = loadUsers().map(user=>({...user}));
     const u = users.find(x=>x.phone===phone);
     if(!u) return;
     if(u.phone===App.user.phone){ ur.value = u.role; return; }
     u.role = ur.value;
-    saveUsers(users); renderAdmin();
-    toast('Роль обновлена');
+    try {
+      await saveUsers(users);
+      renderAdmin();
+      toast('Роль обновлена');
+    } catch(error) {
+      renderAdmin();
+      toast(error.message,'err');
+    }
     return;
   }
 });
