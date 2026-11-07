@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ОбъектУчёт</title>
+<title>ÐžÐ±ÑŠÐµÐºÑ‚Ð£Ñ‡Ñ‘Ñ‚</title>
 <style>
 :root{
   --bg:#eef2f7;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#dbe3ee;
@@ -103,7 +103,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
 .crew__m{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;
   background:var(--soft);font-size:11.5px;font-weight:600;color:var(--text);white-space:nowrap}
 .crew__m--resp{background:var(--rsp);color:var(--rspB);border:1px solid var(--rspB)}
-.crew__m--resp::before{content:'⭐';font-size:10px}
+.crew__m--resp::before{content:'â­';font-size:10px}
 
 /* Crew picker in modal */
 .crew-pick{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;
@@ -271,32 +271,32 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
 <!-- AUTH -->
 <div class="auth" id="authScreen">
   <div class="auth__card">
-    <h1 class="auth__title">📍 ОбъектУчёт</h1>
-    <p class="auth__sub">Учёт объектов, выездов, цеха, расходов и зарплаты</p>
+    <h1 class="auth__title">ðŸ“ ÐžÐ±ÑŠÐµÐºÑ‚Ð£Ñ‡Ñ‘Ñ‚</h1>
+    <p class="auth__sub">Ð£Ñ‡Ñ‘Ñ‚ Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð², Ð²Ñ‹ÐµÐ·Ð´Ð¾Ð², Ñ†ÐµÑ…Ð°, Ñ€Ð°ÑÑ…Ð¾Ð´Ð¾Ð² Ð¸ Ð·Ð°Ñ€Ð¿Ð»Ð°Ñ‚Ñ‹</p>
     <div class="auth__tabs">
-      <button type="button" class="auth__tab active" data-auth="login">Вход</button>
-      <button type="button" class="auth__tab" data-auth="register">Регистрация</button>
+      <button type="button" class="auth__tab active" data-auth="login">Ð’Ñ…Ð¾Ð´</button>
+      <button type="button" class="auth__tab" data-auth="register">Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ</button>
     </div>
     <form class="auth__form" id="loginForm" novalidate>
-      <label class="auth__f"><span>Телефон</span>
+      <label class="auth__f"><span>Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½</span>
         <input type="tel" id="loginPhone" placeholder="+7 999 123-45-67" required></label>
-      <label class="auth__f"><span>Пароль</span>
+      <label class="auth__f"><span>ÐŸÐ°Ñ€Ð¾Ð»ÑŒ</span>
         <input type="password" id="loginPin" inputmode="numeric" minlength="4" required></label>
       <div class="auth__err" id="loginErr"></div>
-      <button type="submit" class="btn btn--p auth__submit">Войти</button>
+      <button type="submit" class="btn btn--p auth__submit">Ð’Ð¾Ð¹Ñ‚Ð¸</button>
     </form>
     <form class="auth__form hid" id="registerForm" novalidate>
-      <label class="auth__f"><span>Телефон</span>
+      <label class="auth__f"><span>Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½</span>
         <input type="tel" id="regPhone" placeholder="+7 999 123-45-67" required></label>
-      <label class="auth__f"><span>Имя и фамилия</span>
-        <input type="text" id="regName" placeholder="Иванов Иван" maxlength="100" required></label>
-      <label class="auth__f"><span>Пароль (минимум 4 символа)</span>
+      <label class="auth__f"><span>Ð˜Ð¼Ñ Ð¸ Ñ„Ð°Ð¼Ð¸Ð»Ð¸Ñ</span>
+        <input type="text" id="regName" placeholder="Ð˜Ð²Ð°Ð½Ð¾Ð² Ð˜Ð²Ð°Ð½" maxlength="100" required></label>
+      <label class="auth__f"><span>ÐŸÐ°Ñ€Ð¾Ð»ÑŒ (Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼ 4 ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°)</span>
         <input type="password" id="regPin" inputmode="numeric" minlength="4" required></label>
-      <label class="auth__f"><span>Повторите пароль</span>
+      <label class="auth__f"><span>ÐŸÐ¾Ð²Ñ‚Ð¾Ñ€Ð¸Ñ‚Ðµ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ</span>
         <input type="password" id="regPin2" inputmode="numeric" minlength="4" required></label>
       <div class="auth__err" id="regErr"></div>
-      <button type="submit" class="btn btn--p auth__submit">Зарегистрироваться</button>
-      <p class="auth__hint">Первый зарегистрировавшийся становится <strong>Администратором</strong>.</p>
+      <button type="submit" class="btn btn--p auth__submit">Ð—Ð°Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒÑÑ</button>
+      <p class="auth__hint">ÐŸÐµÑ€Ð²Ñ‹Ð¹ Ð·Ð°Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð²ÑˆÐ¸Ð¹ÑÑ ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑÑ <strong>ÐÐ´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ð¾Ð¼</strong>.</p>
     </form>
   </div>
 </div>
@@ -308,12 +308,12 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
       <div class="topbar__row">
         <div class="topbar__title">
           <span class="dot" id="saveDot"></span>
-          <span>ОбъектУчёт</span>
+          <span>ÐžÐ±ÑŠÐµÐºÑ‚Ð£Ñ‡Ñ‘Ñ‚</span>
         </div>
         <div class="topbar__actions">
           <span class="user-badge" id="userBadge"></span>
-          <button type="button" class="icobtn" id="btnTheme" title="Тема">◐</button>
-          <button type="button" class="icobtn icobtn--d" id="btnLogout" title="Выйти">🚪</button>
+          <button type="button" class="icobtn" id="btnTheme" title="Ð¢ÐµÐ¼Ð°">â—</button>
+          <button type="button" class="icobtn icobtn--d" id="btnLogout" title="Ð’Ñ‹Ð¹Ñ‚Ð¸">ðŸšª</button>
         </div>
       </div>
     </div>
@@ -321,66 +321,66 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
 
   <section class="tab" data-tab="jobs">
     <div class="filter-bar no-print">
-      <input type="search" id="jobSearch" placeholder="🔍 Поиск...">
+      <input type="search" id="jobSearch" placeholder="ðŸ” ÐŸÐ¾Ð¸ÑÐº...">
       <select id="jobPeriodFilter">
-        <option value="all">Все выезды</option>
-        <option value="today">Сегодня</option>
-        <option value="future">Предстоящие</option>
-        <option value="past">Завершённые</option>
+        <option value="all">Ð’ÑÐµ Ð²Ñ‹ÐµÐ·Ð´Ñ‹</option>
+        <option value="today">Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ</option>
+        <option value="future">ÐŸÑ€ÐµÐ´ÑÑ‚Ð¾ÑÑ‰Ð¸Ðµ</option>
+        <option value="past">Ð—Ð°Ð²ÐµÑ€ÑˆÑ‘Ð½Ð½Ñ‹Ðµ</option>
       </select>
       <select id="jobArchiveFilter">
-        <option value="active">Текущие</option>
-        <option value="archived">Архив</option>
-        <option value="all">Все</option>
+        <option value="active">Ð¢ÐµÐºÑƒÑ‰Ð¸Ðµ</option>
+        <option value="archived">ÐÑ€Ñ…Ð¸Ð²</option>
+        <option value="all">Ð’ÑÐµ</option>
       </select>
       <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewJob">+ Выезд</button>
+      <button type="button" class="btn btn--p" id="btnNewJob">+ Ð’Ñ‹ÐµÐ·Ð´</button>
     </div>
     <div id="jobsList"></div>
   </section>
 
   <section class="tab hid" data-tab="attendance">
     <div class="card">
-      <h3>📱 Отметка рабочего места</h3>
-      <p class="muted">Устройство определяется по вашей активной сессии. Повторный пароль нужен только после выхода или истечения сессии.</p>
+      <h3>ðŸ“± ÐžÑ‚Ð¼ÐµÑ‚ÐºÐ° Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾ Ð¼ÐµÑÑ‚Ð°</h3>
+      <p class="muted">Ð£ÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð¾ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ÑÑ Ð¿Ð¾ Ð²Ð°ÑˆÐµÐ¹ Ð°ÐºÑ‚Ð¸Ð²Ð½Ð¾Ð¹ ÑÐµÑÑÐ¸Ð¸. ÐŸÐ¾Ð²Ñ‚Ð¾Ñ€Ð½Ñ‹Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð½ÑƒÐ¶ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿Ð¾ÑÐ»Ðµ Ð²Ñ‹Ñ…Ð¾Ð´Ð° Ð¸Ð»Ð¸ Ð¸ÑÑ‚ÐµÑ‡ÐµÐ½Ð¸Ñ ÑÐµÑÑÐ¸Ð¸.</p>
       <div id="personalQr"></div>
       <div id="attendanceCurrent"></div>
       <div class="meta" style="margin-top:12px">
-        <label class="f"><span class="f__l">Где вы работаете</span>
+        <label class="f"><span class="f__l">Ð“Ð´Ðµ Ð²Ñ‹ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚Ðµ</span>
           <select id="attendanceMode" class="f__i">
-            <option value="field">На выезде</option>
-            <option value="workshop">В цеху</option>
+            <option value="field">ÐÐ° Ð²Ñ‹ÐµÐ·Ð´Ðµ</option>
+            <option value="workshop">Ð’ Ñ†ÐµÑ…Ñƒ</option>
           </select>
         </label>
-        <label class="f"><span class="f__l">Объект</span>
+        <label class="f"><span class="f__l">ÐžÐ±ÑŠÐµÐºÑ‚</span>
           <select id="attendanceObject" class="f__i"></select>
         </label>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        <button type="button" class="btn btn--p" id="btnAttendanceStart">Отметиться</button>
-        <button type="button" class="btn" id="btnAttendanceStop">Завершить отметку</button>
+        <button type="button" class="btn btn--p" id="btnAttendanceStart">ÐžÑ‚Ð¼ÐµÑ‚Ð¸Ñ‚ÑŒÑÑ</button>
+        <button type="button" class="btn" id="btnAttendanceStop">Ð—Ð°Ð²ÐµÑ€ÑˆÐ¸Ñ‚ÑŒ Ð¾Ñ‚Ð¼ÐµÑ‚ÐºÑƒ</button>
       </div>
     </div>
     <div class="card">
-      <h3>История за сегодня</h3>
+      <h3>Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð·Ð° ÑÐµÐ³Ð¾Ð´Ð½Ñ</h3>
       <div id="attendanceHistory"></div>
     </div>
     <div class="card" id="chiefStatusPanel" style="display:none">
-      <h3>Статусы рабочих</h3>
+      <h3>Ð¡Ñ‚Ð°Ñ‚ÑƒÑÑ‹ Ñ€Ð°Ð±Ð¾Ñ‡Ð¸Ñ…</h3>
       <div id="chiefStatusList"></div>
     </div>
   </section>
 
   <section class="tab hid" data-tab="timesheet">
     <div class="card">
-      <h3>📋 Электронный табель</h3>
+      <h3>ðŸ“‹ Ð­Ð»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ñ‹Ð¹ Ñ‚Ð°Ð±ÐµÐ»ÑŒ</h3>
       <div id="timesheetList"></div>
     </div>
   </section>
 
   <section class="tab hid" data-tab="audit">
     <div class="card">
-      <h3>🧾 Журнал аудита</h3>
+      <h3>ðŸ§¾ Ð–ÑƒÑ€Ð½Ð°Ð» Ð°ÑƒÐ´Ð¸Ñ‚Ð°</h3>
       <div id="auditList"></div>
     </div>
   </section>
@@ -388,32 +388,32 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
   <section class="tab hid" data-tab="workshop">
     <div class="kpis" id="shopKpis"></div>
     <div class="filter-bar no-print">
-      <input type="search" id="shiftSearch" placeholder="🔍 Поиск по объекту или сотруднику...">
+      <input type="search" id="shiftSearch" placeholder="ðŸ” ÐŸÐ¾Ð¸ÑÐº Ð¿Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ñƒ Ð¸Ð»Ð¸ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÑƒ...">
       <select id="shiftArchiveFilter">
-        <option value="active">Текущие</option>
-        <option value="completed">Выполненные</option>
-        <option value="all">Все</option>
+        <option value="active">Ð¢ÐµÐºÑƒÑ‰Ð¸Ðµ</option>
+        <option value="completed">Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ñ‹Ðµ</option>
+        <option value="all">Ð’ÑÐµ</option>
       </select>
       <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewShift">+ Смена</button>
+      <button type="button" class="btn btn--p" id="btnNewShift">+ Ð¡Ð¼ÐµÐ½Ð°</button>
     </div>
     <div id="shiftsList"></div>
   </section>
 
   <section class="tab hid" data-tab="objects">
     <div class="filter-bar no-print">
-      <input type="search" id="objSearch" placeholder="🔍 Название, адрес, код...">
+      <input type="search" id="objSearch" placeholder="ðŸ” ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ, Ð°Ð´Ñ€ÐµÑ, ÐºÐ¾Ð´...">
       <select id="objTypeFilter">
-        <option value="all">Все типы</option>
-        <option value="office">Офис</option>
-        <option value="warehouse">Склад</option>
-        <option value="production">Производство</option>
-        <option value="retail">Магазин</option>
-        <option value="utility">ЖКХ</option>
-        <option value="other">Другое</option>
+        <option value="all">Ð’ÑÐµ Ñ‚Ð¸Ð¿Ñ‹</option>
+        <option value="office">ÐžÑ„Ð¸Ñ</option>
+        <option value="warehouse">Ð¡ÐºÐ»Ð°Ð´</option>
+        <option value="production">ÐŸÑ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²Ð¾</option>
+        <option value="retail">ÐœÐ°Ð³Ð°Ð·Ð¸Ð½</option>
+        <option value="utility">Ð–ÐšÐ¥</option>
+        <option value="other">Ð”Ñ€ÑƒÐ³Ð¾Ðµ</option>
       </select>
       <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewObj">+ Объект</button>
+      <button type="button" class="btn btn--p" id="btnNewObj">+ ÐžÐ±ÑŠÐµÐºÑ‚</button>
     </div>
     <div id="objectsList"></div>
   </section>
@@ -422,61 +422,61 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     <div class="kpis" id="finKpis"></div>
     <div class="filter-bar no-print">
       <label class="f" style="flex:1;min-width:130px">
-        <span class="f__l">Начало периода</span>
+        <span class="f__l">ÐÐ°Ñ‡Ð°Ð»Ð¾ Ð¿ÐµÑ€Ð¸Ð¾Ð´Ð°</span>
         <input type="date" id="periodStart" class="f__i">
       </label>
       <label class="f" style="flex:1;min-width:130px">
-        <span class="f__l">Конец периода</span>
+        <span class="f__l">ÐšÐ¾Ð½ÐµÑ† Ð¿ÐµÑ€Ð¸Ð¾Ð´Ð°</span>
         <input type="date" id="periodEnd" class="f__i">
       </label>
       <div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap">
-        <button type="button" class="btn btn--sm" data-preset="week">Неделя</button>
-        <button type="button" class="btn btn--sm" data-preset="month">Месяц</button>
-        <button type="button" class="btn btn--sm" data-preset="prevMonth">Прошлый</button>
-        <button type="button" class="btn btn--sm no-print" id="btnPrintReport">🖨 Печать</button>
-        <button type="button" class="btn btn--sm no-print" id="btnCsvReport">📥 CSV</button>
+        <button type="button" class="btn btn--sm" data-preset="week">ÐÐµÐ´ÐµÐ»Ñ</button>
+        <button type="button" class="btn btn--sm" data-preset="month">ÐœÐµÑÑÑ†</button>
+        <button type="button" class="btn btn--sm" data-preset="prevMonth">ÐŸÑ€Ð¾ÑˆÐ»Ñ‹Ð¹</button>
+        <button type="button" class="btn btn--sm no-print" id="btnPrintReport">ðŸ–¨ ÐŸÐµÑ‡Ð°Ñ‚ÑŒ</button>
+        <button type="button" class="btn btn--sm no-print" id="btnCsvReport">ðŸ“¥ CSV</button>
       </div>
     </div>
     <div id="financeContent"></div>
     <div class="sig">
-      <div><strong>Утверждаю:</strong> ________________________ / ________________________</div>
+      <div><strong>Ð£Ñ‚Ð²ÐµÑ€Ð¶Ð´Ð°ÑŽ:</strong> ________________________ / ________________________</div>
       <div class="sig__r">
-        <div class="sig__l">Подпись</div><div class="sig__l">Дата</div>
+        <div class="sig__l">ÐŸÐ¾Ð´Ð¿Ð¸ÑÑŒ</div><div class="sig__l">Ð”Ð°Ñ‚Ð°</div>
       </div>
       <div class="sig__r">
-        <div class="sig__l">Составил</div><div class="sig__l">Дата</div>
+        <div class="sig__l">Ð¡Ð¾ÑÑ‚Ð°Ð²Ð¸Ð»</div><div class="sig__l">Ð”Ð°Ñ‚Ð°</div>
       </div>
     </div>
   </section>
 
   <section class="tab hid" data-tab="admin">
     <div class="card">
-      <h3>💵 Ставки</h3>
+      <h3>ðŸ’µ Ð¡Ñ‚Ð°Ð²ÐºÐ¸</h3>
       <div class="meta">
-        <label class="f"><span class="f__l">Выезд (участник), ₽/день</span>
+        <label class="f"><span class="f__l">Ð’Ñ‹ÐµÐ·Ð´ (ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸Ðº), â‚½/Ð´ÐµÐ½ÑŒ</span>
           <input type="number" id="rateVisit" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Ответственный, ₽/день</span>
+        <label class="f"><span class="f__l">ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹, â‚½/Ð´ÐµÐ½ÑŒ</span>
           <input type="number" id="rateResp" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Сервис, ₽/день</span>
+        <label class="f"><span class="f__l">Ð¡ÐµÑ€Ð²Ð¸Ñ, â‚½/Ð´ÐµÐ½ÑŒ</span>
           <input type="number" id="rateService" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Цех, ₽/смена</span>
+        <label class="f"><span class="f__l">Ð¦ÐµÑ…, â‚½/ÑÐ¼ÐµÐ½Ð°</span>
           <input type="number" id="rateShopShift" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Менеджер, ₽/день</span>
+        <label class="f"><span class="f__l">ÐœÐµÐ½ÐµÐ´Ð¶ÐµÑ€, â‚½/Ð´ÐµÐ½ÑŒ</span>
           <input type="number" id="rateManager" class="f__i" min="0" step="100"></label>
       </div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button type="button" class="btn btn--p" id="btnSaveRates">Сохранить ставки</button>
-        <button type="button" class="btn" id="btnResetRates">Сбросить к 4000/5000/3000/4000/0</button>
+        <button type="button" class="btn btn--p" id="btnSaveRates">Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ ÑÑ‚Ð°Ð²ÐºÐ¸</button>
+        <button type="button" class="btn" id="btnResetRates">Ð¡Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ðº 4000/5000/3000/4000/0</button>
       </div>
     </div>
 
     <div class="card">
-      <h3>👥 Сотрудники</h3>
+      <h3>ðŸ‘¥ Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¸</h3>
       <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-        <input type="text" id="empNewName" class="f__i" placeholder="ФИО" style="flex:2;min-width:160px">
+        <input type="text" id="empNewName" class="f__i" placeholder="Ð¤Ð˜Ðž" style="flex:2;min-width:160px">
         <select id="empNewRole" class="f__i" style="flex:1;min-width:130px">
-          <option value="field">Выездной</option>
-          <option value="workshop">Цех</option>
+          <option value="field">Ð’Ñ‹ÐµÐ·Ð´Ð½Ð¾Ð¹</option>
+          <option value="workshop">Ð¦ÐµÑ…</option>
         </select>
         <button type="button" class="btn btn--p" id="empNewAdd">+</button>
       </div>
@@ -484,9 +484,9 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
     </div>
 
     <div class="card">
-      <h3>👤 Пользователи</h3>
+      <h3>ðŸ‘¤ ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ð¸</h3>
       <p style="margin:0 0 10px;font-size:12px;color:var(--muted)">
-        Сотрудник видит только свои выезды. Бухгалтер — все финансы. Администратор — управляет доступом.
+        Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº Ð²Ð¸Ð´Ð¸Ñ‚ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑÐ²Ð¾Ð¸ Ð²Ñ‹ÐµÐ·Ð´Ñ‹. Ð‘ÑƒÑ…Ð³Ð°Ð»Ñ‚ÐµÑ€ â€” Ð²ÑÐµ Ñ„Ð¸Ð½Ð°Ð½ÑÑ‹. ÐÐ´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€ â€” ÑƒÐ¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð¾Ð¼.
       </p>
       <div id="usersList"></div>
     </div>
@@ -494,21 +494,21 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
 
   <nav class="bottom-nav no-print" id="bottomNav">
     <button type="button" class="bottom-nav__btn" data-tab-btn="jobs">
-      <span class="i">🚚</span><span>Выезды</span></button>
+      <span class="i">ðŸšš</span><span>Ð’Ñ‹ÐµÐ·Ð´Ñ‹</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="attendance">
-      <span class="i">📱</span><span>Отметка</span></button>
+      <span class="i">ðŸ“±</span><span>ÐžÑ‚Ð¼ÐµÑ‚ÐºÐ°</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="timesheet">
-      <span class="i">📋</span><span>Табель</span></button>
+      <span class="i">ðŸ“‹</span><span>Ð¢Ð°Ð±ÐµÐ»ÑŒ</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="audit">
-      <span class="i">🧾</span><span>Аудит</span></button>
+      <span class="i">ðŸ§¾</span><span>ÐÑƒÐ´Ð¸Ñ‚</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="workshop">
-      <span class="i">🏭</span><span>Цех</span></button>
+      <span class="i">ðŸ­</span><span>Ð¦ÐµÑ…</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="objects">
-      <span class="i">📍</span><span>Объекты</span></button>
+      <span class="i">ðŸ“</span><span>ÐžÐ±ÑŠÐµÐºÑ‚Ñ‹</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="finance">
-      <span class="i">💰</span><span>Финансы</span></button>
+      <span class="i">ðŸ’°</span><span>Ð¤Ð¸Ð½Ð°Ð½ÑÑ‹</span></button>
     <button type="button" class="bottom-nav__btn" data-tab-btn="admin">
-      <span class="i">⚙️</span><span>Админ</span></button>
+      <span class="i">âš™ï¸</span><span>ÐÐ´Ð¼Ð¸Ð½</span></button>
   </nav>
 </div>
 
@@ -524,7 +524,7 @@ table.tbl{width:100%;border-collapse:collapse;min-width:640px}
    CONSTANTS
    ============================================================ */
 const KS = {
-  state: 'obj_uchet_state_v5',           // v5 — без статуса у выезда
+  state: 'obj_uchet_state_v5',           // v5 â€” Ð±ÐµÐ· ÑÑ‚Ð°Ñ‚ÑƒÑÐ° Ñƒ Ð²Ñ‹ÐµÐ·Ð´Ð°
   users: 'obj_uchet_users_v1',
   session: 'obj_uchet_session_v1',
   theme: 'obj_uchet_theme_v1',
@@ -533,13 +533,13 @@ const KS = {
 const API_BASE = '/api';
 
 const ROLES = {
-  admin:      {label:'Администратор', rank:100, cls:'user-badge--admin'},
-  accountant: {label:'Бухгалтер',      rank:80,  cls:'user-badge--accountant'},
-  employee:   {label:'Сотрудник',      rank:20,  cls:'user-badge--field'},
-  manager:    {label:'Менеджер',       rank:60,  cls:'user-badge--manager'},
-  workshopChief:{label:'Начальник цеха',rank:50, cls:'user-badge--workshop-chief'},
-  field:      {label:'Выездной',       rank:20,  cls:'user-badge--field'},
-  workshop:   {label:'Цех',            rank:20,  cls:'user-badge--workshop'},
+  admin:      {label:'ÐÐ´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€', rank:100, cls:'user-badge--admin'},
+  accountant: {label:'Ð‘ÑƒÑ…Ð³Ð°Ð»Ñ‚ÐµÑ€',      rank:80,  cls:'user-badge--accountant'},
+  employee:   {label:'Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº',      rank:20,  cls:'user-badge--field'},
+  manager:    {label:'ÐœÐµÐ½ÐµÐ´Ð¶ÐµÑ€',       rank:60,  cls:'user-badge--manager'},
+  workshopChief:{label:'ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ð¸Ðº Ñ†ÐµÑ…Ð°',rank:50, cls:'user-badge--workshop-chief'},
+  field:      {label:'Ð’Ñ‹ÐµÐ·Ð´Ð½Ð¾Ð¹',       rank:20,  cls:'user-badge--field'},
+  workshop:   {label:'Ð¦ÐµÑ…',            rank:20,  cls:'user-badge--workshop'},
 };
 const ROLE_KEYS = Object.keys(ROLES).sort((a,b)=>ROLES[b].rank-ROLES[a].rank);
 const USER_ROLE_KEYS = ['admin','accountant','employee','workshopChief','manager'];
@@ -561,23 +561,23 @@ function normalizeUser(user){
 }
 
 const OBJ_TYPES = {
-  office:    {label:'Офис',        ico:'🏢', color:'#2563eb'},
-  warehouse: {label:'Склад',       ico:'📦', color:'#7c3aed'},
-  production:{label:'Производство',ico:'🏭', color:'#d97706'},
-  retail:    {label:'Магазин',     ico:'🛒', color:'#0891b2'},
-  utility:   {label:'ЖКХ',         ico:'🔧', color:'#dc2626'},
-  other:     {label:'Другое',      ico:'📍', color:'#64748b'},
+  office:    {label:'ÐžÑ„Ð¸Ñ',        ico:'ðŸ¢', color:'#2563eb'},
+  warehouse: {label:'Ð¡ÐºÐ»Ð°Ð´',       ico:'ðŸ“¦', color:'#7c3aed'},
+  production:{label:'ÐŸÑ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ÑÑ‚Ð²Ð¾',ico:'ðŸ­', color:'#d97706'},
+  retail:    {label:'ÐœÐ°Ð³Ð°Ð·Ð¸Ð½',     ico:'ðŸ›’', color:'#0891b2'},
+  utility:   {label:'Ð–ÐšÐ¥',         ico:'ðŸ”§', color:'#dc2626'},
+  other:     {label:'Ð”Ñ€ÑƒÐ³Ð¾Ðµ',      ico:'ðŸ“', color:'#64748b'},
 };
-// JOB_STATUS удалён — статус выезда определяется датой
-const JOB_TYPE = {visit:'Выезд', service:'Сервис'};
-const PRIORITY = { low:['Низкий','muted'], normal:['Обычный','info'], high:['Высокий','warn'], urgent:['Срочно','err'] };
+// JOB_STATUS ÑƒÐ´Ð°Ð»Ñ‘Ð½ â€” ÑÑ‚Ð°Ñ‚ÑƒÑ Ð²Ñ‹ÐµÐ·Ð´Ð° Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ÑÑ Ð´Ð°Ñ‚Ð¾Ð¹
+const JOB_TYPE = {visit:'Ð’Ñ‹ÐµÐ·Ð´', service:'Ð¡ÐµÑ€Ð²Ð¸Ñ'};
+const PRIORITY = { low:['ÐÐ¸Ð·ÐºÐ¸Ð¹','muted'], normal:['ÐžÐ±Ñ‹Ñ‡Ð½Ñ‹Ð¹','info'], high:['Ð’Ñ‹ÑÐ¾ÐºÐ¸Ð¹','warn'], urgent:['Ð¡Ñ€Ð¾Ñ‡Ð½Ð¾','err'] };
 const EXP_STATUS = {
-  pending: ['На утверждении','warn'],
-  approved:['Утверждено','ok'],
-  paid:    ['Оплачено','ok'],
-  rejected:['Отклонено','err'],
+  pending: ['ÐÐ° ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ð¸','warn'],
+  approved:['Ð£Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¾','ok'],
+  paid:    ['ÐžÐ¿Ð»Ð°Ñ‡ÐµÐ½Ð¾','ok'],
+  rejected:['ÐžÑ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¾','err'],
 };
-const EXP_CATEGORIES = ['Транспорт','Материалы','Расходники','Питание','Проживание','Связь','Прочее'];
+const EXP_CATEGORIES = ['Ð¢Ñ€Ð°Ð½ÑÐ¿Ð¾Ñ€Ñ‚','ÐœÐ°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ñ‹','Ð Ð°ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ¸','ÐŸÐ¸Ñ‚Ð°Ð½Ð¸Ðµ','ÐŸÑ€Ð¾Ð¶Ð¸Ð²Ð°Ð½Ð¸Ðµ','Ð¡Ð²ÑÐ·ÑŒ','ÐŸÑ€Ð¾Ñ‡ÐµÐµ'];
 const DEFAULT_RATES = { visit:4000, resp:5000, service:3000, shopShift:4000, manager:0 };
 
 /* ============================================================
@@ -593,7 +593,7 @@ async function api(path, options = {}){
   });
   if(response.status === 204) return null;
   const payload = await response.json().catch(()=>({}));
-  if(!response.ok) throw new Error(payload.error || `Ошибка запроса (${response.status})`);
+  if(!response.ok) throw new Error(payload.error || `ÐžÑˆÐ¸Ð±ÐºÐ° Ð·Ð°Ð¿Ñ€Ð¾ÑÐ° (${response.status})`);
   return payload;
 }
 const uid = () => Math.random().toString(36).slice(2,10);
@@ -603,15 +603,15 @@ const num = v => { if(typeof v==='number')return isFinite(v)?v:0;
   const lc=s.lastIndexOf(','), ld=s.lastIndexOf('.');
   if(lc>ld) s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(/,/g,'');
   const n=parseFloat(s); return isFinite(n)?n:0; };
-const money = n => (Math.round(num(n))).toLocaleString('ru-RU')+' ₽';
+const money = n => (Math.round(num(n))).toLocaleString('ru-RU')+' â‚½';
 const todayISO = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const fmtDate = s => { if(!s)return'—'; const [y,m,d]=s.split('-'); return `${d}.${m}.${y}`; };
+const fmtDate = s => { if(!s)return'â€”'; const [y,m,d]=s.split('-'); return `${d}.${m}.${y}`; };
 const validDate = s => { if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
   const d=new Date(s+'T00:00:00'); return !isNaN(d)&&iso(d)===s; };
 const normName = s => String(s||'').trim().toLowerCase();
 
-/* --- День-статус выезда (замена статуса) --- */
+/* --- Ð”ÐµÐ½ÑŒ-ÑÑ‚Ð°Ñ‚ÑƒÑ Ð²Ñ‹ÐµÐ·Ð´Ð° (Ð·Ð°Ð¼ÐµÐ½Ð° ÑÑ‚Ð°Ñ‚ÑƒÑÐ°) --- */
 function vyezdDayStatus(j){
   const t = todayISO();
   if(j.date === t) return 'today';
@@ -619,7 +619,7 @@ function vyezdDayStatus(j){
   return 'future';
 }
 function vyezdDayLabel(st){
-  return { today:'Сегодня', past:'Завершён', future:'Запланирован' }[st] || '';
+  return { today:'Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ', past:'Ð—Ð°Ð²ÐµÑ€ÑˆÑ‘Ð½', future:'Ð—Ð°Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½' }[st] || '';
 }
 function vyezdDayBadge(st){
   const cls = { today:'ok', past:'muted', future:'info' }[st] || 'muted';
@@ -688,7 +688,7 @@ async function saveUsers(users){
   return App.users;
 }
 /* ============================================================
-   STORE — выезд без status
+   STORE â€” Ð²Ñ‹ÐµÐ·Ð´ Ð±ÐµÐ· status
    ============================================================ */
 function newState(){
   return {
@@ -756,7 +756,7 @@ function sanitizeState(p){
         photos: Array.isArray(j.photos)?j.photos.filter(x=>typeof x==='string').slice(0,20):[],
         expenses: Array.isArray(j.expenses)?j.expenses.filter(e=>e&&typeof e==='object').map(e=>({
           id: e.id||uid(),
-          category: EXP_CATEGORIES.includes(e.category)?e.category:'Прочее',
+          category: EXP_CATEGORIES.includes(e.category)?e.category:'ÐŸÑ€Ð¾Ñ‡ÐµÐµ',
           amount: 0, comment: String(e.comment||''),
           status: EXP_STATUS[e.status] ? e.status : 'pending',
           date: validDate(e.date)?e.date:todayISO(),
@@ -811,7 +811,7 @@ function saveState(){
   if(App.user){
     api('/state', {method:'PUT', body:JSON.stringify(App.state)})
       .then(()=>$('#saveDot')?.classList.remove('save-dot--err'))
-      .catch(error=>{ console.error(error); $('#saveDot')?.classList.add('save-dot--err'); toast('Не удалось сохранить данные на сервере','err'); });
+      .catch(error=>{ console.error(error); $('#saveDot')?.classList.add('save-dot--err'); toast('ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ ÑÐ¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€Ðµ','err'); });
   }
 }
 function scheduleSave(){ clearTimeout(saveState._s); saveState._s = setTimeout(saveState, 300); }
@@ -834,8 +834,8 @@ const App = {
 const objById = id => App.state.objects.find(o=>o.id===id);
 const empById = id => App.state.employees.find(e=>e.id===id);
 const empByRole = role => App.state.employees.filter(e=>e.role===role && e.active!==false);
-const objName = id => objById(id)?.name || '—';
-const empName = id => empById(id)?.name || '—';
+const objName = id => objById(id)?.name || 'â€”';
+const empName = id => empById(id)?.name || 'â€”';
 const jobById = id => App.state.jobs.find(j=>j.id===id);
 const shiftById = id => App.state.shifts.find(s=>s.id===id);
 
@@ -934,7 +934,7 @@ function crewNames(job){
 }
 function crewShort(job){
   const crew = crewNames(job);
-  if(!crew.length) return '—';
+  if(!crew.length) return 'â€”';
   const resp = crew.find(c=>c.resp);
   const others = crew.length - 1;
   return resp
@@ -943,21 +943,21 @@ function crewShort(job){
 }
 function crewBadges(job){
   const crew = crewNames(job);
-  if(!crew.length) return '<span class="muted">—</span>';
+  if(!crew.length) return '<span class="muted">â€”</span>';
   return `<div class="crew">${crew.map(c=>
     `<span class="crew__m ${c.resp?'crew__m--resp':''}">${esc(c.name)}</span>`
   ).join('')}</div>`;
 }
 function shiftCrewBadges(shift){
   const ids = shift.employeeIds || [];
-  if(!ids.length) return '<span class="muted">—</span>';
+  if(!ids.length) return '<span class="muted">â€”</span>';
   return `<div class="crew">${ids.map(id=>
     `<span class="crew__m">${esc(empName(id))}</span>`
   ).join('')}</div>`;
 }
 
 /* ============================================================
-   VIEWS — JOBS (Выезды)
+   VIEWS â€” JOBS (Ð’Ñ‹ÐµÐ·Ð´Ñ‹)
    ============================================================ */
 function renderJobs(){
   const me = myEmployee();
@@ -980,8 +980,8 @@ function renderJobs(){
 
   if(!list.length){
     $('#jobsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">🚚</div><div>Выездов нет</div>
-      <div style="margin-top:12px;font-size:12px">Нажмите «+ Выезд», чтобы создать</div>
+      <div class="empty__i">ðŸšš</div><div>Ð’Ñ‹ÐµÐ·Ð´Ð¾Ð² Ð½ÐµÑ‚</div>
+      <div style="margin-top:12px;font-size:12px">ÐÐ°Ð¶Ð¼Ð¸Ñ‚Ðµ Â«+ Ð’Ñ‹ÐµÐ·Ð´Â», Ñ‡Ñ‚Ð¾Ð±Ñ‹ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ</div>
     </div></div>`;
     return;
   }
@@ -993,30 +993,30 @@ function renderJobs(){
     const daySt = vyezdDayStatus(j);
     let actions = '';
     if(daySt==='today' && !j.checkin && meInGroup){
-      actions += `<button class="btn btn--xs btn--p" data-checkin="${j.id}">Чек-ин</button>`;
+      actions += `<button class="btn btn--xs btn--p" data-checkin="${j.id}">Ð§ÐµÐº-Ð¸Ð½</button>`;
     }
     if(daySt==='today' && j.checkin && !j.checkout && meInGroup){
-      actions += `<button class="btn btn--xs" data-checkout="${j.id}">Чек-аут</button>`;
+      actions += `<button class="btn btn--xs" data-checkout="${j.id}">Ð§ÐµÐº-Ð°ÑƒÑ‚</button>`;
     }
-    actions += `<button class="btn btn--xs" data-view-job="${j.id}">👁</button>`;
+    actions += `<button class="btn btn--xs" data-view-job="${j.id}">ðŸ‘</button>`;
     if(isAtLeast(App.user,'manager')){
-      actions += `<button class="btn btn--xs" data-archive-job="${j.id}">${j.archived?'Вернуть':'В архив'}</button>`;
-      actions += `<button class="btn btn--xs icobtn--d" data-del-job="${j.id}">✕</button>`;
+      actions += `<button class="btn btn--xs" data-archive-job="${j.id}">${j.archived?'Ð’ÐµÑ€Ð½ÑƒÑ‚ÑŒ':'Ð’ Ð°Ñ€Ñ…Ð¸Ð²'}</button>`;
+      actions += `<button class="btn btn--xs icobtn--d" data-del-job="${j.id}">âœ•</button>`;
     }
     const expCnt = (j.expenses||[]).length;
     return `<tr>
       <td>
         <div class="title">${esc(j.title)}</div>
-        <div class="sub">${esc(o?.code||'')} · ${esc(o?.name||'—')}</div>
+        <div class="sub">${esc(o?.code||'')} Â· ${esc(o?.name||'â€”')}</div>
       </td>
-      <td>${esc(o?.address||'—')}</td>
+      <td>${esc(o?.address||'â€”')}</td>
       <td>${crewBadges(j)}</td>
       <td>
         <div>${fmtDate(j.date)}</div>
         <div style="margin-top:3px">${vyezdDayBadge(daySt)}</div>
       </td>
       <td><span class="b b--muted">${typeLbl}</span></td>
-      <td class="right">${expCnt ? `${expCnt} шт.` : '—'}</td>
+      <td class="right">${expCnt ? `${expCnt} ÑˆÑ‚.` : 'â€”'}</td>
       <td class="actions">${actions}</td>
     </tr>`;
   }).join('');
@@ -1024,8 +1024,8 @@ function renderJobs(){
   $('#jobsList').innerHTML = `<div class="card" style="padding:0">
     <div class="tbl-wrap"><table class="tbl">
       <thead><tr>
-        <th>Выезд</th><th>Адрес</th><th>Группа</th><th>Дата</th>
-        <th>Тип</th><th>Расходы</th><th></th>
+        <th>Ð’Ñ‹ÐµÐ·Ð´</th><th>ÐÐ´Ñ€ÐµÑ</th><th>Ð“Ñ€ÑƒÐ¿Ð¿Ð°</th><th>Ð”Ð°Ñ‚Ð°</th>
+        <th>Ð¢Ð¸Ð¿</th><th>Ð Ð°ÑÑ…Ð¾Ð´Ñ‹</th><th></th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
@@ -1033,7 +1033,7 @@ function renderJobs(){
 }
 
 /* ============================================================
-   VIEWS — WORKSHOP
+   VIEWS â€” WORKSHOP
    ============================================================ */
 function renderWorkshop(){
   const me = myEmployee();
@@ -1064,16 +1064,16 @@ function renderWorkshop(){
   monthShifts.forEach(s=>(s.employeeIds||[]).forEach(id=>uniqueEmps.add(id)));
 
   $('#shopKpis').innerHTML = `
-    <div class="kpi"><div class="kpi__l">Смен за месяц</div><div class="kpi__v acc">${shiftsCount}</div></div>
-    <div class="kpi"><div class="kpi__l">Человеко-смен</div><div class="kpi__v">${personShifts}</div></div>
-    <div class="kpi"><div class="kpi__l">Стоимость труда</div><div class="kpi__v">${money(cost)}</div></div>
-    <div class="kpi"><div class="kpi__l">Сотрудников занято</div><div class="kpi__v">${uniqueEmps.size}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð¡Ð¼ÐµÐ½ Ð·Ð° Ð¼ÐµÑÑÑ†</div><div class="kpi__v acc">${shiftsCount}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð§ÐµÐ»Ð¾Ð²ÐµÐºÐ¾-ÑÐ¼ÐµÐ½</div><div class="kpi__v">${personShifts}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ñ‚Ñ€ÑƒÐ´Ð°</div><div class="kpi__v">${money(cost)}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð² Ð·Ð°Ð½ÑÑ‚Ð¾</div><div class="kpi__v">${uniqueEmps.size}</div></div>
   `;
 
   if(!shifts.length){
     $('#shiftsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">🏭</div><div>Смен нет</div>
-      <div style="margin-top:12px;font-size:12px">Нажмите «+ Смена», чтобы создать</div>
+      <div class="empty__i">ðŸ­</div><div>Ð¡Ð¼ÐµÐ½ Ð½ÐµÑ‚</div>
+      <div style="margin-top:12px;font-size:12px">ÐÐ°Ð¶Ð¼Ð¸Ñ‚Ðµ Â«+ Ð¡Ð¼ÐµÐ½Ð°Â», Ñ‡Ñ‚Ð¾Ð±Ñ‹ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ</div>
     </div></div>`;
     return;
   }
@@ -1082,10 +1082,10 @@ function renderWorkshop(){
     const cnt = (sh.employeeIds||[]).length;
     const shiftCost = cnt * App.state.rates.shopShift;
     let actions = isAtLeast(App.user,'manager')
-      ? `<button class="btn btn--xs icobtn--d" data-del-shift="${sh.id}">✕</button>`
+      ? `<button class="btn btn--xs icobtn--d" data-del-shift="${sh.id}">âœ•</button>`
       : '';
     if(isAtLeast(App.user,'manager') || userRoles(App.user).includes('workshopChief')){
-      actions = `<button class="btn btn--xs" data-complete-shift="${sh.id}">${sh.completed?'Вернуть':'Выполнено'}</button>` + actions;
+      actions = `<button class="btn btn--xs" data-complete-shift="${sh.id}">${sh.completed?'Ð’ÐµÑ€Ð½ÑƒÑ‚ÑŒ':'Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¾'}</button>` + actions;
     }
     return `<tr>
       <td>${fmtDate(sh.date)}</td>
@@ -1094,7 +1094,7 @@ function renderWorkshop(){
         <div class="sub">${esc(objById(sh.objectId)?.code||'')}</div>
       </td>
       <td>${shiftCrewBadges(sh)}</td>
-      <td class="right">${cnt} чел.</td>
+      <td class="right">${cnt} Ñ‡ÐµÐ».</td>
       <td class="right"><b>${money(shiftCost)}</b></td>
       <td class="actions">${actions}</td>
     </tr>`;
@@ -1103,8 +1103,8 @@ function renderWorkshop(){
   $('#shiftsList').innerHTML = `<div class="card" style="padding:0">
     <div class="tbl-wrap"><table class="tbl">
       <thead><tr>
-        <th>Дата</th><th>Объект</th><th>Группа</th>
-        <th>Кол-во</th><th>Стоимость</th><th></th>
+        <th>Ð”Ð°Ñ‚Ð°</th><th>ÐžÐ±ÑŠÐµÐºÑ‚</th><th>Ð“Ñ€ÑƒÐ¿Ð¿Ð°</th>
+        <th>ÐšÐ¾Ð»-Ð²Ð¾</th><th>Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ</th><th></th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
@@ -1112,7 +1112,7 @@ function renderWorkshop(){
 }
 
 /* ============================================================
-   VIEWS — OBJECTS
+   VIEWS â€” OBJECTS
    ============================================================ */
 function renderObjects(){
   let list = App.state.objects.slice();
@@ -1124,7 +1124,7 @@ function renderObjects(){
 
   if(!list.length){
     $('#objectsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">📍</div><div>Объектов нет</div>
+      <div class="empty__i">ðŸ“</div><div>ÐžÐ±ÑŠÐµÐºÑ‚Ð¾Ð² Ð½ÐµÑ‚</div>
     </div></div>`;
     return;
   }
@@ -1140,16 +1140,16 @@ function renderObjects(){
         <div class="obj-card__ico" style="background:${t.color}22;color:${t.color}">${t.ico}</div>
         <div style="flex:1;min-width:0">
           <div class="obj-card__name">${esc(o.name)}</div>
-          <div class="obj-card__code">${esc(o.code)} · ${t.label}</div>
+          <div class="obj-card__code">${esc(o.code)} Â· ${t.label}</div>
         </div>
-        <span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'Актив':o.status==='paused'?'Пауза':'Закрыт'}</span>
+        <span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'ÐÐºÑ‚Ð¸Ð²':o.status==='paused'?'ÐŸÐ°ÑƒÐ·Ð°':'Ð—Ð°ÐºÑ€Ñ‹Ñ‚'}</span>
       </div>
-      <div class="obj-card__addr">📍 ${esc(o.address)}</div>
+      <div class="obj-card__addr">ðŸ“ ${esc(o.address)}</div>
       <div class="obj-card__meta">
-        <div>👤 ${esc(o.contact||'—')}</div>
-        <div>🚚 <b>${jobs.length}</b> выездов</div>
-        <div>📅 сегодня: <b>${todayJobs}</b></div>
-        <div>🏭 <b>${shifts.length}</b> смен</div>
+        <div>ðŸ‘¤ ${esc(o.contact||'â€”')}</div>
+        <div>ðŸšš <b>${jobs.length}</b> Ð²Ñ‹ÐµÐ·Ð´Ð¾Ð²</div>
+        <div>ðŸ“… ÑÐµÐ³Ð¾Ð´Ð½Ñ: <b>${todayJobs}</b></div>
+        <div>ðŸ­ <b>${shifts.length}</b> ÑÐ¼ÐµÐ½</div>
       </div>
     </div>`;
   }).join('');
@@ -1158,7 +1158,7 @@ function renderObjects(){
 }
 
 /* ============================================================
-   VIEWS — FINANCE
+   VIEWS â€” FINANCE
    ============================================================ */
 function renderFinance(){
   const { start, end } = App.period;
@@ -1189,10 +1189,10 @@ function renderFinance(){
   const totalCost = shopCost + payrollSum;
 
   $('#finKpis').innerHTML = `
-    <div class="kpi"><div class="kpi__l">Расходов оплачено</div><div class="kpi__v err">${paidExp.length}</div></div>
-    <div class="kpi"><div class="kpi__l">ФОТ за период</div><div class="kpi__v">${money(payrollSum)}</div></div>
-    <div class="kpi"><div class="kpi__l">Цех (${shopPersonShifts} чел-смен)</div><div class="kpi__v">${money(shopCost)}</div></div>
-    <div class="kpi"><div class="kpi__l">Итого затрат</div><div class="kpi__v">${money(totalCost)}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð Ð°ÑÑ…Ð¾Ð´Ð¾Ð² Ð¾Ð¿Ð»Ð°Ñ‡ÐµÐ½Ð¾</div><div class="kpi__v err">${paidExp.length}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð¤ÐžÐ¢ Ð·Ð° Ð¿ÐµÑ€Ð¸Ð¾Ð´</div><div class="kpi__v">${money(payrollSum)}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð¦ÐµÑ… (${shopPersonShifts} Ñ‡ÐµÐ»-ÑÐ¼ÐµÐ½)</div><div class="kpi__v">${money(shopCost)}</div></div>
+    <div class="kpi"><div class="kpi__l">Ð˜Ñ‚Ð¾Ð³Ð¾ Ð·Ð°Ñ‚Ñ€Ð°Ñ‚</div><div class="kpi__v">${money(totalCost)}</div></div>
   `;
 
   let pendingHtml = '';
@@ -1202,15 +1202,15 @@ function renderFinance(){
       return `<tr>
         <td>${fmtDate(x.jobDate)}</td>
         <td><b>${esc(x.category)}</b><div class="sub">${esc(x.comment||'')}</div></td>
-        <td>${esc(o?.name||'—')}<div class="sub">${esc(x.jobTitle||'')}</div></td>
+        <td>${esc(o?.name||'â€”')}<div class="sub">${esc(x.jobTitle||'')}</div></td>
         <td class="actions">
-          <button class="btn btn--xs btn--ok" data-approve="${x.jobId}|${x.id}">✓</button>
-          <button class="btn btn--xs icobtn--d" data-reject="${x.jobId}|${x.id}">✕</button>
+          <button class="btn btn--xs btn--ok" data-approve="${x.jobId}|${x.id}">âœ“</button>
+          <button class="btn btn--xs icobtn--d" data-reject="${x.jobId}|${x.id}">âœ•</button>
         </td>
       </tr>`;
     }).join('');
   } else {
-    pendingHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет расходов на утверждении</td></tr>';
+    pendingHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">ÐÐµÑ‚ Ñ€Ð°ÑÑ…Ð¾Ð´Ð¾Ð² Ð½Ð° ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ð¸</td></tr>';
   }
 
   let approvedHtml = '';
@@ -1220,30 +1220,30 @@ function renderFinance(){
       return `<tr>
         <td>${fmtDate(x.jobDate)}</td>
         <td>${esc(x.category)}<div class="sub">${esc(x.comment||'')}</div></td>
-        <td>${esc(o?.name||'—')}</td>
+        <td>${esc(o?.name||'â€”')}</td>
         <td class="actions">
-          <button class="btn btn--xs btn--p" data-pay-exp="${x.jobId}|${x.id}">Оплатить</button>
+          <button class="btn btn--xs btn--p" data-pay-exp="${x.jobId}|${x.id}">ÐžÐ¿Ð»Ð°Ñ‚Ð¸Ñ‚ÑŒ</button>
         </td>
       </tr>`;
     }).join('');
   } else {
-    approvedHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет утверждённых расходов</td></tr>';
+    approvedHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">ÐÐµÑ‚ ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´Ñ‘Ð½Ð½Ñ‹Ñ… Ñ€Ð°ÑÑ…Ð¾Ð´Ð¾Ð²</td></tr>';
   }
 
   const payrollHtml = payroll.filter(r=>r.total>0).map(r=>{
     let detail = '';
     if(r.emp.role==='field'){
       const parts = [];
-      if(r.serviceDays) parts.push(`Сервис: ${r.serviceDays}×${money(App.state.rates.service)}`);
-      if(r.visitDays) parts.push(`Выезд: ${r.visitDays}×${money(App.state.rates.visit)}`);
-      if(r.respVisitDays) parts.push(`Отв.: ${r.respVisitDays}×${money(App.state.rates.resp)}`);
-      detail = parts.join(' · ') || '—';
+      if(r.serviceDays) parts.push(`Ð¡ÐµÑ€Ð²Ð¸Ñ: ${r.serviceDays}Ã—${money(App.state.rates.service)}`);
+      if(r.visitDays) parts.push(`Ð’Ñ‹ÐµÐ·Ð´: ${r.visitDays}Ã—${money(App.state.rates.visit)}`);
+      if(r.respVisitDays) parts.push(`ÐžÑ‚Ð².: ${r.respVisitDays}Ã—${money(App.state.rates.resp)}`);
+      detail = parts.join(' Â· ') || 'â€”';
     } else if(r.emp.role==='workshop'){
-      detail = `${r.shiftsCount} × ${money(App.state.rates.shopShift)}`;
+      detail = `${r.shiftsCount} Ã— ${money(App.state.rates.shopShift)}`;
     } else if(r.emp.role==='manager'){
-      detail = `${daysBetween(s,e)} × ${money(App.state.rates.manager)}${r.bonuses ? ` · Доплаты: ${money(r.bonuses)}` : ''}`;
+      detail = `${daysBetween(s,e)} Ã— ${money(App.state.rates.manager)}${r.bonuses ? ` Â· Ð”Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹: ${money(r.bonuses)}` : ''}`;
     } else {
-      detail = 'Без ставки';
+      detail = 'Ð‘ÐµÐ· ÑÑ‚Ð°Ð²ÐºÐ¸';
     }
     const roleLbl = ROLES[r.emp.role]?.label || r.emp.role;
     return `<tr>
@@ -1255,39 +1255,39 @@ function renderFinance(){
 
   $('#financeContent').innerHTML = `
     <div class="card no-print">
-      <h3>⏳ На утверждении (${pendingExp.length})</h3>
+      <h3>â³ ÐÐ° ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ð¸ (${pendingExp.length})</h3>
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
+        <thead><tr><th>Ð”Ð°Ñ‚Ð°</th><th>Ð¡Ñ‚Ð°Ñ‚ÑŒÑ Ð¸ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ</th><th>ÐžÐ±ÑŠÐµÐºÑ‚</th><th></th></tr></thead>
         <tbody>${pendingHtml}</tbody>
       </table></div>
     </div>
 
     <div class="card no-print">
-      <h3>✅ Утверждено (${approvedExp.length})</h3>
+      <h3>âœ… Ð£Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¾ (${approvedExp.length})</h3>
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
+        <thead><tr><th>Ð”Ð°Ñ‚Ð°</th><th>Ð¡Ñ‚Ð°Ñ‚ÑŒÑ Ð¸ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ</th><th>ÐžÐ±ÑŠÐµÐºÑ‚</th><th></th></tr></thead>
         <tbody>${approvedHtml}</tbody>
       </table></div>
     </div>
 
     <div class="card">
-      <h3>💰 Расчёт зарплаты за период ${fmtDate(s)} — ${fmtDate(e)}</h3>
+      <h3>ðŸ’° Ð Ð°ÑÑ‡Ñ‘Ñ‚ Ð·Ð°Ñ€Ð¿Ð»Ð°Ñ‚Ñ‹ Ð·Ð° Ð¿ÐµÑ€Ð¸Ð¾Ð´ ${fmtDate(s)} â€” ${fmtDate(e)}</h3>
       ${payroll.filter(r=>r.total>0).length ? `
         <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>Сотрудник</th><th>Расчёт</th><th style="text-align:right">К оплате</th></tr></thead>
+          <thead><tr><th>Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº</th><th>Ð Ð°ÑÑ‡Ñ‘Ñ‚</th><th style="text-align:right">Ðš Ð¾Ð¿Ð»Ð°Ñ‚Ðµ</th></tr></thead>
           <tbody>${payrollHtml}</tbody>
           <tfoot><tr style="background:var(--soft)">
-            <td colspan="2"><b>Итого ФОТ</b></td>
+            <td colspan="2"><b>Ð˜Ñ‚Ð¾Ð³Ð¾ Ð¤ÐžÐ¢</b></td>
             <td class="right"><b style="font-size:15px">${money(payrollSum)}</b></td>
           </tr></tfoot>
         </table></div>
-      ` : '<div class="empty"><div class="empty__i">💰</div><div>Рабочих дней за период нет</div></div>'}
+      ` : '<div class="empty"><div class="empty__i">ðŸ’°</div><div>Ð Ð°Ð±Ð¾Ñ‡Ð¸Ñ… Ð´Ð½ÐµÐ¹ Ð·Ð° Ð¿ÐµÑ€Ð¸Ð¾Ð´ Ð½ÐµÑ‚</div></div>'}
     </div>
   `;
 }
 
 /* ============================================================
-   VIEWS — ADMIN
+   VIEWS â€” ADMIN
    ============================================================ */
 function renderAdmin(){
   const r = App.state.rates;
@@ -1302,15 +1302,15 @@ function renderAdmin(){
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <input type="text" class="f__i" style="flex:2;min-width:140px" value="${esc(e.name)}" data-emp-name="${e.id}">
       <select class="f__i" style="flex:1;min-width:110px" data-emp-role="${e.id}">
-        <option value="field" ${e.type==='field'?'selected':''}>Монтажник</option>
-        <option value="workshop" ${e.type==='workshop'?'selected':''}>Сотрудник цеха</option>
+        <option value="field" ${e.type==='field'?'selected':''}>ÐœÐ¾Ð½Ñ‚Ð°Ð¶Ð½Ð¸Ðº</option>
+        <option value="workshop" ${e.type==='workshop'?'selected':''}>Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº Ñ†ÐµÑ…Ð°</option>
       </select>
       <select class="f__i" style="flex:1;min-width:120px" data-emp-status="${e.id}">
-        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${e.workerStatus===value?'selected':''}>${label}</option>`).join('')}
+        ${[['responsible','ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹'],['worker','Ð Ð°Ð±Ð¾Ñ‡Ð¸Ð¹'],['trainee','Ð¡Ñ‚Ð°Ð¶ÐµÑ€']].map(([value,label])=>`<option value="${value}" ${e.workerStatus===value?'selected':''}>${label}</option>`).join('')}
       </select>
-      <button type="button" class="btn btn--xs icobtn--d" data-del-emp="${e.id}">✕</button>
+      <button type="button" class="btn btn--xs icobtn--d" data-del-emp="${e.id}">âœ•</button>
     </div>
-  </div>`).join('') : '<div class="empty" style="padding:20px">Сотрудников нет</div>';
+  </div>`).join('') : '<div class="empty" style="padding:20px">Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð² Ð½ÐµÑ‚</div>';
 
   const users = loadUsers();
   users.sort((a,b)=>Math.max(...userRoles(b).map(roleRank))-Math.max(...userRoles(a).map(roleRank))||a.name.localeCompare(b.name));
@@ -1320,15 +1320,15 @@ function renderAdmin(){
     return `<div class="card" style="margin:0 0 6px;padding:10px">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <div style="flex:2;min-width:150px">
-          <div style="font-weight:700">${esc(u.name)}${isMe?' <span class="b b--info">Вы</span>':''}</div>
+          <div style="font-weight:700">${esc(u.name)}${isMe?' <span class="b b--info">Ð’Ñ‹</span>':''}</div>
           <div style="font-size:12px;color:var(--muted)">${esc(u.phone)}</div>
         </div>
         <select class="f__i" multiple style="flex:1;min-width:160px" data-user-roles="${esc(u.phone)}" ${isMe?'disabled':''}>${roleOpts}</select>
-        <button type="button" class="btn btn--xs" data-reset-pin="${esc(u.phone)}">🔑 Пароль</button>
-        ${isMe ? '' : `<button type="button" class="btn btn--xs ${u.status==='blocked'?'btn--ok':'icobtn--d'}" data-block-user="${esc(u.phone)}">${u.status==='blocked'?'Разблок.':'Блок.'}</button>`}
+        <button type="button" class="btn btn--xs" data-reset-pin="${esc(u.phone)}">ðŸ”‘ ÐŸÐ°Ñ€Ð¾Ð»ÑŒ</button>
+        ${isMe ? '' : `<button type="button" class="btn btn--xs ${u.status==='blocked'?'btn--ok':'icobtn--d'}" data-block-user="${esc(u.phone)}">${u.status==='blocked'?'Ð Ð°Ð·Ð±Ð»Ð¾Ðº.':'Ð‘Ð»Ð¾Ðº.'}</button>`}
       </div>
     </div>`;
-  }).join('') : '<div class="empty" style="padding:20px">Пользователей нет</div>';
+  }).join('') : '<div class="empty" style="padding:20px">ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¹ Ð½ÐµÑ‚</div>';
 }
 
 function renderAttendance(){
@@ -1340,29 +1340,29 @@ function renderAttendance(){
   const objects = App.state.objects.filter(item=>item.status==='active');
   const objectSelect = $('#attendanceObject');
   if(objectSelect){
-    objectSelect.innerHTML = `<option value="">Без конкретного объекта</option>${
-      objects.map(item=>`<option value="${item.id}">${esc(item.code ? `${item.code} — ${item.name}` : item.name)}</option>`).join('')
+    objectSelect.innerHTML = `<option value="">Ð‘ÐµÐ· ÐºÐ¾Ð½ÐºÑ€ÐµÑ‚Ð½Ð¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°</option>${
+      objects.map(item=>`<option value="${item.id}">${esc(item.code ? `${item.code} â€” ${item.name}` : item.name)}</option>`).join('')
     }`;
     if(current?.objectId) objectSelect.value = current.objectId;
   }
   $('#attendanceCurrent').innerHTML = current
-    ? `<div class="b b--ok">Сейчас отмечено: ${current.mode==='workshop'?'в цеху':'на выезде'}${current.objectId ? ` — ${esc(objName(current.objectId))}` : ''}<br><span class="muted">${esc(current.startedAt)}</span></div>`
-    : '<div class="muted">Активной отметки нет</div>';
+    ? `<div class="b b--ok">Ð¡ÐµÐ¹Ñ‡Ð°Ñ Ð¾Ñ‚Ð¼ÐµÑ‡ÐµÐ½Ð¾: ${current.mode==='workshop'?'Ð² Ñ†ÐµÑ…Ñƒ':'Ð½Ð° Ð²Ñ‹ÐµÐ·Ð´Ðµ'}${current.objectId ? ` â€” ${esc(objName(current.objectId))}` : ''}<br><span class="muted">${esc(current.startedAt)}</span></div>`
+    : '<div class="muted">ÐÐºÑ‚Ð¸Ð²Ð½Ð¾Ð¹ Ð¾Ñ‚Ð¼ÐµÑ‚ÐºÐ¸ Ð½ÐµÑ‚</div>';
   $('#btnAttendanceStart').disabled = !!current;
   $('#btnAttendanceStop').disabled = !current;
   $('#attendanceHistory').innerHTML = records.length
     ? records.slice().reverse().map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-        <b>${item.mode==='workshop'?'В цеху':'На выезде'}</b>${item.objectId ? ` — ${esc(objName(item.objectId))}` : ''}
-        <div class="muted">${esc(item.startedAt)} — ${esc(item.endedAt||'идёт')}</div>
+        <b>${item.mode==='workshop'?'Ð’ Ñ†ÐµÑ…Ñƒ':'ÐÐ° Ð²Ñ‹ÐµÐ·Ð´Ðµ'}</b>${item.objectId ? ` â€” ${esc(objName(item.objectId))}` : ''}
+        <div class="muted">${esc(item.startedAt)} â€” ${esc(item.endedAt||'Ð¸Ð´Ñ‘Ñ‚')}</div>
       </div>`).join('')
-    : '<div class="empty">Сегодня отметок ещё нет</div>';
+    : '<div class="empty">Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ Ð¾Ñ‚Ð¼ÐµÑ‚Ð¾Ðº ÐµÑ‰Ñ‘ Ð½ÐµÑ‚</div>';
   const canEditStatuses = userRoles(App.user).includes('admin') || userRoles(App.user).includes('workshopChief');
   $('#chiefStatusPanel').style.display = canEditStatuses ? '' : 'none';
   if(canEditStatuses){
     $('#chiefStatusList').innerHTML = App.state.employees.map(item=>`<div style="display:flex;gap:8px;align-items:center;margin:6px 0">
       <span style="flex:1">${esc(item.name)}</span>
       <select class="f__i" data-chief-status="${item.id}">
-        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${item.workerStatus===value?'selected':''}>${label}</option>`).join('')}
+        ${[['responsible','ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹'],['worker','Ð Ð°Ð±Ð¾Ñ‡Ð¸Ð¹'],['trainee','Ð¡Ñ‚Ð°Ð¶ÐµÑ€']].map(([value,label])=>`<option value="${value}" ${item.workerStatus===value?'selected':''}>${label}</option>`).join('')}
       </select>
     </div>`).join('');
   }
@@ -1374,8 +1374,8 @@ async function renderPersonalQr(){
   try {
     const {link, image} = await api('/auth/attendance-qr');
     host.innerHTML = `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <img src="${esc(image)}" alt="Персональный QR-код" width="160" height="160">
-      <div><b>Ваш персональный QR</b><div class="muted" style="max-width:360px;word-break:break-all">${esc(link)}</div></div>
+      <img src="${esc(image)}" alt="ÐŸÐµÑ€ÑÐ¾Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ QR-ÐºÐ¾Ð´" width="160" height="160">
+      <div><b>Ð’Ð°Ñˆ Ð¿ÐµÑ€ÑÐ¾Ð½Ð°Ð»ÑŒÐ½Ñ‹Ð¹ QR</b><div class="muted" style="max-width:360px;word-break:break-all">${esc(link)}</div></div>
     </div>`;
   } catch(error) {
     host.textContent = error.message;
@@ -1391,7 +1391,7 @@ function closeExpiredAttendance(){
   let changed = false;
   App.state.attendance.forEach(item=>{
     if(item.date < today && !item.endedAt){
-      item.endedAt = 'Закрыта автоматически';
+      item.endedAt = 'Ð—Ð°ÐºÑ€Ñ‹Ñ‚Ð° Ð°Ð²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡ÐµÑÐºÐ¸';
       changed = true;
     }
   });
@@ -1401,15 +1401,15 @@ function closeExpiredAttendance(){
 function renderTimesheet(){
   const rows = App.state.attendance.slice().sort((a,b)=>`${b.date} ${b.startedAt}`.localeCompare(`${a.date} ${a.startedAt}`));
   $('#timesheetList').innerHTML = rows.length ? `<div class="tbl-wrap"><table class="tbl">
-    <thead><tr><th>Дата</th><th>Сотрудник</th><th>Где работает</th><th>Объект</th><th>Статус рабочего</th><th>Время</th></tr></thead>
+    <thead><tr><th>Ð”Ð°Ñ‚Ð°</th><th>Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº</th><th>Ð“Ð´Ðµ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚</th><th>ÐžÐ±ÑŠÐµÐºÑ‚</th><th>Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾</th><th>Ð’Ñ€ÐµÐ¼Ñ</th></tr></thead>
     <tbody>${rows.map(item=>{
       const employee = empById(item.employeeId);
-      return `<tr><td>${fmtDate(item.date)}</td><td>${esc(employee?.name||'—')}</td>
-        <td>${item.mode==='workshop'?'Цех':'Монтаж'}</td><td>${esc(objName(item.objectId))}</td>
-        <td>${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].find(([value])=>value===employee?.workerStatus)?.[1]||'—'}</td>
-        <td>${esc(item.startedAt)} — ${esc(item.endedAt||'открыта')}</td></tr>`;
+      return `<tr><td>${fmtDate(item.date)}</td><td>${esc(employee?.name||'â€”')}</td>
+        <td>${item.mode==='workshop'?'Ð¦ÐµÑ…':'ÐœÐ¾Ð½Ñ‚Ð°Ð¶'}</td><td>${esc(objName(item.objectId))}</td>
+        <td>${[['responsible','ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹'],['worker','Ð Ð°Ð±Ð¾Ñ‡Ð¸Ð¹'],['trainee','Ð¡Ñ‚Ð°Ð¶ÐµÑ€']].find(([value])=>value===employee?.workerStatus)?.[1]||'â€”'}</td>
+        <td>${esc(item.startedAt)} â€” ${esc(item.endedAt||'Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ð°')}</td></tr>`;
     }).join('')}</tbody>
-  </table></div>` : '<div class="empty">Записей табеля нет</div>';
+  </table></div>` : '<div class="empty">Ð—Ð°Ð¿Ð¸ÑÐµÐ¹ Ñ‚Ð°Ð±ÐµÐ»Ñ Ð½ÐµÑ‚</div>';
 }
 
 async function renderAudit(){
@@ -1417,9 +1417,9 @@ async function renderAudit(){
     const result = await api('/audit');
     const rows = result.audit || [];
     $('#auditList').innerHTML = rows.length ? rows.map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-      <b>${esc(item.action)}</b><div class="muted">${esc(item.created_at||'')} · ${esc(item.actor_name||'—')} → ${esc(item.target_name||'система')}</div>
+      <b>${esc(item.action)}</b><div class="muted">${esc(item.created_at||'')} Â· ${esc(item.actor_name||'â€”')} â†’ ${esc(item.target_name||'ÑÐ¸ÑÑ‚ÐµÐ¼Ð°')}</div>
       <div>${esc(JSON.stringify(item.details||{}))}</div>
-    </div>`).join('') : '<div class="empty">Записей аудита нет</div>';
+    </div>`).join('') : '<div class="empty">Ð—Ð°Ð¿Ð¸ÑÐµÐ¹ Ð°ÑƒÐ´Ð¸Ñ‚Ð° Ð½ÐµÑ‚</div>';
   } catch(error) {
     toast(error.message,'err');
   }
@@ -1451,7 +1451,7 @@ function applyUserUI(){
   const badge = $('#userBadge');
   const roles = userRoles(App.user);
   const role = ROLES[roles[0]] || ROLES.employee;
-  badge.textContent = `${App.user.name} · ${roles.map(value=>ROLES[value]?.label||value).join(', ')}`;
+  badge.textContent = `${App.user.name} Â· ${roles.map(value=>ROLES[value]?.label||value).join(', ')}`;
   badge.className = 'user-badge ' + (role.cls || '');
   badge.onclick = showMyStats;
   $('#btnLogout').classList.toggle('hid', userRoles(App.user).includes('admin'));
@@ -1467,7 +1467,7 @@ const crewPick = { selected: new Set(), resp: null };
 
 function renderCrewPicker(fieldEmps){
   if(!fieldEmps.length){
-    return '<div class="crew-pick__empty">Нет выездных сотрудников. Добавьте в разделе «Админ» → «Сотрудники».</div>';
+    return '<div class="crew-pick__empty">ÐÐµÑ‚ Ð²Ñ‹ÐµÐ·Ð´Ð½Ñ‹Ñ… ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð². Ð”Ð¾Ð±Ð°Ð²ÑŒÑ‚Ðµ Ð² Ñ€Ð°Ð·Ð´ÐµÐ»Ðµ Â«ÐÐ´Ð¼Ð¸Ð½Â» â†’ Â«Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¸Â».</div>';
   }
   return `<div class="crew-pick" id="crewPickList">
     ${fieldEmps.map(e=>{
@@ -1478,12 +1478,12 @@ function renderCrewPicker(fieldEmps){
         <label class="crew-pick__name" data-crew-name="${e.id}">${esc(e.name)}</label>
         <label class="crew-pick__resp-lbl">
           <input type="radio" name="crewResp" value="${e.id}" ${isResp?'checked':''} ${checked?'':'disabled'}>
-          <span>⭐ Ответственный</span>
+          <span>â­ ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹</span>
         </label>
       </div>`;
     }).join('')}
   </div>
-  <div class="crew-hint">Отметьте участников. Звёздочкой выберите ответственного среди отмеченных.</div>`;
+  <div class="crew-hint">ÐžÑ‚Ð¼ÐµÑ‚ÑŒÑ‚Ðµ ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸ÐºÐ¾Ð². Ð—Ð²Ñ‘Ð·Ð´Ð¾Ñ‡ÐºÐ¾Ð¹ Ð²Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð³Ð¾ ÑÑ€ÐµÐ´Ð¸ Ð¾Ñ‚Ð¼ÐµÑ‡ÐµÐ½Ð½Ñ‹Ñ….</div>`;
 }
 function refreshCrewPicker(){
   const fieldEmps = empByRole('field');
@@ -1492,7 +1492,7 @@ function refreshCrewPicker(){
   const host = $('#crewPickHost');
   if(host) host.innerHTML = renderCrewPicker(fieldEmps);
   const counter = $('#crewCount');
-  if(counter) counter.textContent = `Выбрано: ${crewPick.selected.size}`;
+  if(counter) counter.textContent = `Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð¾: ${crewPick.selected.size}`;
 }
 function bindCrewPicker(){
   const host = $('#crewPickHost');
@@ -1520,63 +1520,63 @@ function bindCrewPicker(){
 }
 
 /* ============================================================
-   MODAL — NEW VYEZD
+   MODAL â€” NEW VYEZD
    ============================================================ */
 function modalNewJob(preObjId){
   const objects = App.state.objects.filter(o=>o.status==='active');
   const fieldEmps = empByRole('field');
-  if(!objects.length){ toast('Сначала создайте объект','err'); return; }
-  if(!fieldEmps.length){ toast('Сначала добавьте выездных сотрудников в Админ → Сотрудники','err'); return; }
+  if(!objects.length){ toast('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° ÑÐ¾Ð·Ð´Ð°Ð¹Ñ‚Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚','err'); return; }
+  if(!fieldEmps.length){ toast('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° Ð´Ð¾Ð±Ð°Ð²ÑŒÑ‚Ðµ Ð²Ñ‹ÐµÐ·Ð´Ð½Ñ‹Ñ… ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð² Ð² ÐÐ´Ð¼Ð¸Ð½ â†’ Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¸','err'); return; }
 
   crewPick.selected = new Set();
   crewPick.resp = null;
 
   openModal(`
-    <div class="modal__h"><h3>Новый выезд</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
+    <div class="modal__h"><h3>ÐÐ¾Ð²Ñ‹Ð¹ Ð²Ñ‹ÐµÐ·Ð´</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button></div>
     <div class="modal__b">
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Объект *</span>
+        <span class="f__l">ÐžÐ±ÑŠÐµÐºÑ‚ *</span>
         <select id="njObj" class="f__i">
-          ${objects.map(o=>`<option value="${o.id}" ${o.id===preObjId?'selected':''}>${esc(o.code)} — ${esc(o.name)}</option>`).join('')}
+          ${objects.map(o=>`<option value="${o.id}" ${o.id===preObjId?'selected':''}>${esc(o.code)} â€” ${esc(o.name)}</option>`).join('')}
         </select>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Группа монтажников <span id="crewCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Выбрано: 0</span></span>
+        <span class="f__l">Ð“Ñ€ÑƒÐ¿Ð¿Ð° Ð¼Ð¾Ð½Ñ‚Ð°Ð¶Ð½Ð¸ÐºÐ¾Ð² <span id="crewCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð¾: 0</span></span>
         <div id="crewPickHost"></div>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Название работ</span>
-        <input type="text" id="njTitle" class="f__i" placeholder="Монтаж, ТО, диагностика...">
+        <span class="f__l">ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ Ñ€Ð°Ð±Ð¾Ñ‚</span>
+        <input type="text" id="njTitle" class="f__i" placeholder="ÐœÐ¾Ð½Ñ‚Ð°Ð¶, Ð¢Ðž, Ð´Ð¸Ð°Ð³Ð½Ð¾ÑÑ‚Ð¸ÐºÐ°...">
       </div>
       <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Дата</span>
+        <label class="f"><span class="f__l">Ð”Ð°Ñ‚Ð°</span>
           <input type="date" id="njDate" class="f__i" value="${todayISO()}"></label>
-        <label class="f"><span class="f__l">Тип</span>
+        <label class="f"><span class="f__l">Ð¢Ð¸Ð¿</span>
           <select id="njType" class="f__i">
-            <option value="visit">Выезд</option>
-            <option value="service">Сервис</option>
+            <option value="visit">Ð’Ñ‹ÐµÐ·Ð´</option>
+            <option value="service">Ð¡ÐµÑ€Ð²Ð¸Ñ</option>
           </select></label>
-        <label class="f"><span class="f__l">Приоритет</span>
+        <label class="f"><span class="f__l">ÐŸÑ€Ð¸Ð¾Ñ€Ð¸Ñ‚ÐµÑ‚</span>
           <select id="njPriority" class="f__i">
-            <option value="normal">Обычный</option>
-            <option value="high">Высокий</option>
-            <option value="urgent">Срочно</option>
+            <option value="normal">ÐžÐ±Ñ‹Ñ‡Ð½Ñ‹Ð¹</option>
+            <option value="high">Ð’Ñ‹ÑÐ¾ÐºÐ¸Ð¹</option>
+            <option value="urgent">Ð¡Ñ€Ð¾Ñ‡Ð½Ð¾</option>
           </select></label>
       </div>
       ${isAtLeast(App.user,'manager') ? `<div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Доплата менеджеру, ₽</span>
+        <label class="f"><span class="f__l">Ð”Ð¾Ð¿Ð»Ð°Ñ‚Ð° Ð¼ÐµÐ½ÐµÐ´Ð¶ÐµÑ€Ñƒ, â‚½</span>
           <input type="number" id="njManagerBonus" class="f__i" min="0" step="100" value="0"></label>
-        <label class="f"><span class="f__l">Основание доплаты</span>
-          <input type="text" id="njManagerBonusNote" class="f__i" placeholder="Описание дополнительной работы"></label>
+        <label class="f"><span class="f__l">ÐžÑÐ½Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð´Ð¾Ð¿Ð»Ð°Ñ‚Ñ‹</span>
+          <input type="text" id="njManagerBonusNote" class="f__i" placeholder="ÐžÐ¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ð´Ð¾Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ð¹ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹"></label>
       </div>` : ''}
       <div class="f">
-        <span class="f__l">Заметки</span>
-        <textarea id="njNotes" class="f__i" placeholder="Пропуск, особенности, что взять с собой..."></textarea>
+        <span class="f__l">Ð—Ð°Ð¼ÐµÑ‚ÐºÐ¸</span>
+        <textarea id="njNotes" class="f__i" placeholder="ÐŸÑ€Ð¾Ð¿ÑƒÑÐº, Ð¾ÑÐ¾Ð±ÐµÐ½Ð½Ð¾ÑÑ‚Ð¸, Ñ‡Ñ‚Ð¾ Ð²Ð·ÑÑ‚ÑŒ Ñ ÑÐ¾Ð±Ð¾Ð¹..."></textarea>
       </div>
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="njSave">Создать</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">ÐžÑ‚Ð¼ÐµÐ½Ð°</button>
+      <button class="btn btn--p" id="njSave">Ð¡Ð¾Ð·Ð´Ð°Ñ‚ÑŒ</button>
     </div>
   `, true);
 
@@ -1589,15 +1589,15 @@ function modalNewJob(preObjId){
     const assignees = [...crewPick.selected];
     const responsibleId = crewPick.resp;
 
-    if(!objId || !validDate(date)){ toast('Заполните поля','err'); return; }
-    if(!assignees.length){ toast('Выберите хотя бы одного монтажника','err'); return; }
-    if(!responsibleId){ toast('Выберите ответственного','err'); return; }
-    if(!assignees.includes(responsibleId)){ toast('Ответственный должен быть в группе','err'); return; }
+    if(!objId || !validDate(date)){ toast('Ð—Ð°Ð¿Ð¾Ð»Ð½Ð¸Ñ‚Ðµ Ð¿Ð¾Ð»Ñ','err'); return; }
+    if(!assignees.length){ toast('Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ…Ð¾Ñ‚Ñ Ð±Ñ‹ Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð¼Ð¾Ð½Ñ‚Ð°Ð¶Ð½Ð¸ÐºÐ°','err'); return; }
+    if(!responsibleId){ toast('Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð³Ð¾','err'); return; }
+    if(!assignees.includes(responsibleId)){ toast('ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð±Ñ‹Ñ‚ÑŒ Ð² Ð³Ñ€ÑƒÐ¿Ð¿Ðµ','err'); return; }
 
     App.state.jobs.push({
       id: uid(), objectId: objId, date,
       assignees, responsibleId,
-      title: $('#njTitle').value.trim() || 'Работы на объекте',
+      title: $('#njTitle').value.trim() || 'Ð Ð°Ð±Ð¾Ñ‚Ñ‹ Ð½Ð° Ð¾Ð±ÑŠÐµÐºÑ‚Ðµ',
       type: $('#njType').value,
       priority: $('#njPriority').value,
       managerBonus: num($('#njManagerBonus')?.value),
@@ -1605,16 +1605,16 @@ function modalNewJob(preObjId){
       checkin: null, checkout: null, photos: [], expenses: [],
       notes: $('#njNotes').value.trim(),
       history: [
-        {when: todayISO(), what: `Выезд создан. Группа: ${assignees.map(id=>empName(id)).join(', ')}`}
+        {when: todayISO(), what: `Ð’Ñ‹ÐµÐ·Ð´ ÑÐ¾Ð·Ð´Ð°Ð½. Ð“Ñ€ÑƒÐ¿Ð¿Ð°: ${assignees.map(id=>empName(id)).join(', ')}`}
       ],
     });
     saveState(); closeModal(); renderJobs();
-    toast('Выезд создан');
+    toast('Ð’Ñ‹ÐµÐ·Ð´ ÑÐ¾Ð·Ð´Ð°Ð½');
   };
 }
 
 /* ============================================================
-   MODAL — VIEW VYEZD
+   MODAL â€” VIEW VYEZD
    ============================================================ */
 function modalViewJob(id){
   const j = jobById(id); if(!j) return;
@@ -1629,75 +1629,75 @@ function modalViewJob(id){
           <span style="font-weight:600;flex:1">${esc(x.category)}</span>
           <span class="muted" style="flex:1;font-size:12px">${esc(x.comment||'')}</span>
           <span class="b b--${st[1]}" style="flex-shrink:0">${st[0]}</span>
-          ${x.status==='pending' && meInGroup && daySt==='today' ? `<button class="btn btn--xs icobtn--d" data-del-exp="${j.id}|${x.id}">✕</button>` : ''}
+          ${x.status==='pending' && meInGroup && daySt==='today' ? `<button class="btn btn--xs icobtn--d" data-del-exp="${j.id}|${x.id}">âœ•</button>` : ''}
         </div>`;
       }).join('')
-    : '<div class="muted" style="padding:10px;font-size:12px">Расходов нет</div>';
+    : '<div class="muted" style="padding:10px;font-size:12px">Ð Ð°ÑÑ…Ð¾Ð´Ð¾Ð² Ð½ÐµÑ‚</div>';
 
   const photosHtml = (j.photos||[]).length
     ? `<div class="photos">${j.photos.map(p=>`<img src="${esc(p)}" onclick="document.getElementById('lightImg').src=this.src;document.getElementById('lightBox').classList.remove('hid')">`).join('')}</div>`
-    : '<div class="muted" style="font-size:12px;padding:6px 0">Фото нет</div>';
+    : '<div class="muted" style="font-size:12px;padding:6px 0">Ð¤Ð¾Ñ‚Ð¾ Ð½ÐµÑ‚</div>';
 
-  // Редактировать может: менеджер+ или участник в день выезда
+  // Ð ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð¼Ð¾Ð¶ÐµÑ‚: Ð¼ÐµÐ½ÐµÐ´Ð¶ÐµÑ€+ Ð¸Ð»Ð¸ ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸Ðº Ð² Ð´ÐµÐ½ÑŒ Ð²Ñ‹ÐµÐ·Ð´Ð°
   const canEdit = isAtLeast(App.user,'manager') || (meInGroup && daySt==='today');
-  // Добавлять расходы: в день выезда (участник) или менеджер всегда
+  // Ð”Ð¾Ð±Ð°Ð²Ð»ÑÑ‚ÑŒ Ñ€Ð°ÑÑ…Ð¾Ð´Ñ‹: Ð² Ð´ÐµÐ½ÑŒ Ð²Ñ‹ÐµÐ·Ð´Ð° (ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸Ðº) Ð¸Ð»Ð¸ Ð¼ÐµÐ½ÐµÐ´Ð¶ÐµÑ€ Ð²ÑÐµÐ³Ð´Ð°
   const canAddExp = (meInGroup && daySt==='today') || isAtLeast(App.user,'manager');
-  // Фото — тот же принцип
+  // Ð¤Ð¾Ñ‚Ð¾ â€” Ñ‚Ð¾Ñ‚ Ð¶Ðµ Ð¿Ñ€Ð¸Ð½Ñ†Ð¸Ð¿
   const canAddPhoto = canEdit;
 
   const crew = crewNames(j);
   const crewHtml = crew.length ? `<div class="crew" style="max-width:none">${crew.map(c=>
     `<span class="crew__m ${c.resp?'crew__m--resp':''}">${esc(c.name)}</span>`
-  ).join('')}</div>` : '<span class="muted">Не назначена</span>';
+  ).join('')}</div>` : '<span class="muted">ÐÐµ Ð½Ð°Ð·Ð½Ð°Ñ‡ÐµÐ½Ð°</span>';
 
-  // Кнопки в футере
-  let footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>`;
+  // ÐšÐ½Ð¾Ð¿ÐºÐ¸ Ð² Ñ„ÑƒÑ‚ÐµÑ€Ðµ
+  let footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</button>`;
   if(daySt==='today' && !j.checkin && meInGroup){
-    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-      <button class="btn btn--p" data-checkin="${j.id}">Чек-ин</button>`;
+    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</button>
+      <button class="btn btn--p" data-checkin="${j.id}">Ð§ÐµÐº-Ð¸Ð½</button>`;
   }
   if(daySt==='today' && j.checkin && !j.checkout && meInGroup){
-    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-      <button class="btn" data-checkout="${j.id}">Чек-аут</button>`;
+    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</button>
+      <button class="btn" data-checkout="${j.id}">Ð§ÐµÐº-Ð°ÑƒÑ‚</button>`;
   }
 
   openModal(`
     <div class="modal__h">
       <h3>${esc(j.title)}</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button>
+      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button>
     </div>
     <div class="modal__b">
       <div class="meta" style="margin-bottom:14px">
-        <div><div class="f__l">Объект</div><div><b>${esc(o?.name||'—')}</b></div></div>
-        <div><div class="f__l">Дата</div><div>${fmtDate(j.date)} ${vyezdDayBadge(daySt)}</div></div>
-        <div><div class="f__l">Тип</div><div>${JOB_TYPE[j.type]}</div></div>
+        <div><div class="f__l">ÐžÐ±ÑŠÐµÐºÑ‚</div><div><b>${esc(o?.name||'â€”')}</b></div></div>
+        <div><div class="f__l">Ð”Ð°Ñ‚Ð°</div><div>${fmtDate(j.date)} ${vyezdDayBadge(daySt)}</div></div>
+        <div><div class="f__l">Ð¢Ð¸Ð¿</div><div>${JOB_TYPE[j.type]}</div></div>
       </div>
 
-      <div class="f__l" style="margin-bottom:6px">Группа монтажников (${crew.length})</div>
+      <div class="f__l" style="margin-bottom:6px">Ð“Ñ€ÑƒÐ¿Ð¿Ð° Ð¼Ð¾Ð½Ñ‚Ð°Ð¶Ð½Ð¸ÐºÐ¾Ð² (${crew.length})</div>
       <div style="margin-bottom:14px">${crewHtml}</div>
 
       <div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">
-        📍 ${esc(o?.address||'—')}
-        ${o?.contact?`<div style="margin-top:4px">👤 ${esc(o.contact)} ${o.phone?'· '+esc(o.phone):''}</div>`:''}
+        ðŸ“ ${esc(o?.address||'â€”')}
+        ${o?.contact?`<div style="margin-top:4px">ðŸ‘¤ ${esc(o.contact)} ${o.phone?'Â· '+esc(o.phone):''}</div>`:''}
       </div>
 
-      ${o?.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">🔑 Доступ:</b> ${esc(o.access)}</div>` : ''}
-      ${j.checkin ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:12.5px">🕐 Чек-ин: ${esc(j.checkin.time)} ${j.checkin.byId?`<span class="muted">(${esc(empName(j.checkin.byId))})</span>`:''} <span class="muted">(${j.checkin.lat.toFixed(3)}, ${j.checkin.lng.toFixed(3)})</span></div>` : ''}
-      ${j.checkout ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:12.5px">✅ Чек-аут: ${esc(j.checkout.time)} ${j.checkout.byId?`<span class="muted">(${esc(empName(j.checkout.byId))})</span>`:''}</div>` : ''}
+      ${o?.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">ðŸ”‘ Ð”Ð¾ÑÑ‚ÑƒÐ¿:</b> ${esc(o.access)}</div>` : ''}
+      ${j.checkin ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:12.5px">ðŸ• Ð§ÐµÐº-Ð¸Ð½: ${esc(j.checkin.time)} ${j.checkin.byId?`<span class="muted">(${esc(empName(j.checkin.byId))})</span>`:''} <span class="muted">(${j.checkin.lat.toFixed(3)}, ${j.checkin.lng.toFixed(3)})</span></div>` : ''}
+      ${j.checkout ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:12.5px">âœ… Ð§ÐµÐº-Ð°ÑƒÑ‚: ${esc(j.checkout.time)} ${j.checkout.byId?`<span class="muted">(${esc(empName(j.checkout.byId))})</span>`:''}</div>` : ''}
       ${j.notes ? `<div style="padding:10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">${esc(j.notes)}</div>` : ''}
       ${j.managerBonus ? `<div style="padding:10px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:8px;margin-bottom:14px;font-size:13px">
-        <b>Доплата менеджеру:</b> ${money(j.managerBonus)}${j.managerBonusNote ? `<div class="muted" style="margin-top:4px">${esc(j.managerBonusNote)}</div>` : ''}
+        <b>Ð”Ð¾Ð¿Ð»Ð°Ñ‚Ð° Ð¼ÐµÐ½ÐµÐ´Ð¶ÐµÑ€Ñƒ:</b> ${money(j.managerBonus)}${j.managerBonusNote ? `<div class="muted" style="margin-top:4px">${esc(j.managerBonusNote)}</div>` : ''}
       </div>` : ''}
 
-      <div class="f__l" style="margin-bottom:6px">Расходы (${(j.expenses||[]).length})</div>
+      <div class="f__l" style="margin-bottom:6px">Ð Ð°ÑÑ…Ð¾Ð´Ñ‹ (${(j.expenses||[]).length})</div>
       ${expHtml}
-      ${canAddExp ? `<button type="button" class="btn btn--sm" style="margin-top:8px" data-add-exp="${j.id}">+ Добавить расход</button>` : ''}
+      ${canAddExp ? `<button type="button" class="btn btn--sm" style="margin-top:8px" data-add-exp="${j.id}">+ Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ñ€Ð°ÑÑ…Ð¾Ð´</button>` : ''}
 
-      <div class="f__l" style="margin:16px 0 6px">Фотоотчёт (${(j.photos||[]).length})</div>
+      <div class="f__l" style="margin:16px 0 6px">Ð¤Ð¾Ñ‚Ð¾Ð¾Ñ‚Ñ‡Ñ‘Ñ‚ (${(j.photos||[]).length})</div>
       ${photosHtml}
-      ${canAddPhoto ? `<label class="padd no-print">+ Фото<input type="file" id="jobPhotoInput" accept="image/*" multiple></label>` : ''}
+      ${canAddPhoto ? `<label class="padd no-print">+ Ð¤Ð¾Ñ‚Ð¾<input type="file" id="jobPhotoInput" accept="image/*" multiple></label>` : ''}
 
-      ${(j.history||[]).length ? `<div class="f__l" style="margin:16px 0 6px">История</div>
+      ${(j.history||[]).length ? `<div class="f__l" style="margin:16px 0 6px">Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ</div>
         <div class="timeline">
           ${j.history.slice().reverse().map(h=>`<div class="tl"><div class="tl__w">${esc(h.when)}</div><div class="tl__t">${esc(h.what)}</div></div>`).join('')}
         </div>` : ''}
@@ -1708,19 +1708,19 @@ function modalViewJob(id){
   $('#jobPhotoInput')?.addEventListener('change', async e=>{
     const files = [...e.target.files]; e.target.value = '';
     for(const f of files){
-      if(f.size > 15*1024*1024){ toast(`${f.name} > 15 МБ`,'err'); continue; }
+      if(f.size > 15*1024*1024){ toast(`${f.name} > 15 ÐœÐ‘`,'err'); continue; }
       try{
         const data = await compressImg(f);
         const jj = jobById(id);
         if(jj) { jj.photos = jj.photos||[]; jj.photos.push(data); }
-      }catch(err){ toast('Фото: '+(err.message||err),'err'); }
+      }catch(err){ toast('Ð¤Ð¾Ñ‚Ð¾: '+(err.message||err),'err'); }
     }
     saveState(); closeModal(); modalViewJob(id);
   });
 }
 
 /* ============================================================
-   MODAL — VIEW OBJECT
+   MODAL â€” VIEW OBJECT
    ============================================================ */
 function modalViewObject(id){
   const o = objById(id); if(!o) return;
@@ -1735,42 +1735,42 @@ function modalViewObject(id){
   openModal(`
     <div class="modal__h">
       <h3>${t.ico} ${esc(o.name)}</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button>
+      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button>
     </div>
     <div class="modal__b">
       <div class="meta" style="margin-bottom:14px">
-        <div><div class="f__l">Код</div><div style="font-family:monospace">${esc(o.code)}</div></div>
-        <div><div class="f__l">Тип</div><div>${t.label}</div></div>
-        <div><div class="f__l">Статус</div><div><span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'Актив':o.status==='paused'?'Пауза':'Закрыт'}</span></div></div>
-        <div><div class="f__l">Ответственный</div><div>${esc(empName(o.responsibleId))}</div></div>
+        <div><div class="f__l">ÐšÐ¾Ð´</div><div style="font-family:monospace">${esc(o.code)}</div></div>
+        <div><div class="f__l">Ð¢Ð¸Ð¿</div><div>${t.label}</div></div>
+        <div><div class="f__l">Ð¡Ñ‚Ð°Ñ‚ÑƒÑ</div><div><span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'ÐÐºÑ‚Ð¸Ð²':o.status==='paused'?'ÐŸÐ°ÑƒÐ·Ð°':'Ð—Ð°ÐºÑ€Ñ‹Ñ‚'}</span></div></div>
+        <div><div class="f__l">ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹</div><div>${esc(empName(o.responsibleId))}</div></div>
       </div>
-      <div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">📍 ${esc(o.address)}</div>
-      ${o.contact ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">👤 ${esc(o.contact)} ${o.phone?'· '+esc(o.phone):''}</div>` : ''}
-      ${o.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">🔑 Доступ:</b> ${esc(o.access)}</div>` : ''}
+      <div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">ðŸ“ ${esc(o.address)}</div>
+      ${o.contact ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">ðŸ‘¤ ${esc(o.contact)} ${o.phone?'Â· '+esc(o.phone):''}</div>` : ''}
+      ${o.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">ðŸ”‘ Ð”Ð¾ÑÑ‚ÑƒÐ¿:</b> ${esc(o.access)}</div>` : ''}
       ${o.notes ? `<div style="padding:10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">${esc(o.notes)}</div>` : ''}
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
         <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Выездов всего</div>
+          <div class="f__l">Ð’Ñ‹ÐµÐ·Ð´Ð¾Ð² Ð²ÑÐµÐ³Ð¾</div>
           <div style="font-size:18px;font-weight:800">${jobs.length}</div>
         </div>
         <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Сегодня</div>
+          <div class="f__l">Ð¡ÐµÐ³Ð¾Ð´Ð½Ñ</div>
           <div style="font-size:18px;font-weight:800;color:var(--accent)">${todayJobs}</div>
         </div>
         <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Расходы выездов</div>
-          <div style="font-size:14px;font-weight:800;color:var(--danger)">${jobs.reduce((sum,j)=>sum+(j.expenses||[]).length,0)} шт.</div>
+          <div class="f__l">Ð Ð°ÑÑ…Ð¾Ð´Ñ‹ Ð²Ñ‹ÐµÐ·Ð´Ð¾Ð²</div>
+          <div style="font-size:14px;font-weight:800;color:var(--danger)">${jobs.reduce((sum,j)=>sum+(j.expenses||[]).length,0)} ÑˆÑ‚.</div>
         </div>
         <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Смен цеха / стоимость</div>
+          <div class="f__l">Ð¡Ð¼ÐµÐ½ Ñ†ÐµÑ…Ð° / ÑÑ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ</div>
           <div style="font-size:14px;font-weight:800;color:var(--danger)">${shifts.length} / ${money(shopCost)}</div>
         </div>
       </div>
 
-      ${jobs.length ? `<div class="f__l" style="margin-bottom:6px">Выезды на объекте</div>
+      ${jobs.length ? `<div class="f__l" style="margin-bottom:6px">Ð’Ñ‹ÐµÐ·Ð´Ñ‹ Ð½Ð° Ð¾Ð±ÑŠÐµÐºÑ‚Ðµ</div>
         <div class="tbl-wrap" style="margin-bottom:14px"><table class="tbl">
-          <thead><tr><th>Дата</th><th>Выезд</th><th>Группа</th></tr></thead>
+          <thead><tr><th>Ð”Ð°Ñ‚Ð°</th><th>Ð’Ñ‹ÐµÐ·Ð´</th><th>Ð“Ñ€ÑƒÐ¿Ð¿Ð°</th></tr></thead>
           <tbody>${jobs.slice().reverse().slice(0,8).map(j=>{
             const daySt = vyezdDayStatus(j);
             return `<tr>
@@ -1781,9 +1781,9 @@ function modalViewObject(id){
           }).join('')}</tbody>
         </table></div>` : ''}
 
-      ${shifts.length ? `<div class="f__l" style="margin-bottom:6px">Смены цеха</div>
+      ${shifts.length ? `<div class="f__l" style="margin-bottom:6px">Ð¡Ð¼ÐµÐ½Ñ‹ Ñ†ÐµÑ…Ð°</div>
         <div class="tbl-wrap" style="margin-bottom:14px"><table class="tbl">
-          <thead><tr><th>Дата</th><th>Группа</th><th>Стоимость</th></tr></thead>
+          <thead><tr><th>Ð”Ð°Ñ‚Ð°</th><th>Ð“Ñ€ÑƒÐ¿Ð¿Ð°</th><th>Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ</th></tr></thead>
           <tbody>${shifts.slice().reverse().slice(0,8).map(sh=>{
             const cnt = sh.employeeIds?.length||0;
             const cost = cnt * App.state.rates.shopShift;
@@ -1796,44 +1796,44 @@ function modalViewObject(id){
         </table></div>` : ''}
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</button>
       ${isAtLeast(App.user,'manager') ? `
-        <button class="btn icobtn--d" data-del-obj="${o.id}">Удалить</button>
-        <button class="btn btn--p" data-new-job-obj="${o.id}">+ Выезд</button>
+        <button class="btn icobtn--d" data-del-obj="${o.id}">Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ</button>
+        <button class="btn btn--p" data-new-job-obj="${o.id}">+ Ð’Ñ‹ÐµÐ·Ð´</button>
       ` : ''}
     </div>
   `, true);
 }
 
 /* ============================================================
-   MODAL — ADD EXPENSE
+   MODAL â€” ADD EXPENSE
    ============================================================ */
 function modalAddExpense(jobId){
   const j = jobById(jobId); if(!j) return;
   const me = myEmployee();
   openModal(`
-    <div class="modal__h"><h3>Расход по выезду</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
+    <div class="modal__h"><h3>Ð Ð°ÑÑ…Ð¾Ð´ Ð¿Ð¾ Ð²Ñ‹ÐµÐ·Ð´Ñƒ</h3>
+      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button></div>
     <div class="modal__b">
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Статья *</span>
+        <span class="f__l">Ð¡Ñ‚Ð°Ñ‚ÑŒÑ *</span>
         <select id="expCat" class="f__i">
           ${EXP_CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('')}
         </select>
       </div>
       <div class="f">
-        <span class="f__l">Описание для утверждения *</span>
-        <textarea id="expNote" class="f__i" placeholder="Что было сделано или приобретено, для какого объекта и зачем"></textarea>
+        <span class="f__l">ÐžÐ¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ð´Ð»Ñ ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ñ *</span>
+        <textarea id="expNote" class="f__i" placeholder="Ð§Ñ‚Ð¾ Ð±Ñ‹Ð»Ð¾ ÑÐ´ÐµÐ»Ð°Ð½Ð¾ Ð¸Ð»Ð¸ Ð¿Ñ€Ð¸Ð¾Ð±Ñ€ÐµÑ‚ÐµÐ½Ð¾, Ð´Ð»Ñ ÐºÐ°ÐºÐ¾Ð³Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° Ð¸ Ð·Ð°Ñ‡ÐµÐ¼"></textarea>
       </div>
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="expSave">Добавить</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">ÐžÑ‚Ð¼ÐµÐ½Ð°</button>
+      <button class="btn btn--p" id="expSave">Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ</button>
     </div>
   `);
   $('#expSave').onclick = () => {
     const comment = $('#expNote').value.trim();
-    if(!comment){ toast('Добавьте описание','err'); return; }
+    if(!comment){ toast('Ð”Ð¾Ð±Ð°Ð²ÑŒÑ‚Ðµ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ','err'); return; }
     const jj = jobById(jobId);
     jj.expenses = jj.expenses||[];
     jj.expenses.push({
@@ -1846,33 +1846,33 @@ function modalAddExpense(jobId){
       byId: me?.id || null,
     });
     saveState(); closeModal(); modalViewJob(jobId);
-    toast('Расход добавлен');
+    toast('Ð Ð°ÑÑ…Ð¾Ð´ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½');
   };
 }
 
 /* ============================================================
-   MODAL — NEW SHIFT
+   MODAL â€” NEW SHIFT
    ============================================================ */
 function modalNewShift(){
   const objects = App.state.objects.filter(o=>o.status==='active');
   const emps = empByRole('workshop');
-  if(!objects.length){ toast('Сначала создайте объект','err'); return; }
-  if(!emps.length){ toast('Сначала добавьте сотрудников цеха','err'); return; }
+  if(!objects.length){ toast('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° ÑÐ¾Ð·Ð´Ð°Ð¹Ñ‚Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚','err'); return; }
+  if(!emps.length){ toast('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° Ð´Ð¾Ð±Ð°Ð²ÑŒÑ‚Ðµ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð² Ñ†ÐµÑ…Ð°','err'); return; }
 
   const selected = new Set();
 
   openModal(`
-    <div class="modal__h"><h3>Новая смена цеха</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
+    <div class="modal__h"><h3>ÐÐ¾Ð²Ð°Ñ ÑÐ¼ÐµÐ½Ð° Ñ†ÐµÑ…Ð°</h3>
+      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button></div>
     <div class="modal__b">
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Объект *</span>
+        <span class="f__l">ÐžÐ±ÑŠÐµÐºÑ‚ *</span>
         <select id="nsObj" class="f__i">
-          ${objects.map(o=>`<option value="${o.id}">${esc(o.code)} — ${esc(o.name)}</option>`).join('')}
+          ${objects.map(o=>`<option value="${o.id}">${esc(o.code)} â€” ${esc(o.name)}</option>`).join('')}
         </select>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Группа <span id="nsCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Выбрано: 0</span></span>
+        <span class="f__l">Ð“Ñ€ÑƒÐ¿Ð¿Ð° <span id="nsCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð¾: 0</span></span>
         <div class="crew-pick" id="nsCrew">
           ${emps.map(e=>`
             <div class="crew-pick__row" data-ns-row="${e.id}">
@@ -1881,26 +1881,26 @@ function modalNewShift(){
             </div>
           `).join('')}
         </div>
-        <div class="crew-hint">Отметьте одного или нескольких сотрудников цеха.</div>
+        <div class="crew-hint">ÐžÑ‚Ð¼ÐµÑ‚ÑŒÑ‚Ðµ Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð¸Ð»Ð¸ Ð½ÐµÑÐºÐ¾Ð»ÑŒÐºÐ¸Ñ… ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð² Ñ†ÐµÑ…Ð°.</div>
       </div>
       <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Дата</span>
+        <label class="f"><span class="f__l">Ð”Ð°Ñ‚Ð°</span>
           <input type="date" id="nsDate" class="f__i" value="${todayISO()}"></label>
       </div>
       <div class="f">
-        <span class="f__l">Заметки</span>
-        <textarea id="nsNotes" class="f__i" placeholder="Что делали"></textarea>
+        <span class="f__l">Ð—Ð°Ð¼ÐµÑ‚ÐºÐ¸</span>
+        <textarea id="nsNotes" class="f__i" placeholder="Ð§Ñ‚Ð¾ Ð´ÐµÐ»Ð°Ð»Ð¸"></textarea>
       </div>
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="nsSave">Создать</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">ÐžÑ‚Ð¼ÐµÐ½Ð°</button>
+      <button class="btn btn--p" id="nsSave">Ð¡Ð¾Ð·Ð´Ð°Ñ‚ÑŒ</button>
     </div>
   `);
 
   const updateCount = ()=>{
     const c = document.getElementById('nsCount');
-    if(c) c.textContent = `Выбрано: ${selected.size}`;
+    if(c) c.textContent = `Ð’Ñ‹Ð±Ñ€Ð°Ð½Ð¾: ${selected.size}`;
   };
 
   const crewEl = document.getElementById('nsCrew');
@@ -1926,8 +1926,8 @@ function modalNewShift(){
     const date = $('#nsDate').value;
     const employeeIds = [...selected];
 
-    if(!objectId || !validDate(date)){ toast('Заполните поля','err'); return; }
-    if(!employeeIds.length){ toast('Выберите хотя бы одного сотрудника','err'); return; }
+    if(!objectId || !validDate(date)){ toast('Ð—Ð°Ð¿Ð¾Ð»Ð½Ð¸Ñ‚Ðµ Ð¿Ð¾Ð»Ñ','err'); return; }
+    if(!employeeIds.length){ toast('Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ…Ð¾Ñ‚Ñ Ð±Ñ‹ Ð¾Ð´Ð½Ð¾Ð³Ð¾ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ°','err'); return; }
 
     App.state.shifts.push({
       id: uid(),
@@ -1937,66 +1937,66 @@ function modalNewShift(){
       notes: $('#nsNotes').value.trim(),
     });
     saveState(); closeModal(); renderWorkshop();
-    toast(`Смена создана (${employeeIds.length} чел.)`);
+    toast(`Ð¡Ð¼ÐµÐ½Ð° ÑÐ¾Ð·Ð´Ð°Ð½Ð° (${employeeIds.length} Ñ‡ÐµÐ».)`);
   };
 }
 
 /* ============================================================
-   MODAL — NEW OBJECT
+   MODAL â€” NEW OBJECT
    ============================================================ */
 function modalNewObject(){
   const managers = App.state.employees.filter(e=>['manager','admin'].includes(e.role));
   openModal(`
-    <div class="modal__h"><h3>Новый объект</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
+    <div class="modal__h"><h3>ÐÐ¾Ð²Ñ‹Ð¹ Ð¾Ð±ÑŠÐµÐºÑ‚</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button></div>
     <div class="modal__b">
       <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Код</span>
+        <label class="f"><span class="f__l">ÐšÐ¾Ð´</span>
           <input type="text" id="noCode" class="f__i" placeholder="OBJ-001"></label>
-        <label class="f"><span class="f__l">Тип</span>
+        <label class="f"><span class="f__l">Ð¢Ð¸Ð¿</span>
           <select id="noType" class="f__i">
             ${Object.entries(OBJ_TYPES).map(([k,v])=>`<option value="${k}">${v.ico} ${v.label}</option>`).join('')}
           </select></label>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Название *</span>
-        <input type="text" id="noName" class="f__i" placeholder="БЦ «Ромашка»" required>
+        <span class="f__l">ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ *</span>
+        <input type="text" id="noName" class="f__i" placeholder="Ð‘Ð¦ Â«Ð Ð¾Ð¼Ð°ÑˆÐºÐ°Â»" required>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Адрес *</span>
-        <input type="text" id="noAddr" class="f__i" placeholder="Москва, ул. Ленина, 5">
+        <span class="f__l">ÐÐ´Ñ€ÐµÑ *</span>
+        <input type="text" id="noAddr" class="f__i" placeholder="ÐœÐ¾ÑÐºÐ²Ð°, ÑƒÐ». Ð›ÐµÐ½Ð¸Ð½Ð°, 5">
       </div>
       <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Контактное лицо</span>
+        <label class="f"><span class="f__l">ÐšÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð½Ð¾Ðµ Ð»Ð¸Ñ†Ð¾</span>
           <input type="text" id="noContact" class="f__i"></label>
-        <label class="f"><span class="f__l">Телефон</span>
+        <label class="f"><span class="f__l">Ð¢ÐµÐ»ÐµÑ„Ð¾Ð½</span>
           <input type="text" id="noPhone" class="f__i"></label>
       </div>
       <div class="f" style="margin-bottom:12px">
-        <span class="f__l">🔑 Доступ</span>
-        <textarea id="noAccess" class="f__i" placeholder="Пропуск, код домофона, охрана..."></textarea>
+        <span class="f__l">ðŸ”‘ Ð”Ð¾ÑÑ‚ÑƒÐ¿</span>
+        <textarea id="noAccess" class="f__i" placeholder="ÐŸÑ€Ð¾Ð¿ÑƒÑÐº, ÐºÐ¾Ð´ Ð´Ð¾Ð¼Ð¾Ñ„Ð¾Ð½Ð°, Ð¾Ñ…Ñ€Ð°Ð½Ð°..."></textarea>
       </div>
       <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Ответственный</span>
+        <label class="f"><span class="f__l">ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹</span>
           <select id="noResp" class="f__i">
-            <option value="">— не выбран —</option>
+            <option value="">â€” Ð½Ðµ Ð²Ñ‹Ð±Ñ€Ð°Ð½ â€”</option>
             ${managers.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
           </select></label>
       </div>
       <div class="f">
-        <span class="f__l">Заметки</span>
+        <span class="f__l">Ð—Ð°Ð¼ÐµÑ‚ÐºÐ¸</span>
         <textarea id="noNotes" class="f__i"></textarea>
       </div>
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="noSave">Создать</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">ÐžÑ‚Ð¼ÐµÐ½Ð°</button>
+      <button class="btn btn--p" id="noSave">Ð¡Ð¾Ð·Ð´Ð°Ñ‚ÑŒ</button>
     </div>
   `);
 
   $('#noSave').onclick = () => {
     const name = $('#noName').value.trim();
     const address = $('#noAddr').value.trim();
-    if(!name || !address){ toast('Заполните название и адрес','err'); return; }
+    if(!name || !address){ toast('Ð—Ð°Ð¿Ð¾Ð»Ð½Ð¸Ñ‚Ðµ Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¸ Ð°Ð´Ñ€ÐµÑ','err'); return; }
     App.state.objects.push({
       id: uid(), code: $('#noCode').value.trim() || 'OBJ-'+Math.floor(Math.random()*900+100),
       name, type: $('#noType').value, status: 'active', address,
@@ -2004,55 +2004,55 @@ function modalNewObject(){
       access: $('#noAccess').value.trim(),
       responsibleId: $('#noResp').value || null,
       notes: $('#noNotes').value.trim(), photos: [],
-      history: [{when: todayISO(), what:'Объект добавлен'}],
+      history: [{when: todayISO(), what:'ÐžÐ±ÑŠÐµÐºÑ‚ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½'}],
     });
     saveState(); closeModal(); renderObjects();
-    toast('Объект создан');
+    toast('ÐžÐ±ÑŠÐµÐºÑ‚ ÑÐ¾Ð·Ð´Ð°Ð½');
   };
 }
 
 /* ============================================================
-   MODAL — MY STATS
+   MODAL â€” MY STATS
    ============================================================ */
 function showMyStats(){
   const me = myEmployee();
-  if(!me){ toast('Ваш профиль не найден в списке сотрудников','err'); return; }
+  if(!me){ toast('Ð’Ð°Ñˆ Ð¿Ñ€Ð¾Ñ„Ð¸Ð»ÑŒ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½ Ð² ÑÐ¿Ð¸ÑÐºÐµ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð²','err'); return; }
   const {start, end} = App.period;
   const {start:s, end:e} = normalizePeriod(start, end);
   const payroll = calcPayroll(s, e);
   const row = payroll.find(r=>r.emp.id===me.id);
 
   openModal(`
-    <div class="modal__h"><h3>Мои показатели</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
+    <div class="modal__h"><h3>ÐœÐ¾Ð¸ Ð¿Ð¾ÐºÐ°Ð·Ð°Ñ‚ÐµÐ»Ð¸</h3>
+      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">âœ•</button></div>
     <div class="modal__b">
       <div style="margin-bottom:12px">
-        <div class="f__l">Сотрудник</div>
+        <div class="f__l">Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº</div>
         <div style="font-size:16px;font-weight:700">${esc(me.name)}</div>
         <div class="muted" style="font-size:12px">${ROLES[me.role]?.label}</div>
       </div>
       <div style="margin-bottom:12px">
-        <div class="f__l">Период</div>
-        <div>${fmtDate(s)} — ${fmtDate(e)}</div>
+        <div class="f__l">ÐŸÐµÑ€Ð¸Ð¾Ð´</div>
+        <div>${fmtDate(s)} â€” ${fmtDate(e)}</div>
       </div>
       ${row ? `
         ${row.emp.role==='field' ? `
           <div style="margin-bottom:12px">
-            <div class="f__l">Выезды (участник): ${row.visitDays}</div>
-            <div class="f__l">Сервис: ${row.serviceDays}</div>
-            <div class="f__l">Ответственный: ${row.respVisitDays}</div>
+            <div class="f__l">Ð’Ñ‹ÐµÐ·Ð´Ñ‹ (ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸Ðº): ${row.visitDays}</div>
+            <div class="f__l">Ð¡ÐµÑ€Ð²Ð¸Ñ: ${row.serviceDays}</div>
+            <div class="f__l">ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹: ${row.respVisitDays}</div>
           </div>` : ''}
         ${row.emp.role==='workshop' ? `
           <div style="margin-bottom:12px">
-            <div class="f__l">Смен: ${row.shiftsCount}</div>
+            <div class="f__l">Ð¡Ð¼ÐµÐ½: ${row.shiftsCount}</div>
           </div>` : ''}
         <div style="padding:12px;background:var(--soft);border-radius:9px;font-size:16px;font-weight:800;color:var(--accent)">
-          К оплате: ${money(row.total)}
+          Ðš Ð¾Ð¿Ð»Ð°Ñ‚Ðµ: ${money(row.total)}
         </div>
-      ` : '<div class="empty">Рабочих дней за период нет</div>'}
+      ` : '<div class="empty">Ð Ð°Ð±Ð¾Ñ‡Ð¸Ñ… Ð´Ð½ÐµÐ¹ Ð·Ð° Ð¿ÐµÑ€Ð¸Ð¾Ð´ Ð½ÐµÑ‚</div>'}
     </div>
     <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
+      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</button>
     </div>
   `);
 }
@@ -2079,9 +2079,9 @@ document.addEventListener('click', async e=>{
 
   const dj = t.closest('[data-del-job]');
   if(dj){
-    if(!confirm('Удалить выезд?')) return;
+    if(!confirm('Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ð²Ñ‹ÐµÐ·Ð´?')) return;
     App.state.jobs = App.state.jobs.filter(j=>j.id!==dj.dataset.delJob);
-    saveState(); renderJobs(); closeModal(); toast('Удалено'); return;
+    saveState(); renderJobs(); closeModal(); toast('Ð£Ð´Ð°Ð»ÐµÐ½Ð¾'); return;
   }
 
   const aj = t.closest('[data-archive-job]');
@@ -2091,16 +2091,16 @@ document.addEventListener('click', async e=>{
     job.archived = !job.archived;
     job.archivedAt = job.archived ? todayISO() : null;
     job.history = job.history||[];
-    job.history.push({when:todayISO(), what: job.archived ? 'Выезд перенесён в архив' : 'Выезд возвращён из архива'});
-    saveState(); renderJobs(); toast(job.archived ? 'Выезд в архиве' : 'Выезд восстановлен');
+    job.history.push({when:todayISO(), what: job.archived ? 'Ð’Ñ‹ÐµÐ·Ð´ Ð¿ÐµÑ€ÐµÐ½ÐµÑÑ‘Ð½ Ð² Ð°Ñ€Ñ…Ð¸Ð²' : 'Ð’Ñ‹ÐµÐ·Ð´ Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ñ‘Ð½ Ð¸Ð· Ð°Ñ€Ñ…Ð¸Ð²Ð°'});
+    saveState(); renderJobs(); toast(job.archived ? 'Ð’Ñ‹ÐµÐ·Ð´ Ð² Ð°Ñ€Ñ…Ð¸Ð²Ðµ' : 'Ð’Ñ‹ÐµÐ·Ð´ Ð²Ð¾ÑÑÑ‚Ð°Ð½Ð¾Ð²Ð»ÐµÐ½');
     return;
   }
 
   const ds = t.closest('[data-del-shift]');
   if(ds){
-    if(!confirm('Удалить смену?')) return;
+    if(!confirm('Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ ÑÐ¼ÐµÐ½Ñƒ?')) return;
     App.state.shifts = App.state.shifts.filter(s=>s.id!==ds.dataset.delShift);
-    saveState(); renderWorkshop(); toast('Удалено'); return;
+    saveState(); renderWorkshop(); toast('Ð£Ð´Ð°Ð»ÐµÐ½Ð¾'); return;
   }
 
   const cs = t.closest('[data-complete-shift]');
@@ -2112,7 +2112,7 @@ document.addEventListener('click', async e=>{
     shift.completedAt = shift.completed ? todayISO() : null;
     shift.completedById = shift.completed ? (employee?.id || null) : null;
     saveState(); renderWorkshop();
-    toast(shift.completed ? 'Объект отмечен выполненным' : 'Объект возвращён в работу');
+    toast(shift.completed ? 'ÐžÐ±ÑŠÐµÐºÑ‚ Ð¾Ñ‚Ð¼ÐµÑ‡ÐµÐ½ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ñ‹Ð¼' : 'ÐžÐ±ÑŠÐµÐºÑ‚ Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ñ‘Ð½ Ð² Ñ€Ð°Ð±Ð¾Ñ‚Ñƒ');
     return;
   }
 
@@ -2121,23 +2121,23 @@ document.addEventListener('click', async e=>{
   if(t.id==='btnNewObj'){ modalNewObject(); return; }
   if(t.id==='btnAttendanceStart'){
     const employee = myEmployee();
-    if(!employee){ toast('Для аккаунта не найден сотрудник','err'); return; }
+    if(!employee){ toast('Ð”Ð»Ñ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð° Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº','err'); return; }
     if(App.state.attendance.some(item=>item.employeeId===employee.id && !item.endedAt)){
-      toast('Сначала завершите текущую отметку','err'); return;
+      toast('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° Ð·Ð°Ð²ÐµÑ€ÑˆÐ¸Ñ‚Ðµ Ñ‚ÐµÐºÑƒÑ‰ÑƒÑŽ Ð¾Ñ‚Ð¼ÐµÑ‚ÐºÑƒ','err'); return;
     }
     App.state.attendance.push({
       id: uid(), employeeId: employee.id, mode: $('#attendanceMode').value,
       objectId: $('#attendanceObject').value || null, date: todayISO(),
       startedAt: attendanceNow(), endedAt: null,
     });
-    saveState(); renderAttendance(); toast('Отметка сохранена'); return;
+    saveState(); renderAttendance(); toast('ÐžÑ‚Ð¼ÐµÑ‚ÐºÐ° ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð°'); return;
   }
   if(t.id==='btnAttendanceStop'){
     const employee = myEmployee();
     const current = App.state.attendance.find(item=>item.employeeId===employee?.id && !item.endedAt);
-    if(!current){ toast('Активной отметки нет','err'); return; }
+    if(!current){ toast('ÐÐºÑ‚Ð¸Ð²Ð½Ð¾Ð¹ Ð¾Ñ‚Ð¼ÐµÑ‚ÐºÐ¸ Ð½ÐµÑ‚','err'); return; }
     current.endedAt = attendanceNow();
-    saveState(); renderAttendance(); toast('Отметка завершена'); return;
+    saveState(); renderAttendance(); toast('ÐžÑ‚Ð¼ÐµÑ‚ÐºÐ° Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð°'); return;
   }
 
   const vo = t.closest('[data-view-obj]');
@@ -2145,9 +2145,9 @@ document.addEventListener('click', async e=>{
 
   const dobj = t.closest('[data-del-obj]');
   if(dobj){
-    if(!confirm('Удалить объект? Связанные выезды и смены останутся без объекта.')) return;
+    if(!confirm('Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ Ð¾Ð±ÑŠÐµÐºÑ‚? Ð¡Ð²ÑÐ·Ð°Ð½Ð½Ñ‹Ðµ Ð²Ñ‹ÐµÐ·Ð´Ñ‹ Ð¸ ÑÐ¼ÐµÐ½Ñ‹ Ð¾ÑÑ‚Ð°Ð½ÑƒÑ‚ÑÑ Ð±ÐµÐ· Ð¾Ð±ÑŠÐµÐºÑ‚Ð°.')) return;
     App.state.objects = App.state.objects.filter(o=>o.id!==dobj.dataset.delObj);
-    saveState(); closeModal(); renderObjects(); toast('Удалено'); return;
+    saveState(); closeModal(); renderObjects(); toast('Ð£Ð´Ð°Ð»ÐµÐ½Ð¾'); return;
   }
 
   const njo = t.closest('[data-new-job-obj]');
@@ -2165,7 +2165,7 @@ document.addEventListener('click', async e=>{
   if(de){
     const [jobId, expId] = de.dataset.delExp.split('|');
     const jj = jobById(jobId);
-    if(jj){ jj.expenses = (jj.expenses||[]).filter(x=>x.id!==expId); saveState(); modalViewJob(jobId); toast('Удалено'); }
+    if(jj){ jj.expenses = (jj.expenses||[]).filter(x=>x.id!==expId); saveState(); modalViewJob(jobId); toast('Ð£Ð´Ð°Ð»ÐµÐ½Ð¾'); }
     return;
   }
 
@@ -2174,7 +2174,7 @@ document.addEventListener('click', async e=>{
     const [jobId, expId] = ap.dataset.approve.split('|');
     const jj = jobById(jobId);
     const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='approved'; saveState(); renderFinance(); toast('Утверждено'); }
+    if(ex){ ex.status='approved'; saveState(); renderFinance(); toast('Ð£Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¾'); }
     return;
   }
   const rj = t.closest('[data-reject]');
@@ -2182,7 +2182,7 @@ document.addEventListener('click', async e=>{
     const [jobId, expId] = rj.dataset.reject.split('|');
     const jj = jobById(jobId);
     const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='rejected'; saveState(); renderFinance(); toast('Отклонено','err'); }
+    if(ex){ ex.status='rejected'; saveState(); renderFinance(); toast('ÐžÑ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¾','err'); }
     return;
   }
   const pe = t.closest('[data-pay-exp]');
@@ -2190,7 +2190,7 @@ document.addEventListener('click', async e=>{
     const [jobId, expId] = pe.dataset.payExp.split('|');
     const jj = jobById(jobId);
     const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='paid'; saveState(); renderFinance(); toast('Оплачено'); }
+    if(ex){ ex.status='paid'; saveState(); renderFinance(); toast('ÐžÐ¿Ð»Ð°Ñ‡ÐµÐ½Ð¾'); }
     return;
   }
 
@@ -2201,31 +2201,31 @@ document.addEventListener('click', async e=>{
     r.service = num($('#rateService').value);
     r.shopShift = num($('#rateShopShift').value);
     r.manager = num($('#rateManager').value);
-    saveState(); renderFinance(); toast('Ставки сохранены'); return;
+    saveState(); renderFinance(); toast('Ð¡Ñ‚Ð°Ð²ÐºÐ¸ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ñ‹'); return;
   }
   if(t.id==='btnResetRates'){
-    if(!confirm('Сбросить ставки к стандартным?')) return;
+    if(!confirm('Ð¡Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ ÑÑ‚Ð°Ð²ÐºÐ¸ Ðº ÑÑ‚Ð°Ð½Ð´Ð°Ñ€Ñ‚Ð½Ñ‹Ð¼?')) return;
     App.state.rates = { ...DEFAULT_RATES };
-    saveState(); renderAdmin(); renderFinance(); toast('Ставки сброшены'); return;
+    saveState(); renderAdmin(); renderFinance(); toast('Ð¡Ñ‚Ð°Ð²ÐºÐ¸ ÑÐ±Ñ€Ð¾ÑˆÐµÐ½Ñ‹'); return;
   }
 
   if(t.id==='empNewAdd'){
     const name = $('#empNewName').value.trim();
     const role = $('#empNewRole').value;
-    if(!name){ toast('Введите ФИО','err'); return; }
-    if(App.state.employees.some(e=>normName(e.name)===normName(name))){ toast('Уже существует','err'); return; }
+    if(!name){ toast('Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¤Ð˜Ðž','err'); return; }
+    if(App.state.employees.some(e=>normName(e.name)===normName(name))){ toast('Ð£Ð¶Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚','err'); return; }
     App.state.employees.push({
       id: uid(), name, role, type: role, workerStatus:'worker', phone:'', email:'', salary:0,
       hireDate: todayISO(), active: true,
     });
-    saveState(); $('#empNewName').value=''; renderAdmin(); toast('Добавлено'); return;
+    saveState(); $('#empNewName').value=''; renderAdmin(); toast('Ð”Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¾'); return;
   }
 
   const deemp = t.closest('[data-del-emp]');
   if(deemp){
-    if(!confirm('Удалить сотрудника?')) return;
+    if(!confirm('Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ°?')) return;
     App.state.employees = App.state.employees.filter(e=>e.id!==deemp.dataset.delEmp);
-    saveState(); renderAdmin(); toast('Удалено'); return;
+    saveState(); renderAdmin(); toast('Ð£Ð´Ð°Ð»ÐµÐ½Ð¾'); return;
   }
 
   const bu = t.closest('[data-block-user]');
@@ -2233,11 +2233,11 @@ document.addEventListener('click', async e=>{
     const users = loadUsers().map(user=>({...user}));
     const u = users.find(x=>x.phone===bu.dataset.blockUser);
     if(!u || u.phone===App.user.phone) return;
-    if(!confirm(`${u.status==='blocked'?'Разблокировать':'Заблокировать'} ${u.name}?`)) return;
+    if(!confirm(`${u.status==='blocked'?'Ð Ð°Ð·Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ':'Ð—Ð°Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ'} ${u.name}?`)) return;
     u.status = u.status==='blocked' ? 'active' : 'blocked';
     try {
       await saveUsers(users);
-      renderAdmin(); toast(u.status==='blocked'?'Заблокирован':'Разблокирован');
+      renderAdmin(); toast(u.status==='blocked'?'Ð—Ð°Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ð½':'Ð Ð°Ð·Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ð½');
     } catch(error) {
       renderAdmin(); toast(error.message,'err');
     }
@@ -2249,15 +2249,15 @@ document.addEventListener('click', async e=>{
     const users = loadUsers();
     const u = users.find(x=>x.phone===rp.dataset.resetPin);
     if(!u) return;
-    const newPassword = prompt(`Новый пароль для «${u.name}»:`);
-    if(!newPassword || newPassword.length<4){ toast('Слишком короткий пароль','err'); return; }
+    const newPassword = prompt(`ÐÐ¾Ð²Ñ‹Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð´Ð»Ñ Â«${u.name}Â»:`);
+    if(!newPassword || newPassword.length<4){ toast('Ð¡Ð»Ð¸ÑˆÐºÐ¾Ð¼ ÐºÐ¾Ñ€Ð¾Ñ‚ÐºÐ¸Ð¹ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ','err'); return; }
     try{
       await api(`/users/${encodeURIComponent(u.id)}/reset-pin`, {
         method:'POST',
         body:JSON.stringify({password:newPassword}),
       });
-      toast('PIN обновлён');
-    }catch(err){ toast('Ошибка: '+(err.message||err),'err'); }
+      toast('PIN Ð¾Ð±Ð½Ð¾Ð²Ð»Ñ‘Ð½');
+    }catch(err){ toast('ÐžÑˆÐ¸Ð±ÐºÐ°: '+(err.message||err),'err'); }
     return;
   }
 
@@ -2271,7 +2271,7 @@ document.addEventListener('click', async e=>{
 async function doCheckIn(jobId){
   const j = jobById(jobId); if(!j) return;
   if(vyezdDayStatus(j) !== 'today'){
-    toast('Чек-ин возможен только в день выезда','err');
+    toast('Ð§ÐµÐº-Ð¸Ð½ Ð²Ð¾Ð·Ð¼Ð¾Ð¶ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð² Ð´ÐµÐ½ÑŒ Ð²Ñ‹ÐµÐ·Ð´Ð°','err');
     return;
   }
   const me = myEmployee();
@@ -2282,14 +2282,14 @@ async function doCheckIn(jobId){
       byId: me?.id || null,
     };
     j.history = j.history||[];
-    j.history.push({when: todayISO(), what: `Чек-ин: ${me?.name||'—'}`});
+    j.history.push({when: todayISO(), what: `Ð§ÐµÐº-Ð¸Ð½: ${me?.name||'â€”'}`});
     const o = objById(j.objectId);
     if(o){
       o.history = o.history||[];
-      o.history.push({when: todayISO(), what: `Чек-ин: ${me?.name||'—'} — ${j.title}`});
+      o.history.push({when: todayISO(), what: `Ð§ÐµÐº-Ð¸Ð½: ${me?.name||'â€”'} â€” ${j.title}`});
     }
     saveState(); closeModal(); renderJobs();
-    toast('Чек-ин выполнен');
+    toast('Ð§ÐµÐº-Ð¸Ð½ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½');
   };
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
@@ -2302,15 +2302,15 @@ async function doCheckIn(jobId){
 function doCheckOut(jobId){
   const j = jobById(jobId); if(!j) return;
   if(vyezdDayStatus(j) !== 'today'){
-    toast('Чек-аут возможен только в день выезда','err');
+    toast('Ð§ÐµÐº-Ð°ÑƒÑ‚ Ð²Ð¾Ð·Ð¼Ð¾Ð¶ÐµÐ½ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð² Ð´ÐµÐ½ÑŒ Ð²Ñ‹ÐµÐ·Ð´Ð°','err');
     return;
   }
   const me = myEmployee();
   j.checkout = { time: new Date().toLocaleString('ru-RU'), byId: me?.id || null };
   j.history = j.history||[];
-  j.history.push({when: todayISO(), what: `Чек-аут: ${me?.name||'—'}`});
+  j.history.push({when: todayISO(), what: `Ð§ÐµÐº-Ð°ÑƒÑ‚: ${me?.name||'â€”'}`});
   saveState(); closeModal(); renderJobs();
-  toast('Чек-аут выполнен');
+  toast('Ð§ÐµÐº-Ð°ÑƒÑ‚ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½');
 }
 
 /* ============================================================
@@ -2357,7 +2357,7 @@ document.addEventListener('change', async e=>{
       id: uid(), action:'worker.status.changed', actorId:App.user?.id||null,
       targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
     });
-    saveState(); renderAttendance(); toast('Статус рабочего обновлён');
+    saveState(); renderAttendance(); toast('Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾ Ð¾Ð±Ð½Ð¾Ð²Ð»Ñ‘Ð½');
     return;
   }
 
@@ -2367,7 +2367,7 @@ document.addEventListener('change', async e=>{
     if(emp){
       emp.type = er.value;
       emp.role = er.value;
-      saveState(); renderAdmin(); toast('Тип сотрудника обновлён');
+      saveState(); renderAdmin(); toast('Ð¢Ð¸Ð¿ ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ° Ð¾Ð±Ð½Ð¾Ð²Ð»Ñ‘Ð½');
       const account = App.users.find(user=>user.phone===emp.phone);
       if(account && userRoles(App.user).includes('admin')){
         api(`/users/${encodeURIComponent(account.id)}/regenerate-qr`, {method:'POST'})
@@ -2387,7 +2387,7 @@ document.addEventListener('change', async e=>{
         id: uid(), action:'worker.status.changed', actorId: App.user?.id||null,
         targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
       });
-      saveState(); renderAdmin(); toast('Статус рабочего обновлён');
+      saveState(); renderAdmin(); toast('Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐ³Ð¾ Ð¾Ð±Ð½Ð¾Ð²Ð»Ñ‘Ð½');
     }
     return;
   }
@@ -2400,12 +2400,12 @@ document.addEventListener('change', async e=>{
     if(!u) return;
     if(u.phone===App.user.phone) return;
     u.roles = [...ur.selectedOptions].map(option=>option.value);
-    if(!u.roles.length){ renderAdmin(); toast('Назначьте хотя бы одну роль','err'); return; }
+    if(!u.roles.length){ renderAdmin(); toast('ÐÐ°Ð·Ð½Ð°Ñ‡ÑŒÑ‚Ðµ Ñ…Ð¾Ñ‚Ñ Ð±Ñ‹ Ð¾Ð´Ð½Ñƒ Ñ€Ð¾Ð»ÑŒ','err'); return; }
     u.role = u.roles[0];
     try {
       await saveUsers(users);
       renderAdmin();
-      toast('Роль обновлена');
+      toast('Ð Ð¾Ð»ÑŒ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð°');
     } catch(error) {
       renderAdmin();
       toast(error.message,'err');
@@ -2462,11 +2462,11 @@ function csvEscape(v){
 function exportCSV(){
   const {start, end} = normalizePeriod(App.period.start, App.period.end);
 
-  const rows = [['Сотрудник','Роль','Период','Сервис,дн','Выезд,дн','Отв.,дн','Смен (цех)','К оплате,₽']];
+  const rows = [['Ð¡Ð¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸Ðº','Ð Ð¾Ð»ÑŒ','ÐŸÐµÑ€Ð¸Ð¾Ð´','Ð¡ÐµÑ€Ð²Ð¸Ñ,Ð´Ð½','Ð’Ñ‹ÐµÐ·Ð´,Ð´Ð½','ÐžÑ‚Ð².,Ð´Ð½','Ð¡Ð¼ÐµÐ½ (Ñ†ÐµÑ…)','Ðš Ð¾Ð¿Ð»Ð°Ñ‚Ðµ,â‚½']];
   calcPayroll(start, end).forEach(r=>{
     rows.push([
       r.emp.name, ROLES[r.emp.role]?.label || r.emp.role,
-      start+' — '+end,
+      start+' â€” '+end,
       r.serviceDays, r.visitDays, r.respVisitDays,
       r.shiftsCount || 0,
       r.total.toFixed(2).replace('.',','),
@@ -2474,8 +2474,8 @@ function exportCSV(){
   });
 
   rows.push([]);
-  rows.push(['Выезды']);
-  rows.push(['Дата','Объект','Выезд','Группа','Ответственный','Тип']);
+  rows.push(['Ð’Ñ‹ÐµÐ·Ð´Ñ‹']);
+  rows.push(['Ð”Ð°Ñ‚Ð°','ÐžÐ±ÑŠÐµÐºÑ‚','Ð’Ñ‹ÐµÐ·Ð´','Ð“Ñ€ÑƒÐ¿Ð¿Ð°','ÐžÑ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹','Ð¢Ð¸Ð¿']);
   App.state.jobs.filter(j=>j.date>=start && j.date<=end).forEach(j=>{
     rows.push([
       j.date, objName(j.objectId), j.title,
@@ -2485,8 +2485,8 @@ function exportCSV(){
   });
 
   rows.push([]);
-  rows.push(['Смены цеха']);
-  rows.push(['Дата','Объект','Группа','Кол-во человек','Стоимость,₽']);
+  rows.push(['Ð¡Ð¼ÐµÐ½Ñ‹ Ñ†ÐµÑ…Ð°']);
+  rows.push(['Ð”Ð°Ñ‚Ð°','ÐžÐ±ÑŠÐµÐºÑ‚','Ð“Ñ€ÑƒÐ¿Ð¿Ð°','ÐšÐ¾Ð»-Ð²Ð¾ Ñ‡ÐµÐ»Ð¾Ð²ÐµÐº','Ð¡Ñ‚Ð¾Ð¸Ð¼Ð¾ÑÑ‚ÑŒ,â‚½']);
   App.state.shifts.filter(s=>s.date>=start && s.date<=end).forEach(sh=>{
     const cnt = sh.employeeIds?.length||0;
     rows.push([
@@ -2501,10 +2501,10 @@ function exportCSV(){
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `Отчёт_${start}_${end}.csv`;
+  a.download = `ÐžÑ‚Ñ‡Ñ‘Ñ‚_${start}_${end}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-  toast('CSV скачан');
+  toast('CSV ÑÐºÐ°Ñ‡Ð°Ð½');
 }
 
 /* ============================================================
@@ -2513,10 +2513,10 @@ function exportCSV(){
 function compressImg(file, maxSide=1200, quality=0.72){
   return new Promise((res, rej)=>{
     const reader = new FileReader();
-    reader.onerror = ()=>rej(new Error('Не удалось прочитать файл'));
+    reader.onerror = ()=>rej(new Error('ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»'));
     reader.onload = e=>{
       const img = new Image();
-      img.onerror = ()=>rej(new Error('Формат не поддерживается'));
+      img.onerror = ()=>rej(new Error('Ð¤Ð¾Ñ€Ð¼Ð°Ñ‚ Ð½Ðµ Ð¿Ð¾Ð´Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÐµÑ‚ÑÑ'));
       img.onload = ()=>{
         let w = img.width, h = img.height;
         if(w > maxSide || h > maxSide){
@@ -2543,7 +2543,7 @@ function compressImg(file, maxSide=1200, quality=0.72){
    LOGOUT
    ============================================================ */
 function handleLogout(){
-  if(!confirm('Выйти?')) return;
+  if(!confirm('Ð’Ñ‹Ð¹Ñ‚Ð¸?')) return;
   api('/auth/logout').finally(()=>{ App.user = null; location.reload(); });
 }
 
@@ -2563,8 +2563,8 @@ $('#loginForm').onsubmit = async (e)=>{
   const err = $('#loginErr'); err.textContent = '';
   const phone = normalizePhone($('#loginPhone').value);
   const password = $('#loginPin').value;
-  if(!phone){ err.textContent = 'Некорректный телефон'; return; }
-  if(!password || password.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
+  if(!phone){ err.textContent = 'ÐÐµÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ñ‹Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½'; return; }
+  if(!password || password.length<4){ err.textContent = 'ÐŸÐ°Ñ€Ð¾Ð»ÑŒ â€” Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼ 4 ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°'; return; }
   try{
     const result = await api('/auth/login', {method:'POST', body:JSON.stringify({phone, password})});
     const state = await api('/state');
@@ -2579,15 +2579,15 @@ $('#registerForm').onsubmit = async (e)=>{
   const name = $('#regName').value.trim();
   const p1 = $('#regPin').value;
   const p2 = $('#regPin2').value;
-  if(!phone){ err.textContent = 'Некорректный телефон'; return; }
-  if(!name){ err.textContent = 'Введите имя'; return; }
-  if(p1.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
-  if(p1!==p2){ err.textContent = 'Пароль не совпадает'; return; }
+  if(!phone){ err.textContent = 'ÐÐµÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ñ‹Ð¹ Ñ‚ÐµÐ»ÐµÑ„Ð¾Ð½'; return; }
+  if(!name){ err.textContent = 'Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð¼Ñ'; return; }
+  if(p1.length<4){ err.textContent = 'ÐŸÐ°Ñ€Ð¾Ð»ÑŒ â€” Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼ 4 ÑÐ¸Ð¼Ð²Ð¾Ð»Ð°'; return; }
+  if(p1!==p2){ err.textContent = 'ÐŸÐ°Ñ€Ð¾Ð»ÑŒ Ð½Ðµ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°ÐµÑ‚'; return; }
   try{
     const result = await api('/auth/register', {method:'POST', body:JSON.stringify({phone, name, password:p1})});
     const state = await api('/state');
     await startApp(result.user, state);
-    toast(result.user.role==='admin' ? 'Вы первый — назначен Администратор' : 'Регистрация успешна');
+    toast(result.user.role==='admin' ? 'Ð’Ñ‹ Ð¿ÐµÑ€Ð²Ñ‹Ð¹ â€” Ð½Ð°Ð·Ð½Ð°Ñ‡ÐµÐ½ ÐÐ´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€' : 'Ð ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ ÑƒÑÐ¿ÐµÑˆÐ½Ð°');
   }catch(ex){ err.textContent = ex.message; }
 };
 
@@ -2646,4 +2646,4 @@ window.addEventListener('beforeunload', ()=>{
 })();
 </script>
 </body>
-</html>
+  </html>
