@@ -3,7 +3,9 @@ CREATE TABLE IF NOT EXISTS users (
   phone TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   pin_hash TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('admin', 'accountant', 'manager', 'field', 'workshop')),
+  role TEXT NOT NULL CHECK (role IN ('admin', 'accountant', 'employee', 'workshopChief', 'manager', 'field', 'workshop')),
+  roles TEXT[] NOT NULL DEFAULT ARRAY['employee'],
+  qr_token TEXT UNIQUE,
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'blocked')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -22,3 +24,14 @@ CREATE TABLE IF NOT EXISTS app_state (
   state JSONB NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS audit_log (
+  id UUID PRIMARY KEY,
+  actor_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  action TEXT NOT NULL,
+  target_id UUID,
+  details JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS audit_log_created_at_idx ON audit_log (created_at DESC);
