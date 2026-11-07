@@ -42,6 +42,7 @@ const stateSchema = z.object({
   employees: z.array(z.unknown()).default([]),
   jobs: z.array(z.unknown()).default([]),
   shifts: z.array(z.unknown()).default([]),
+  attendance: z.array(z.unknown()).default([]),
   rates: z.record(z.string(), z.number().finite().nonnegative()).default({}),
   meta: z.record(z.string(), z.unknown()).default({}),
 });
@@ -142,6 +143,29 @@ function sameJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+function canUpdateAttendance(employee, previous, next) {
+  const previousAttendance = Array.isArray(previous.attendance) ? previous.attendance : [];
+  const nextAttendance = Array.isArray(next.attendance) ? next.attendance : [];
+  const nextById = new Map(nextAttendance.map((item) => [item.id, item]));
+  if (nextAttendance.length < previousAttendance.length) return false;
+  for (const oldItem of previousAttendance) {
+    const item = nextById.get(oldItem.id);
+    if (!item) return false;
+    if (sameJson(oldItem, item)) continue;
+    if (item.employeeId !== employee.id) return false;
+    for (const key of new Set([...Object.keys(oldItem), ...Object.keys(item)])) {
+      if (key !== 'endedAt' || !sameJson(oldItem.employeeId, item.employeeId)) {
+        if (!sameJson(oldItem[key], item[key])) return false;
+      }
+    }
+  }
+  for (const item of nextAttendance) {
+    if (previousAttendance.some((oldItem) => oldItem.id === item.id)) continue;
+    if (item.employeeId !== employee.id || item.endedAt) return false;
+  }
+  return true;
+}
+
 function canUpdateState(user, previous, next) {
   if (['admin', 'manager'].includes(user.role)) return true;
   if (user.role === 'workshopChief') {
@@ -153,6 +177,7 @@ function canUpdateState(user, previous, next) {
       || previous.shifts.length !== next.shifts.length) return false;
     const employee = previous.employees.find((item) => item.phone === user.phone);
     if (!employee) return false;
+    if (!canUpdateAttendance(employee, previous, next)) return false;
     const previousById = new Map(previous.shifts.map((shift) => [shift.id, shift]));
     const editableShiftKeys = new Set(['completed', 'completedAt', 'completedById']);
     for (const shift of next.shifts) {
@@ -168,16 +193,19 @@ function canUpdateState(user, previous, next) {
     }
     return true;
   }
-  if (user.role !== 'field') return false;
+  if (!['field', 'workshop'].includes(user.role)) return false;
   if (!sameJson(previous.objects, next.objects)
     || !sameJson(previous.employees, next.employees)
     || !sameJson(previous.shifts, next.shifts)
+    || (user.role === 'workshop' && !sameJson(previous.jobs, next.jobs))
     || !sameJson(previous.rates, next.rates)
     || !sameJson(previous.meta, next.meta)
     || previous.jobs.length !== next.jobs.length) return false;
 
   const employee = previous.employees.find((item) => item.phone === user.phone || item.name === user.name);
   if (!employee) return false;
+  if (!canUpdateAttendance(employee, previous, next)) return false;
+  if (user.role === 'workshop') return true;
   const previousById = new Map(previous.jobs.map((job) => [job.id, job]));
   for (const job of next.jobs) {
     const oldJob = previousById.get(job.id);
@@ -246,7 +274,7 @@ app.post('/api/auth/register', async (req, res, next) => {
       [user.id, user.phone, user.name, user.pinHash, user.role],
     );
     const defaultState = {
-      objects: [], employees: [], jobs: [], shifts: [],
+      objects: [], employees: [], jobs: [], shifts: [], attendance: [],
       rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 0 },
       meta: { createdAt: Date.now() },
     };
@@ -370,7 +398,7 @@ app.get('/api/state', requireAuth, async (_req, res, next) => {
   try {
     const result = await pool.query('SELECT state FROM app_state WHERE id = TRUE');
     const state = result.rows[0]?.state || {
-      objects: [], employees: [], jobs: [], shifts: [],
+      objects: [], employees: [], jobs: [], shifts: [], attendance: [],
       rates: { visit: 4000, resp: 5000, service: 3000, shopShift: 4000, manager: 0 },
       meta: { createdAt: Date.now(), managerRateVersion: 1 },
     };
@@ -394,7 +422,7 @@ app.put('/api/state', requireAuth, async (req, res, next) => {
     const state = stateSchema.parse(req.body);
     const currentResult = await pool.query('SELECT state FROM app_state WHERE id = TRUE');
     const current = currentResult.rows[0]?.state || {
-      objects: [], employees: [], jobs: [], shifts: [], rates: {}, meta: {},
+      objects: [], employees: [], jobs: [], shifts: [], attendance: [], rates: {}, meta: {},
     };
     if (!canUpdateState(req.user, current, state)) {
       return res.status(403).json({ error: 'Недостаточно прав для изменения этих данных' });
