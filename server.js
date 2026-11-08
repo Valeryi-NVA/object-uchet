@@ -60,6 +60,9 @@ function currentUser(request, db) {
 function publicUser(user) {
   return { id: user.id, phone: user.phone, name: user.name, role: user.role, createdAt: user.createdAt };
 }
+function publicDb(db) {
+  return { ...db, users: db.users.map(publicUser), session: null };
+}
 
 const server = createServer(async (request, response) => {
   try {
@@ -85,16 +88,16 @@ const server = createServer(async (request, response) => {
       send(response, 200, { user: publicUser(user), token: tokenFor(user) }); return;
     }
     if (url.pathname === '/api/state' && request.method === 'GET') {
-      if (!currentUser(request, db)) { send(response, 401, { error: 'Требуется вход' }); return; }
       const user = currentUser(request, db);
-      send(response, 200, { db, user }); return;
+      if (!user) { send(response, 401, { error: 'Требуется вход' }); return; }
+      send(response, 200, { db: publicDb(db), user: publicUser(user) }); return;
     }
     if (url.pathname === '/api/state' && request.method === 'PUT') {
       const user = currentUser(request, db);
       if (!user) { send(response, 401, { error: 'Требуется вход' }); return; }
       const incoming = await body(request);
-      if (!incoming || typeof incoming !== 'object' || !Array.isArray(incoming.users) || !Array.isArray(incoming.objects)) { send(response, 400, { error: 'Некорректное состояние приложения' }); return; }
-      await writeDb({ ...incoming, session: null }); send(response, 200, { ok: true }); return;
+      if (!incoming || typeof incoming !== 'object' || !Array.isArray(incoming.objects)) { send(response, 400, { error: 'Некорректное состояние приложения' }); return; }
+      await writeDb({ ...incoming, users: db.users, session: null }); send(response, 200, { ok: true }); return;
     }
     if (url.pathname === '/' || url.pathname === '/index.html') {
       response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
