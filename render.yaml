@@ -5,6 +5,9 @@ services:
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
+    envVars:
+      - key: AUTH_SECRET
+        generateValue: true
     disk:
       name: stroygroup-data
       mountPath: /opt/render/project/src/data
