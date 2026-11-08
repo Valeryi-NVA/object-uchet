@@ -180,6 +180,15 @@ const server = createServer(async (request, response) => {
       await audit(user.id, 'CREATE', 'Client', id, result.rows[0]);
       send(response, 201, { item: result.rows[0] }); return;
     }
+    const clientMatch = url.pathname.match(/^\/api\/clients\/([^/]+)$/);
+    if (pool && clientMatch && request.method === 'DELETE') {
+      const user = await authenticatedUser(request, db);
+      if (!user || !canManage(user)) { send(response, 403, { error: 'Недостаточно прав' }); return; }
+      const result = await pool.query('DELETE FROM clients WHERE id = $1 RETURNING id', [clientMatch[1]]);
+      if (!result.rowCount) { send(response, 404, { error: 'Клиент не найден' }); return; }
+      await audit(user.id, 'DELETE', 'Client', clientMatch[1]);
+      send(response, 200, { ok: true }); return;
+    }
     const objectMatch = url.pathname.match(/^\/api\/objects\/([^/]+)$/);
     const objectCostsMatch = url.pathname.match(/^\/api\/objects\/([^/]+)\/costs$/);
     if (pool && url.pathname === '/api/objects' && request.method === 'GET') {
@@ -198,6 +207,14 @@ const server = createServer(async (request, response) => {
       const result = await pool.query('INSERT INTO objects (id, client_id, name, address, status, note) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [id, input.clientId || null, name, String(input.address || '').trim(), String(input.status || 'PLANNING'), input.note || null]);
       await audit(user.id, 'CREATE', 'Object', id, result.rows[0]);
       send(response, 201, { item: result.rows[0] }); return;
+    }
+    if (pool && objectMatch && request.method === 'DELETE') {
+      const user = await authenticatedUser(request, db);
+      if (!user || !canManage(user)) { send(response, 403, { error: 'Недостаточно прав' }); return; }
+      const result = await pool.query('DELETE FROM objects WHERE id = $1 RETURNING id', [objectMatch[1]]);
+      if (!result.rowCount) { send(response, 404, { error: 'Объект не найден' }); return; }
+      await audit(user.id, 'DELETE', 'Object', objectMatch[1]);
+      send(response, 200, { ok: true }); return;
     }
     if (pool && objectCostsMatch && request.method === 'GET') {
       const user = await authenticatedUser(request, db);
