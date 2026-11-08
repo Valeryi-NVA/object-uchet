@@ -1,22 +1,13 @@
 {
-  "name": "object-uchet",
+  "name": "nva-house-template",
   "version": "1.0.0",
   "private": true,
-  "description": "Object accounting application with server-side authentication and persistence",
   "type": "module",
   "scripts": {
-    "dev": "node --watch server.js",
     "start": "node server.js",
     "check": "node --check server.js"
   },
   "engines": {
-    "node": ">=22"
-  },
-  "dependencies": {
-    "express": "^5.1.0",
-    "helmet": "^8.1.0",
-    "pg": "^8.16.3",
-    "qrcode": "^1.5.4",
-    "zod": "^4.1.12"
+    "node": ">=20"
   }
 }
