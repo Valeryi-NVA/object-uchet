@@ -1,2649 +1,1671 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ОбъектУчёт</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>СтройГрупп — управление фирмой</title>
 <style>
-:root{
-  --bg:#eef2f7;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#dbe3ee;
-  --accent:#2563eb;--soft:#eff5ff;--danger:#dc2626;--ok:#16a34a;--warn:#d97706;
-  --r:12px;--sh:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.07);
-  --in:#fff;--rsp:#dcfce7;--rspB:#16a34a;
-}
-html[data-theme="dark"]{
-  --bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--border:#334155;
-  --accent:#60a5fa;--soft:#1e3a8a;--danger:#f87171;--ok:#4ade80;--warn:#fbbf24;
-  --in:#0f172a;--rsp:#14532d;--rspB:#4ade80;
-}
-*,*::before,*::after{box-sizing:border-box}
-body{margin:0;padding:10px 10px 100px;background:var(--bg);color:var(--text);
-  font:14px/1.45 system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-html.light-lock,html.light-lock body{overflow:hidden}
-.hid{display:none!important}
-.page{max-width:1100px;margin:0 auto}
-h1,h2,h3{margin:0}
-.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px 16px;margin-bottom:12px}
-.card h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:.4px;font-weight:700}
-
-/* Topbar */
-.topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:6px 0 8px;margin-bottom:6px}
-.topbar__in{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:10px 14px}
-.topbar__row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.topbar__title{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
-.topbar__title .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-.topbar__actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.user-badge{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:7px;
-  background:var(--soft);font-size:12px;font-weight:700;color:var(--accent);
-  white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-.user-badge:hover{filter:brightness(.95)}
-.user-badge--admin{background:#7c3aed;color:#fff}
-.user-badge--accountant{background:var(--accent);color:#fff}
-.user-badge--manager{background:#0891b2;color:#fff}
-.user-badge--field{background:var(--rspB);color:#fff}
-.user-badge--workshop{background:var(--warn);color:#fff}
-
-/* Forms */
-.f{display:flex;flex-direction:column;gap:5px;min-width:0}
-.f__l{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.3px}
-.f__i{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;
-  background:var(--in);color:inherit;font:inherit;font-size:15px}
-.f__i:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.2)}
-textarea.f__i{resize:vertical;min-height:70px;font-family:inherit;font-size:14px}
-select.f__i{cursor:pointer}
-.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-
-/* Buttons */
-.btn{padding:9px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);
-  color:inherit;font:inherit;font-size:13px;font-weight:600;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:.15s}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn:active{transform:scale(.98)}
-.btn--p{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn--p:hover{filter:brightness(1.1);color:#fff}
-.btn--d{color:var(--danger);border-color:var(--danger)}
-.btn--d:hover{background:rgba(220,38,38,.08)}
-.btn--ok{background:var(--ok);border-color:var(--ok);color:#fff}
-.btn--ok:hover{filter:brightness(1.1);color:#fff}
-.btn--sm{padding:6px 10px;font-size:12px}
-.btn--xs{padding:4px 8px;font-size:11px;border-radius:6px}
-.icobtn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--muted);
-  font-size:15px;cursor:pointer;flex-shrink:0;transition:.15s}
-.icobtn:hover{color:var(--accent);border-color:var(--accent)}
-.icobtn--d:hover{color:var(--danger);border-color:var(--danger)}
-
-/* Badges */
-.b{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;
-  font-size:11.5px;font-weight:700;border:1px solid transparent;white-space:nowrap}
-.b::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.85}
-.b--ok{color:var(--ok);background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.3)}
-.b--warn{color:var(--warn);background:rgba(217,119,6,.1);border-color:rgba(217,119,6,.3)}
-.b--err{color:var(--danger);background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3)}
-.b--info{color:var(--accent);background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.3)}
-.b--muted{color:var(--muted);background:var(--soft);border-color:var(--border)}
-.b--resp{color:#fff;background:var(--rspB);border-color:var(--rspB);font-size:10px;padding:2px 7px}
-.b--resp::before{display:none}
-
-/* Tables */
-.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
-table.tbl{width:100%;border-collapse:collapse;min-width:640px}
-.tbl th{padding:11px 14px;text-align:left;font-size:11px;text-transform:uppercase;
-  letter-spacing:.06em;color:var(--muted);font-weight:700;background:var(--soft);
-  border-bottom:1px solid var(--border);white-space:nowrap}
-.tbl td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
-.tbl tr:last-child td{border-bottom:0}
-.tbl tbody tr:hover{background:var(--soft)}
-.tbl .title{font-weight:700}
-.tbl .sub{font-size:11.5px;color:var(--muted);margin-top:2px}
-.tbl .actions{display:flex;gap:4px;justify-content:flex-end;white-space:nowrap}
-
-/* Crew display */
-.crew{display:flex;flex-wrap:wrap;gap:4px;max-width:240px}
-.crew__m{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;
-  background:var(--soft);font-size:11.5px;font-weight:600;color:var(--text);white-space:nowrap}
-.crew__m--resp{background:var(--rsp);color:var(--rspB);border:1px solid var(--rspB)}
-.crew__m--resp::before{content:'⭐';font-size:10px}
-
-/* Crew picker in modal */
-.crew-pick{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;
-  padding:6px;border:1px solid var(--border);border-radius:9px;background:var(--in)}
-.crew-pick__row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;
-  background:var(--card);border:1px solid var(--border);cursor:pointer;transition:.15s}
-.crew-pick__row:hover{border-color:var(--accent)}
-.crew-pick__row.is-resp{border-color:var(--rspB);background:var(--rsp)}
-.crew-pick__chk{width:18px;height:18px;cursor:pointer;flex-shrink:0}
-.crew-pick__name{flex:1;font-weight:600;font-size:13.5px;cursor:pointer}
-.crew-pick__resp-lbl{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);
-  cursor:pointer;user-select:none;white-space:nowrap}
-.crew-pick__resp-lbl input{width:16px;height:16px;cursor:pointer}
-.crew-pick__row.is-resp .crew-pick__resp-lbl{color:var(--rspB);font-weight:700}
-.crew-pick__empty{padding:16px;text-align:center;color:var(--muted);font-size:12px}
-.crew-hint{font-size:11.5px;color:var(--muted);margin-top:6px}
-
-/* Objects grid */
-.obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.obj-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px;
-  cursor:pointer;transition:.15s;border-left:4px solid var(--accent);position:relative}
-.obj-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,.12)}
-.obj-card__h{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-.obj-card__ico{width:38px;height:38px;border-radius:10px;background:var(--soft);
-  display:grid;place-items:center;font-size:18px;flex-shrink:0}
-.obj-card__name{font-weight:700;font-size:14px}
-.obj-card__code{font-size:11px;color:var(--muted);font-family:monospace}
-.obj-card__addr{font-size:12.5px;color:var(--muted);margin:6px 0;display:flex;gap:5px;align-items:flex-start}
-.obj-card__meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--muted);
-  border-top:1px solid var(--border);padding-top:8px;margin-top:8px}
-.obj-card__meta b{color:var(--text)}
-
-/* Expenses */
-.exp-item{display:flex;gap:6px;align-items:center;flex-wrap:wrap;
-  padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--in);
-  margin-bottom:6px}
-
-/* KPI */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
-.kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px}
-.kpi__l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px}
-.kpi__v{font-size:20px;font-weight:800}
-.kpi__v.ok{color:var(--ok)} .kpi__v.err{color:var(--danger)} .kpi__v.acc{color:var(--accent)}
-
-/* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);
-  border-top:1px solid var(--border);display:flex;z-index:50;
-  padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -2px 10px rgba(15,23,42,.06)}
-.bottom-nav__btn{flex:1;padding:10px 6px;background:transparent;border:none;color:var(--muted);
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;
-  font:inherit;font-size:11px;font-weight:600;transition:.15s}
-.bottom-nav__btn .i{font-size:20px;line-height:1}
-.bottom-nav__btn.active{color:var(--accent)}
-.bottom-nav__btn.hid{display:none}
-
-/* Toast */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
-  padding:11px 16px;background:#1e293b;color:#fff;border-radius:9px;font-size:13px;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.2s;
-  z-index:600;display:flex;gap:10px;align-items:center;max-width:92vw}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
-.toast--err{background:var(--danger)}
-
-/* Modal */
-.modal-back{position:fixed;inset:0;background:rgba(15,23,42,.7);z-index:150;
-  display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--card);border-radius:var(--r);max-width:560px;width:100%;
-  max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal--wide{max-width:820px}
-.modal__h{padding:16px 20px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:10px}
-.modal__h h3{font-size:15px;margin:0}
-.modal__b{padding:16px 20px;overflow-y:auto;flex:1}
-.modal__f{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-
-/* Auth */
-.auth{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  padding:20px;background:var(--bg);z-index:500;overflow-y:auto}
-.auth__card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);
-  padding:28px;max-width:400px;width:100%}
-.auth__title{margin:0 0 6px;font-size:22px;text-align:center;font-weight:800}
-.auth__sub{font-size:13px;color:var(--muted);text-align:center;margin:0 0 22px}
-.auth__tabs{display:flex;margin-bottom:16px;border-bottom:1px solid var(--border)}
-.auth__tab{flex:1;padding:10px;background:transparent;border:none;font:inherit;font-size:14px;
-  font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
-.auth__tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.auth__form{display:flex;flex-direction:column;gap:12px}
-.auth__f{display:flex;flex-direction:column;gap:5px}
-.auth__f span{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}
-.auth__f input{padding:12px 14px;border:1px solid var(--border);border-radius:9px;
-  background:var(--in);color:inherit;font:inherit;font-size:15px}
-.auth__f input:focus{outline:none;border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(37,99,235,.2)}
-.auth__submit{padding:13px;font-size:15px;justify-content:center}
-.auth__err{min-height:18px;font-size:12px;color:var(--danger);text-align:center}
-.auth__hint{font-size:12px;color:var(--muted);text-align:center;margin:4px 0 0;
-  line-height:1.4;padding:10px;background:var(--soft);border-radius:8px}
-.auth__hint strong{color:var(--accent)}
-
-/* Timeline */
-.timeline{position:relative;padding-left:20px}
-.timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--border)}
-.tl{position:relative;padding-bottom:12px;font-size:12.5px}
-.tl::before{content:'';position:absolute;left:-20px;top:4px;width:10px;height:10px;
-  border-radius:50%;background:var(--card);border:2px solid var(--accent)}
-.tl__w{font-size:11px;color:var(--muted)}
-.tl__t{margin-top:2px}
-
-/* Photos */
-.photos{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.photos img{width:64px;height:64px;object-fit:cover;border-radius:8px;
-  border:1px solid var(--border);cursor:zoom-in;transition:.15s}
-.photos img:hover{transform:scale(1.05);border-color:var(--accent)}
-.padd{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;
-  border:1px dashed var(--accent);border-radius:8px;background:var(--card);
-  color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;margin-top:6px}
-.padd input{display:none}
-
-/* Light */
-.light{position:fixed;inset:0;background:rgba(15,23,42,.9);z-index:200;
-  display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
-.light img{max-width:100%;max-height:100%;border-radius:6px}
-
-/* Print */
-.sig{display:none;margin-top:20px;padding-top:12px;border-top:1px solid #cbd5e1;font-size:12px;color:#334155}
-.sig__r{display:flex;justify-content:space-between;margin-top:16px;gap:20px}
-.sig__l{flex:1;border-bottom:1px solid #94a3b8;padding-top:16px;font-size:11px;color:#64748b}
-
-/* Utils */
-.muted{color:var(--muted)}
-.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
-.empty__i{font-size:38px;margin-bottom:8px;opacity:.5}
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.filter-bar input,.filter-bar select{background:var(--card);border:1px solid var(--border);
-  padding:9px 12px;border-radius:9px;color:var(--text);font:inherit;font-size:13px;min-width:140px}
-.filter-bar .sp{flex:1}
-
-@media(max-width:700px){
-  body{padding:6px 6px 90px}
-  .crew{max-width:180px}
-}
-
-@media print{
-  html,html[data-theme="dark"],html[data-theme="light"],:root{
-    --text:#000!important;--muted:#475569!important;--accent:#1e40af!important;
-    --border:#cbd5e1!important;--soft:#f1f5f9!important;--in:#fff!important;
-    --card:#fff!important;--bg:#fff!important;--ok:#15803d!important;--danger:#b91c1c!important;
+  :root{
+    --bg:#f4f6f9; --card:#fff; --text:#12161f; --muted:#6b7280;
+    --accent:#2563eb; --accent-soft:#e8efff;
+    --border:#e3e7ee; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+    --radius:12px;
   }
-  body{background:#fff!important;color:#000!important;padding:0}
-  .no-print,.bottom-nav,.topbar__actions,.filter-bar,.tbar,.card.no-print{display:none!important}
-  .topbar{position:static;background:#fff;padding:0}
-  .card,.kpi,.obj-card,.modal__b{box-shadow:none!important;border:1px solid #ccc!important;
-    border-radius:0!important;padding:8px!important;background:#fff!important}
-  .sig{display:block}
-  .tbl th{background:#f1f5f9!important;color:#000!important}
-  .tbl td,.tbl th{border-color:#ccc!important;padding:6px 8px!important;font-size:11px!important}
-  .b{border:1px solid #999!important;background:transparent!important;color:#000!important}
-  .b::before{display:none}
-  .b--ok,.b--warn,.b--err,.b--info,.b--muted,.b--resp{color:#000!important}
-}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,'Inter',sans-serif;
+    background:var(--bg); color:var(--text); font-size:14px; line-height:1.45;
+  }
+
+  .auth-screen{
+    min-height:100vh;display:grid;place-items:center;padding:24px;
+    background:linear-gradient(135deg,#eef2f7 0%,#dbe4f0 100%);
+  }
+  .auth-card{
+    width:min(430px,100%);background:#fff;border:1px solid var(--border);
+    border-radius:16px;padding:26px 24px;box-shadow:0 24px 70px rgba(15,23,42,.10);
+  }
+  .auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .auth-tabs{display:flex;gap:4px;padding:4px;background:#f4f6f9;border-radius:10px;margin-bottom:20px}
+  .auth-tabs button{
+    flex:1;padding:9px;border:0;background:transparent;border-radius:8px;font:inherit;
+    font-weight:600;color:var(--muted);cursor:pointer;font-size:13px;transition:.15s;
+  }
+  .auth-tabs button.active{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .auth-form{display:grid;gap:13px}
+  .auth-form .btn.primary{padding:11px;font-size:14px}
+  .auth-error{color:var(--bad);font-size:12.5px;min-height:16px;font-weight:500}
+  .auth-hint{font-size:12px;color:var(--muted);text-align:center;line-height:1.55}
+  .auth-hint b{color:var(--text);background:#eef2f7;padding:1px 5px;border-radius:4px;font-family:monospace}
+  .quick-admin{
+    width:100%;padding:10px;border-radius:9px;border:1px dashed #cbd5e1;background:#f8fafc;
+    color:var(--muted);font:inherit;font-weight:600;font-size:13px;cursor:pointer;margin-top:6px;
+  }
+  .quick-admin:hover{background:#eef2f7;color:var(--text);border-color:var(--accent)}
+  .debug-box{
+    margin-top:14px;padding:10px 12px;border-radius:8px;font-size:12px;
+    background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
+  }
+  .debug-box b{color:#78350f}
+
+  .topbar{
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding:12px 24px;background:#fff;border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:30;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;font-weight:800;font-size:18px;
+  }
+  .brand-title{font-weight:700;font-size:16px;letter-spacing:-.01em}
+  .brand-sub{font-size:11px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase}
+  .user-chip{
+    display:flex;align-items:center;gap:12px;padding:6px 8px 6px 14px;
+    background:#f4f6f9;border-radius:10px;
+  }
+  .user-chip .user-name{font-weight:700;font-size:13px;line-height:1.2}
+  .user-chip .user-role{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+  .tabs{
+    display:flex;gap:4px;overflow-x:auto;padding:10px 24px;background:#fff;
+    border-bottom:1px solid var(--border);position:sticky;top:63px;z-index:25;
+    scrollbar-width:thin;
+  }
+  .tabs button{
+    border:0;background:transparent;padding:8px 14px;border-radius:8px;cursor:pointer;
+    color:var(--muted);font-weight:600;white-space:nowrap;font-size:13px;font-family:inherit;
+    transition:.15s;
+  }
+  .tabs button:hover:not(.active){background:#eef2f7;color:var(--text)}
+  .tabs button.active{background:var(--accent);color:#fff}
+
+  main{padding:22px 24px 70px;max-width:1440px;margin:0 auto}
+  .head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 16px;flex-wrap:wrap}
+  .head h2{margin:0;font-size:19px;letter-spacing:-.02em}
+  h3{font-size:15px;margin:26px 0 12px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:22px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px}
+  .card .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .card .v{font-size:21px;font-weight:800;margin-top:7px;letter-spacing:-.02em}
+  .card .v.green{color:var(--ok)} .card .v.red{color:var(--bad)} .card .v.blue{color:var(--accent)}
+  .card .s{font-size:12px;color:var(--muted);margin-top:4px}
+
+  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    text-align:left;padding:11px 14px;background:#fafbfd;color:var(--muted);
+    font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;
+    border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  td{padding:11px 14px;border-bottom:1px solid #f0f2f6;vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fafcff}
+  .sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .empty{color:var(--muted);padding:22px;text-align:center;background:var(--card);border:1px dashed var(--border);border-radius:var(--radius)}
+  .row-actions{display:flex;gap:6px;justify-content:flex-end}
+
+  .btn{
+    border:1px solid var(--border);background:#fff;color:var(--text);font-family:inherit;
+    padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px;transition:.15s;
+  }
+  .btn:hover{background:#f3f6fb;border-color:#cfd6e2}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:#1d4ed8}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .btn.danger{color:var(--bad)}
+  .btn.danger:hover{background:#fdecec;border-color:#f5c2c2}
+  .btn.xs{padding:4px 9px;font-size:12px;border-radius:7px;line-height:1.3}
+
+  .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .b-new{background:#eef2f7;color:#475569}
+  .b-work{background:#fff4e0;color:#b45309}
+  .b-done{background:#e7f7ee;color:#15803d}
+  .b-cancel{background:#fdecec;color:#b91c1c}
+  .b-role{background:var(--accent-soft);color:#1e40af}
+
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px}
+  .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid #f0f2f6;margin-bottom:12px}
+  .money{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+  .money b{color:var(--text);font-size:13.5px}
+  .profit b{color:var(--ok)}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+  .sub-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .mini{font-size:12.5px}
+  .mini td{padding:7px 8px}
+  .mini th{padding:7px 8px;font-size:10px}
+
+  select.role-select{
+    padding:6px 10px;border:1px solid var(--border);border-radius:8px;font:inherit;
+    font-size:13px;background:#fff;min-width:170px;
+  }
+  select.role-select:disabled{background:#f4f6f9;color:var(--muted);cursor:not-allowed}
+
+  dialog{border:0;border-radius:14px;padding:0;width:min(540px,93vw);box-shadow:0 24px 70px rgba(15,23,42,.28);font-family:inherit;color:var(--text)}
+  dialog::backdrop{background:rgba(15,23,42,.45)}
+  .dlg-head{padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:16px}
+  .dlg-body{padding:16px 20px;display:grid;gap:13px;max-height:66vh;overflow:auto}
+  .dlg-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:#fafbfd}
+  label.fld{display:grid;gap:6px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  label.fld input,label.fld select,label.fld textarea{
+    padding:9px 11px;border:1px solid var(--border);border-radius:9px;font:inherit;font-size:14px;
+    color:var(--text);background:#fff;font-weight:400;text-transform:none;letter-spacing:normal;width:100%;
+  }
+  label.fld input:focus,label.fld select:focus,label.fld textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+  .checks{display:flex;flex-wrap:wrap;gap:8px}
+  .chk{display:flex;align-items:center;gap:6px;background:#f7f9fc;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;text-transform:none;letter-spacing:normal}
+  .chk input{width:auto}
+  .period{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+  .period label{display:grid;gap:5px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .period input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font:inherit}
+  .total-row td{font-weight:800;background:#fafbfd;border-top:2px solid var(--border)}
+
+  [hidden]{display:none !important}
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div class="auth" id="authScreen">
-  <div class="auth__card">
-    <h1 class="auth__title">📍 ОбъектУчёт</h1>
-    <p class="auth__sub">Учёт объектов, выездов, цеха, расходов и зарплаты</p>
-    <div class="auth__tabs">
-      <button type="button" class="auth__tab active" data-auth="login">Вход</button>
-      <button type="button" class="auth__tab" data-auth="register">Регистрация</button>
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="logo">С</div>
+      <div>
+        <div class="brand-title">СтройГрупп</div>
+        <div class="brand-sub">навесы · беседки · дома</div>
+      </div>
     </div>
-    <form class="auth__form" id="loginForm" novalidate>
-      <label class="auth__f"><span>Телефон</span>
-        <input type="tel" id="loginPhone" placeholder="+7 999 123-45-67" required></label>
-      <label class="auth__f"><span>Пароль</span>
-        <input type="password" id="loginPin" inputmode="numeric" minlength="4" required></label>
-      <div class="auth__err" id="loginErr"></div>
-      <button type="submit" class="btn btn--p auth__submit">Войти</button>
+
+    <div class="auth-tabs">
+      <button type="button" id="tabLogin" class="active">Вход</button>
+      <button type="button" id="tabRegister">Регистрация</button>
+    </div>
+
+    <form id="loginForm" class="auth-form" autocomplete="off" novalidate>
+      <label class="fld">Телефон
+        <input type="tel" id="loginPhone" placeholder="+7 900 000-00-00" value="+7 900 000-00-00">
+      </label>
+      <label class="fld">Пароль
+        <input type="password" id="loginPass" value="admin">
+      </label>
+      <div id="loginError" class="auth-error"></div>
+      <button type="submit" class="btn primary">Войти</button>
+      <button type="button" class="quick-admin" id="quickAdminBtn">🔑 Быстрый вход как администратор</button>
+      <div class="auth-hint">
+        Администратор: <b>+7 900 000-00-00</b> / <b>admin</b>
+      </div>
     </form>
-    <form class="auth__form hid" id="registerForm" novalidate>
-      <label class="auth__f"><span>Телефон</span>
-        <input type="tel" id="regPhone" placeholder="+7 999 123-45-67" required></label>
-      <label class="auth__f"><span>Имя и фамилия</span>
-        <input type="text" id="regName" placeholder="Иванов Иван" maxlength="100" required></label>
-      <label class="auth__f"><span>Пароль (минимум 4 символа)</span>
-        <input type="password" id="regPin" inputmode="numeric" minlength="4" required></label>
-      <label class="auth__f"><span>Повторите пароль</span>
-        <input type="password" id="regPin2" inputmode="numeric" minlength="4" required></label>
-      <div class="auth__err" id="regErr"></div>
-      <button type="submit" class="btn btn--p auth__submit">Зарегистрироваться</button>
-      <p class="auth__hint">Первый зарегистрировавшийся становится <strong>Администратором</strong>.</p>
+
+    <form id="registerForm" class="auth-form" autocomplete="off" hidden novalidate>
+      <label class="fld">Телефон
+        <input type="tel" id="regPhone" placeholder="+7 900 123-45-67">
+      </label>
+      <label class="fld">ФИО
+        <input type="text" id="regName" placeholder="Иванов Иван Иванович">
+      </label>
+      <label class="fld">Пароль (мин. 4 символа)
+        <input type="password" id="regPass" placeholder="••••">
+      </label>
+      <label class="fld">Повтор пароля
+        <input type="password" id="regPass2" placeholder="••••">
+      </label>
+      <div id="regError" class="auth-error"></div>
+      <button type="submit" class="btn primary">Зарегистрироваться</button>
+      <div class="auth-hint">
+        После регистрации роль назначает администратор в разделе «Настройки».
+      </div>
     </form>
   </div>
 </div>
 
-<!-- APP -->
-<div class="page hid" id="mainApp">
-  <div class="topbar no-print">
-    <div class="topbar__in">
-      <div class="topbar__row">
-        <div class="topbar__title">
-          <span class="dot" id="saveDot"></span>
-          <span>ОбъектУчёт</span>
-        </div>
-        <div class="topbar__actions">
-          <span class="user-badge" id="userBadge"></span>
-          <button type="button" class="icobtn" id="btnTheme" title="Тема">◐</button>
-          <button type="button" class="icobtn icobtn--d" id="btnLogout" title="Выйти">🚪</button>
-        </div>
+<div id="mainApp" hidden>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">С</div>
+      <div>
+        <div class="brand-title">СтройГрупп</div>
+        <div class="brand-sub">навесы · беседки · мангальные зоны · дома</div>
       </div>
     </div>
-  </div>
-
-  <section class="tab" data-tab="jobs">
-    <div class="filter-bar no-print">
-      <input type="search" id="jobSearch" placeholder="🔍 Поиск...">
-      <select id="jobPeriodFilter">
-        <option value="all">Все выезды</option>
-        <option value="today">Сегодня</option>
-        <option value="future">Предстоящие</option>
-        <option value="past">Завершённые</option>
-      </select>
-      <select id="jobArchiveFilter">
-        <option value="active">Текущие</option>
-        <option value="archived">Архив</option>
-        <option value="all">Все</option>
-      </select>
-      <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewJob">+ Выезд</button>
-    </div>
-    <div id="jobsList"></div>
-  </section>
-
-  <section class="tab hid" data-tab="attendance">
-    <div class="card">
-      <h3>📱 Отметка рабочего места</h3>
-      <p class="muted">Устройство определяется по вашей активной сессии. Повторный пароль нужен только после выхода или истечения сессии.</p>
-      <div id="personalQr"></div>
-      <div id="attendanceCurrent"></div>
-      <div class="meta" style="margin-top:12px">
-        <label class="f"><span class="f__l">Где вы работаете</span>
-          <select id="attendanceMode" class="f__i">
-            <option value="field">На выезде</option>
-            <option value="workshop">В цеху</option>
-          </select>
-        </label>
-        <label class="f"><span class="f__l">Объект</span>
-          <select id="attendanceObject" class="f__i"></select>
-        </label>
+    <div class="user-chip">
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-role" id="userRole">—</div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        <button type="button" class="btn btn--p" id="btnAttendanceStart">Отметиться</button>
-        <button type="button" class="btn" id="btnAttendanceStop">Завершить отметку</button>
-      </div>
+      <button class="btn ghost" id="logoutBtn" title="Выйти">Выйти</button>
     </div>
-    <div class="card">
-      <h3>История за сегодня</h3>
-      <div id="attendanceHistory"></div>
-    </div>
-    <div class="card" id="chiefStatusPanel" style="display:none">
-      <h3>Статусы рабочих</h3>
-      <div id="chiefStatusList"></div>
-    </div>
-  </section>
+  </header>
 
-  <section class="tab hid" data-tab="timesheet">
-    <div class="card">
-      <h3>📋 Электронный табель</h3>
-      <div id="timesheetList"></div>
-    </div>
-  </section>
-
-  <section class="tab hid" data-tab="audit">
-    <div class="card">
-      <h3>🧾 Журнал аудита</h3>
-      <div id="auditList"></div>
-    </div>
-  </section>
-
-  <section class="tab hid" data-tab="workshop">
-    <div class="kpis" id="shopKpis"></div>
-    <div class="filter-bar no-print">
-      <input type="search" id="shiftSearch" placeholder="🔍 Поиск по объекту или сотруднику...">
-      <select id="shiftArchiveFilter">
-        <option value="active">Текущие</option>
-        <option value="completed">Выполненные</option>
-        <option value="all">Все</option>
-      </select>
-      <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewShift">+ Смена</button>
-    </div>
-    <div id="shiftsList"></div>
-  </section>
-
-  <section class="tab hid" data-tab="objects">
-    <div class="filter-bar no-print">
-      <input type="search" id="objSearch" placeholder="🔍 Название, адрес, код...">
-      <select id="objTypeFilter">
-        <option value="all">Все типы</option>
-        <option value="office">Офис</option>
-        <option value="warehouse">Склад</option>
-        <option value="production">Производство</option>
-        <option value="retail">Магазин</option>
-        <option value="utility">ЖКХ</option>
-        <option value="other">Другое</option>
-      </select>
-      <div class="sp"></div>
-      <button type="button" class="btn btn--p" id="btnNewObj">+ Объект</button>
-    </div>
-    <div id="objectsList"></div>
-  </section>
-
-  <section class="tab hid" data-tab="finance">
-    <div class="kpis" id="finKpis"></div>
-    <div class="filter-bar no-print">
-      <label class="f" style="flex:1;min-width:130px">
-        <span class="f__l">Начало периода</span>
-        <input type="date" id="periodStart" class="f__i">
-      </label>
-      <label class="f" style="flex:1;min-width:130px">
-        <span class="f__l">Конец периода</span>
-        <input type="date" id="periodEnd" class="f__i">
-      </label>
-      <div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap">
-        <button type="button" class="btn btn--sm" data-preset="week">Неделя</button>
-        <button type="button" class="btn btn--sm" data-preset="month">Месяц</button>
-        <button type="button" class="btn btn--sm" data-preset="prevMonth">Прошлый</button>
-        <button type="button" class="btn btn--sm no-print" id="btnPrintReport">🖨 Печать</button>
-        <button type="button" class="btn btn--sm no-print" id="btnCsvReport">📥 CSV</button>
-      </div>
-    </div>
-    <div id="financeContent"></div>
-    <div class="sig">
-      <div><strong>Утверждаю:</strong> ________________________ / ________________________</div>
-      <div class="sig__r">
-        <div class="sig__l">Подпись</div><div class="sig__l">Дата</div>
-      </div>
-      <div class="sig__r">
-        <div class="sig__l">Составил</div><div class="sig__l">Дата</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="tab hid" data-tab="admin">
-    <div class="card">
-      <h3>💵 Ставки</h3>
-      <div class="meta">
-        <label class="f"><span class="f__l">Выезд (участник), ₽/день</span>
-          <input type="number" id="rateVisit" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Ответственный, ₽/день</span>
-          <input type="number" id="rateResp" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Сервис, ₽/день</span>
-          <input type="number" id="rateService" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Цех, ₽/смена</span>
-          <input type="number" id="rateShopShift" class="f__i" min="0" step="100"></label>
-        <label class="f"><span class="f__l">Менеджер, ₽/день</span>
-          <input type="number" id="rateManager" class="f__i" min="0" step="100"></label>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button type="button" class="btn btn--p" id="btnSaveRates">Сохранить ставки</button>
-        <button type="button" class="btn" id="btnResetRates">Сбросить к 4000/5000/3000/4000/0</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>👥 Сотрудники</h3>
-      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-        <input type="text" id="empNewName" class="f__i" placeholder="ФИО" style="flex:2;min-width:160px">
-        <select id="empNewRole" class="f__i" style="flex:1;min-width:130px">
-          <option value="field">Выездной</option>
-          <option value="workshop">Цех</option>
-        </select>
-        <button type="button" class="btn btn--p" id="empNewAdd">+</button>
-      </div>
-      <div id="empList"></div>
-    </div>
-
-    <div class="card">
-      <h3>👤 Пользователи</h3>
-      <p style="margin:0 0 10px;font-size:12px;color:var(--muted)">
-        Сотрудник видит только свои выезды. Бухгалтер — все финансы. Администратор — управляет доступом.
-      </p>
-      <div id="usersList"></div>
-    </div>
-  </section>
-
-  <nav class="bottom-nav no-print" id="bottomNav">
-    <button type="button" class="bottom-nav__btn" data-tab-btn="jobs">
-      <span class="i">🚚</span><span>Выезды</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="attendance">
-      <span class="i">📱</span><span>Отметка</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="timesheet">
-      <span class="i">📋</span><span>Табель</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="audit">
-      <span class="i">🧾</span><span>Аудит</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="workshop">
-      <span class="i">🏭</span><span>Цех</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="objects">
-      <span class="i">📍</span><span>Объекты</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="finance">
-      <span class="i">💰</span><span>Финансы</span></button>
-    <button type="button" class="bottom-nav__btn" data-tab-btn="admin">
-      <span class="i">⚙️</span><span>Админ</span></button>
-  </nav>
+  <nav id="nav" class="tabs"></nav>
+  <main id="app"></main>
 </div>
 
-<div class="toast" id="toast"></div>
-<div class="modal-back hid" id="modalRoot"></div>
-<div class="light hid" id="lightBox"><img id="lightImg" alt=""></div>
+<dialog id="modal">
+  <div class="dlg-head" id="dlgTitle"></div>
+  <div class="dlg-body" id="dlgBody"></div>
+  <div class="dlg-foot">
+    <button class="btn ghost" type="button" onclick="document.getElementById('modal').close()">Отмена</button>
+    <button class="btn primary" type="button" id="dlgSave">Сохранить</button>
+  </div>
+</dialog>
 
 <script>
-(function(){
-'use strict';
-
-/* ============================================================
-   CONSTANTS
-   ============================================================ */
-const KS = {
-  state: 'obj_uchet_state_v5',           // v5 — без статуса у выезда
-  users: 'obj_uchet_users_v1',
-  session: 'obj_uchet_session_v1',
-  theme: 'obj_uchet_theme_v1',
-  tab: 'obj_uchet_tab_v1',
-};
-const API_BASE = '/api';
-
-const ROLES = {
-  admin:      {label:'Администратор', rank:100, cls:'user-badge--admin'},
-  accountant: {label:'Бухгалтер',      rank:80,  cls:'user-badge--accountant'},
-  employee:   {label:'Сотрудник',      rank:20,  cls:'user-badge--field'},
-  manager:    {label:'Менеджер',       rank:60,  cls:'user-badge--manager'},
-  workshopChief:{label:'Начальник цеха',rank:50, cls:'user-badge--workshop-chief'},
-  field:      {label:'Выездной',       rank:20,  cls:'user-badge--field'},
-  workshop:   {label:'Цех',            rank:20,  cls:'user-badge--workshop'},
-};
-const ROLE_KEYS = Object.keys(ROLES).sort((a,b)=>ROLES[b].rank-ROLES[a].rank);
-const USER_ROLE_KEYS = ['admin','accountant','employee','workshopChief','manager'];
-const PERMS = {
-  admin:      ['jobs','attendance','timesheet','audit','workshop','objects','finance','admin'],
-  accountant: ['timesheet'],
-  manager:    ['objects'],
-  workshopChief: ['attendance','timesheet','audit','workshop'],
-  field:      ['jobs','attendance','objects'],
-  workshop:   ['workshop','attendance','objects'],
-};
-const userRoles = user => Array.isArray(user?.roles) && user.roles.length ? user.roles : (user?.role ? [user.role] : []);
-const can = (user, tab) => userRoles(user).some(role=>(PERMS[role]||[]).includes(tab));
-const roleRank = r => ROLES[r]?.rank ?? 0;
-const isAtLeast = (user, role) => userRoles(user).some(value=>roleRank(value) >= roleRank(role));
-function normalizeUser(user){
-  const roles = userRoles(user).map(role=>role==='field'||role==='workshop'?'employee':role);
-  return {...user, roles:[...new Set(roles)], role:roles[0] || 'employee'};
-}
-
-const OBJ_TYPES = {
-  office:    {label:'Офис',        ico:'🏢', color:'#2563eb'},
-  warehouse: {label:'Склад',       ico:'📦', color:'#7c3aed'},
-  production:{label:'Производство',ico:'🏭', color:'#d97706'},
-  retail:    {label:'Магазин',     ico:'🛒', color:'#0891b2'},
-  utility:   {label:'ЖКХ',         ico:'🔧', color:'#dc2626'},
-  other:     {label:'Другое',      ico:'📍', color:'#64748b'},
-};
-// JOB_STATUS удалён — статус выезда определяется датой
-const JOB_TYPE = {visit:'Выезд', service:'Сервис'};
-const PRIORITY = { low:['Низкий','muted'], normal:['Обычный','info'], high:['Высокий','warn'], urgent:['Срочно','err'] };
-const EXP_STATUS = {
-  pending: ['На утверждении','warn'],
-  approved:['Утверждено','ok'],
-  paid:    ['Оплачено','ok'],
-  rejected:['Отклонено','err'],
-};
-const EXP_CATEGORIES = ['Транспорт','Материалы','Расходники','Питание','Проживание','Связь','Прочее'];
-const DEFAULT_RATES = { visit:4000, resp:5000, service:3000, shopShift:4000, manager:0 };
-
-/* ============================================================
-   UTILS
-   ============================================================ */
-const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-async function api(path, options = {}){
-  const response = await fetch(API_BASE + path, {
-    credentials: 'same-origin',
-    headers: {'Content-Type':'application/json', ...(options.headers||{})},
-    ...options,
+/* =========================================================
+   УТИЛИТЫ
+   ========================================================= */
+var $ = function(s, r){ return (r || document).querySelector(s); };
+function uid(){ return Math.random().toString(36).slice(2, 10); }
+function num(v){ var n = Number(v); return isFinite(n) ? n : 0; }
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
   });
-  if(response.status === 204) return null;
-  const payload = await response.json().catch(()=>({}));
-  if(!response.ok) throw new Error(payload.error || `Ошибка запроса (${response.status})`);
-  return payload;
 }
-const uid = () => Math.random().toString(36).slice(2,10);
-const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num = v => { if(typeof v==='number')return isFinite(v)?v:0;
-  let s=String(v).replace(/\s+/g,'');
-  const lc=s.lastIndexOf(','), ld=s.lastIndexOf('.');
-  if(lc>ld) s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(/,/g,'');
-  const n=parseFloat(s); return isFinite(n)?n:0; };
-const money = n => (Math.round(num(n))).toLocaleString('ru-RU')+' ₽';
-const todayISO = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
-const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const fmtDate = s => { if(!s)return'—'; const [y,m,d]=s.split('-'); return `${d}.${m}.${y}`; };
-const validDate = s => { if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
-  const d=new Date(s+'T00:00:00'); return !isNaN(d)&&iso(d)===s; };
-const normName = s => String(s||'').trim().toLowerCase();
+function fmt(v){ return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(num(v)) + ' ₽'; }
+function fmtN(v){ return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(num(v)); }
+function ymd(d){
+  return d.getFullYear() + '-' +
+         String(d.getMonth() + 1).padStart(2, '0') + '-' +
+         String(d.getDate()).padStart(2, '0');
+}
+function today(){ return ymd(new Date()); }
+function inR(d, a, b){ return !!d && d >= a && d <= b; }
+function nn(v, fallback){ return (v === null || v === undefined) ? fallback : v; }
+function getProp(obj, key){ return obj && obj[key]; }
 
-/* --- День-статус выезда (замена статуса) --- */
-function vyezdDayStatus(j){
-  const t = todayISO();
-  if(j.date === t) return 'today';
-  if(j.date < t) return 'past';
-  return 'future';
+function normalizePhone(s){
+  var d = String(s || '').replace(/\D/g, '');
+  if (d.length === 11 && (d[0] === '8' || d[0] === '7')) return '+7' + d.slice(1);
+  if (d.length === 10) return '+7' + d;
+  return d ? '+7' + d : '';
 }
-function vyezdDayLabel(st){
-  return { today:'Сегодня', past:'Завершён', future:'Запланирован' }[st] || '';
+function formatPhone(s){
+  var d = String(s || '').replace(/\D/g, '').slice(-10);
+  if (d.length !== 10) return s || '—';
+  return '+7 ' + d.slice(0,3) + ' ' + d.slice(3,6) + '-' + d.slice(6,8) + '-' + d.slice(8);
 }
-function vyezdDayBadge(st){
-  const cls = { today:'ok', past:'muted', future:'info' }[st] || 'muted';
-  return `<span class="b b--${cls}">${vyezdDayLabel(st)}</span>`;
-}
-
-function toast(msg, kind){
-  const t = $('#toast'); if(!t) return;
-  t.textContent = msg; t.className = 'toast show'+(kind==='err'?' toast--err':'');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(()=>t.classList.remove('show'), 3500);
-}
-
-function openModal(html, wide){
-  const root = $('#modalRoot');
-  root.innerHTML = `<div class="modal${wide?' modal--wide':''}">${html}</div>`;
-  root.classList.remove('hid');
-  root.onclick = e => { if(e.target === root) closeModal(); };
-}
-function closeModal(){
-  const root = $('#modalRoot');
-  root.classList.add('hid'); root.innerHTML = '';
-}
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-
-/* ============================================================
-   AUTH
-   ============================================================ */
-function normalizePhone(p){
-  const d = String(p||'').replace(/\D/g,'');
-  if(d.length===11 && d[0]==='8') return '+7'+d.slice(1);
-  if(d.length===11 && d[0]==='7') return '+'+d;
-  if(d.length===10) return '+7'+d;
-  return null;
-}
-function loadUsers(){
-  if(Array.isArray(App.users)) return App.users;
-  return [];
-}
-async function saveUsers(users){
-  const previous = Array.isArray(App.users)
-    ? App.users.map(user=>({...user}))
-    : [];
-  App.users = users;
-  try {
-    await Promise.all(users.map(user=>{
-      const old = previous.find(item=>item.id===user.id || item.phone===user.phone);
-      if(!old) return null;
-      const changes = {};
-      if(JSON.stringify(old.roles||[old.role]) !== JSON.stringify(user.roles||[user.role])) {
-        changes.roles = user.roles;
-      }
-      if(old.status !== user.status) changes.status = user.status;
-      if(!Object.keys(changes).length) return null;
-      return api(`/users/${encodeURIComponent(user.id)}`, {
-        method:'PATCH',
-        body:JSON.stringify(changes),
-      }).then(payload=>{
-        Object.assign(user, payload.user);
-      });
-    }));
-  } catch(error) {
-    App.users = previous;
-    throw error;
+function hashPassword(pwd){
+  var h = 0x811c9dc5;
+  var s = String(pwd);
+  for (var i = 0; i < s.length; i++){
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
   }
-  return App.users;
+  return (h >>> 0).toString(16).padStart(8, '0');
 }
-/* ============================================================
-   STORE — выезд без status
-   ============================================================ */
-function newState(){
+
+/* =========================================================
+   РОЛИ И ПРАВА
+   ========================================================= */
+var ROLES_DEF = {
+  admin:      { label: 'Администратор',    tabs: 'all' },
+  manager:    { label: 'Менеджер',         tabs: ['dash','objects','finance'] },
+  foreman:    { label: 'Начальник цеха',   tabs: ['dash','staff','timesheet','trips','works','fleet','salary'] },
+  accountant: { label: 'Бухгалтер',        tabs: ['dash','objects','finance','salary'] },
+  designer:   { label: 'Проектировщик',    tabs: ['dash','objects'] },
+  installer:  { label: 'Монтажник',        tabs: ['dash','trips'] },
+  worker:     { label: 'Сотрудник цеха',   tabs: ['dash','timesheet','works'] }
+};
+
+/* =========================================================
+   ХРАНИЛИЩЕ
+   ========================================================= */
+var LS_KEY = 'stroy_model_v2';
+var DB = loadDB();
+
+function safeGetItem(key){
+  try { return localStorage.getItem(key); } catch (e){ console.warn('localStorage.getItem:', e); return null; }
+}
+function safeSetItem(key, val){
+  try { localStorage.setItem(key, val); return true; }
+  catch (e){
+    console.error('localStorage.setItem:', e);
+    if (!window.__saveWarned){
+      window.__saveWarned = true;
+      setTimeout(function(){
+        alert('Внимание: не удалось сохранить данные в браузере.\n' +
+              'Изменения будут потеряны при перезагрузке.\n\n' +
+              'Причина: ' + e.message);
+      }, 100);
+    }
+    return false;
+  }
+}
+
+function loadDB(){
+  var db = null;
+  var raw = safeGetItem(LS_KEY);
+  if (raw){
+    try { db = JSON.parse(raw); }
+    catch (e){ console.warn('Не удалось разобрать JSON из localStorage:', e); db = null; }
+  }
+  if (!db || typeof db !== 'object') db = seed();
+  return migrate(db);
+}
+
+function migrate(db){
+  var arrays = ['employees','vehicles','works','objects','timesheet','trips','output','costs','payments','users'];
+  for (var i = 0; i < arrays.length; i++){
+    if (!Array.isArray(db[arrays[i]])) db[arrays[i]] = [];
+  }
+  if (!db.settings || typeof db.settings !== 'object'){
+    var mStart = ymd(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+    db.settings = { from: mStart, to: today() };
+  }
+  var hasAdmin = false;
+  for (var j = 0; j < db.users.length; j++){
+    if (db.users[j].role === 'admin'){ hasAdmin = true; break; }
+  }
+  if (!hasAdmin){
+    db.users.push({
+      id: 'u-admin',
+      phone: '+79000000000',
+      name: 'Администратор',
+      passHash: hashPassword('admin'),
+      role: 'admin',
+      createdAt: today()
+    });
+  }
+  if (db.session === undefined) db.session = null;
+  return db;
+}
+
+function save(){
+  safeSetItem(LS_KEY, JSON.stringify(DB));
+  if (window.__serverAuthToken){
+    fetch('/api/state', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + window.__serverAuthToken },
+      body: JSON.stringify(DB)
+    }).catch(function(e){ console.warn('Серверное сохранение недоступно:', e.message); });
+  }
+}
+
+function serverAuth(path, data){
+  return fetch('/api/auth/' + path, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function(response){
+    return response.json().then(function(payload){
+      if (!response.ok) throw new Error(payload.error || 'Ошибка авторизации');
+      return payload;
+    });
+  });
+}
+
+function loadServerState(){
+  if (!window.__serverAuthToken) return Promise.resolve(false);
+  return fetch('/api/state', { headers: { authorization: 'Bearer ' + window.__serverAuthToken } })
+    .then(function(response){
+      if (!response.ok) throw new Error('Сессия сервера истекла');
+      return response.json();
+    })
+    .then(function(payload){
+      if (payload.db) {
+        DB = migrate(payload.db);
+        if (payload.user) DB.session = payload.user.id;
+        safeSetItem(LS_KEY, JSON.stringify(DB));
+        return true;
+      }
+      return false;
+    });
+}
+
+function seed(){
+  var d = today();
+  var mStart = ymd(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+
+  var employees = [
+    { id: 'e1', name: 'Иванов И.И.',   role: 'Начальник цеха', payType: 'salary',  rate: 0,    salary: 80000, premiumPct: 0, phone: '+7 900 000-00-01' },
+    { id: 'e2', name: 'Петров П.П.',   role: 'Цех',            payType: 'day',     rate: 2500, salary: 0,     premiumPct: 0, phone: '+7 900 000-00-02' },
+    { id: 'e3', name: 'Сидоров С.С.',  role: 'Цех',            payType: 'piece',   rate: 0,    salary: 0,     premiumPct: 0, phone: '+7 900 000-00-03' },
+    { id: 'e4', name: 'Кузнецов А.А.', role: 'Монтажник',      payType: 'day',     rate: 3000, salary: 0,     premiumPct: 0, phone: '+7 900 000-00-04' },
+    { id: 'e5', name: 'Морозов Д.Д.',  role: 'Монтажник',      payType: 'day',     rate: 3000, salary: 0,     premiumPct: 0, phone: '+7 900 000-00-05' },
+    { id: 'e6', name: 'Смирнов В.В.',  role: 'Менеджер',       payType: 'day',     rate: 2000, salary: 0,     premiumPct: 3, phone: '+7 900 000-00-06' },
+    { id: 'e7', name: 'Орлова Е.Е.',   role: 'Бухгалтер',      payType: 'salary',  rate: 0,    salary: 60000, premiumPct: 0, phone: '+7 900 000-00-07' },
+    { id: 'e8', name: 'Волков Н.Н.',   role: 'Проектировщик',  payType: 'premium', rate: 0,    salary: 0,     premiumPct: 5, phone: '+7 900 000-00-08' }
+  ];
+  var vehicles = [
+    { id: 'v1', plate: 'А123ВС', model: 'Газель NEXT',  driverId: 'e4' },
+    { id: 'v2', plate: 'В456ЕК', model: 'Ford Transit', driverId: 'e5' }
+  ];
+  var works = [
+    { id: 'w1', name: 'Беседка — сборка',         rate: 15000 },
+    { id: 'w2', name: 'Автонавес — сборка',        rate: 12000 },
+    { id: 'w3', name: 'Мангальная зона — сборка',  rate: 8000 },
+    { id: 'w4', name: 'Дом — каркас',              rate: 45000 }
+  ];
+  var objects = [
+    { id: 'o1', name: 'Беседка 4×4 «Комфорт»', address: 'г. Москва, ул. Ленина, 10', phone: '+7 900 111-22-33',
+      comment: 'Срок сдачи до конца месяца', status: 'В работе', amount: 180000,
+      managerId: 'e6', designerId: 'e8', closedAt: '' },
+    { id: 'o2', name: 'Автонавес на 2 авто', address: 'МО, г. Химки, СНТ «Берёзка»', phone: '+7 900 444-55-66',
+      comment: 'Нужен повторный замер', status: 'Новый', amount: 95000,
+      managerId: 'e6', designerId: 'e8', closedAt: '' },
+    { id: 'o3', name: 'Мангальная зона «Люкс»', address: 'г. Одинцово, КП «Лесной»', phone: '+7 900 777-88-99',
+      comment: 'Сдан, закрыт', status: 'Завершён', amount: 120000,
+      managerId: 'e6', designerId: 'e8', closedAt: d }
+  ];
+  var timesheet = [
+    { id: uid(), empId: 'e2', date: d, days: 1, objectId: 'o1', note: 'Изготовление каркаса' },
+    { id: uid(), empId: 'e3', date: d, days: 1, objectId: 'o1', note: 'Сдельно' }
+  ];
+  var trips = [
+    { id: uid(), date: d, objectId: 'o1', seniorId: 'e4', crew: ['e4', 'e5'],
+      vehicleId: 'v1', driverId: 'e4', fuel: 1500, materials: 4200, other: 0 }
+  ];
+  var output = [
+    { id: uid(), empId: 'e3', workId: 'w1', qty: 1, date: d, objectId: 'o1' }
+  ];
+  var costs = [
+    { id: uid(), objectId: 'o1', date: d, type: 'Материалы', amount: 25000, note: 'Брус, доска, крепёж' }
+  ];
+  var payments = [
+    { id: uid(), objectId: 'o1', date: d, amount: 90000, note: 'Аванс 50%' }
+  ];
+  var users = [
+    { id: 'u-admin',   phone: '+79000000000', name: 'Администратор', passHash: hashPassword('admin'), role: 'admin',   createdAt: d },
+    { id: 'u-manager', phone: '+79001111111', name: 'Смирнов В.В.',  passHash: hashPassword('1234'),  role: 'manager', createdAt: d },
+    { id: 'u-foreman', phone: '+79002222222', name: 'Иванов И.И.',   passHash: hashPassword('1234'),  role: 'foreman', createdAt: d }
+  ];
+
   return {
-    objects: [],
-    employees: [],
-    jobs: [],
-    shifts: [],
-    attendance: [],
-    audit: [],
-    rates: { ...DEFAULT_RATES },
-    meta: { createdAt: Date.now(), managerRateVersion: 1, workflowVersion: 2 },
+    employees: employees, vehicles: vehicles, works: works, objects: objects,
+    timesheet: timesheet, trips: trips, output: output, costs: costs, payments: payments,
+    users: users, session: null,
+    settings: { from: mStart, to: d }
   };
 }
-function sanitizeState(p){
-  if(!p || typeof p!=='object') return null;
-  const s = newState();
-  const isLegacyManagerRate = !p.meta || p.meta.managerRateVersion !== 1;
-  s.meta = { ...s.meta, ...(p.meta||{}), managerRateVersion: 1, workflowVersion: 2 };
-  if(Array.isArray(p.objects)){
-    s.objects = p.objects.filter(o=>o && o.name).map(o=>({
-      id: o.id||uid(), code: String(o.code||''), name: String(o.name),
-      type: OBJ_TYPES[o.type] ? o.type : 'other',
-      status: o.status==='paused' ? 'paused' : (o.status==='closed'?'closed':'active'),
-      address: String(o.address||''), contact: String(o.contact||''),
-      phone: String(o.phone||''), access: String(o.access||''),
-      responsibleId: o.responsibleId||null, notes: String(o.notes||''),
-      photos: Array.isArray(o.photos)?o.photos.filter(x=>typeof x==='string').slice(0,20):[],
-      history: Array.isArray(o.history)?o.history.slice(-100):[],
-    }));
+
+/* =========================================================
+   АВТОРИЗАЦИЯ
+   ========================================================= */
+function getCurrentUser(){
+  if (!DB.session) return null;
+  var u = null;
+  for (var i = 0; i < DB.users.length; i++){
+    if (DB.users[i].id === DB.session){ u = DB.users[i]; break; }
   }
-  if(Array.isArray(p.employees)){
-    s.employees = p.employees.filter(e=>e && e.name).map(e=>({
-      id: e.id||uid(), name: String(e.name),
-      role: e.type==='workshop' || e.role==='workshop' ? 'workshop' : 'field',
-      type: e.type==='workshop' || e.role==='workshop' ? 'workshop' : 'field',
-      workerStatus: ['responsible','worker','trainee'].includes(e.workerStatus) ? e.workerStatus : 'worker',
-      phone: String(e.phone||''), email: String(e.email||''),
-      salary: num(e.salary)||0, hireDate: validDate(e.hireDate)?e.hireDate:todayISO(),
-      active: e.active !== false,
-    }));
-  }
-  if(Array.isArray(p.jobs)){
-    s.jobs = p.jobs.filter(j=>j && j.objectId && validDate(j.date)).map(j=>{
-      let assignees = Array.isArray(j.assignees) ? j.assignees.filter(x=>typeof x==='string' && x) : [];
-      if(!assignees.length && j.assigneeId) assignees = [j.assigneeId];
-      let responsibleId = j.responsibleId || (assignees[0] || null);
-      if(responsibleId && !assignees.includes(responsibleId)) responsibleId = assignees[0] || null;
-      assignees = [...new Set(assignees)];
-      return {
-        id: j.id||uid(), objectId: j.objectId, assignees, responsibleId,
-        date: j.date, title: String(j.title||''),
-        type: j.type==='service' ? 'service' : 'visit',
-        priority: PRIORITY[j.priority] ? j.priority : 'normal',
-        archived: j.archived === true,
-        archivedAt: validDate(j.archivedAt) ? j.archivedAt : null,
-        managerBonus: num(j.managerBonus)||0,
-        managerBonusNote: String(j.managerBonusNote||''),
-        checkin: j.checkin && typeof j.checkin==='object' ? {
-          time: String(j.checkin.time||''), lat: num(j.checkin.lat), lng: num(j.checkin.lng),
-          byId: j.checkin.byId||null,
-        } : null,
-        checkout: j.checkout && typeof j.checkout==='object' ? {
-          time: String(j.checkout.time||''), byId: j.checkout.byId||null,
-        } : null,
-        photos: Array.isArray(j.photos)?j.photos.filter(x=>typeof x==='string').slice(0,20):[],
-        expenses: Array.isArray(j.expenses)?j.expenses.filter(e=>e&&typeof e==='object').map(e=>({
-          id: e.id||uid(),
-          category: EXP_CATEGORIES.includes(e.category)?e.category:'Прочее',
-          amount: 0, comment: String(e.comment||''),
-          status: EXP_STATUS[e.status] ? e.status : 'pending',
-          date: validDate(e.date)?e.date:todayISO(),
-          byId: e.byId||null,
-        })):[],
-        notes: String(j.notes||''),
-        history: Array.isArray(j.history)?j.history.slice(-50):[],
-      };
-    });
-  }
-  if(Array.isArray(p.shifts)){
-    const fallbackObjId = s.objects[0]?.id || null;
-    s.shifts = p.shifts.filter(sh=>sh && validDate(sh.date)).map(sh=>{
-      let objectId = sh.objectId || null;
-      let employeeIds = Array.isArray(sh.employeeIds) ? sh.employeeIds.filter(x=>typeof x==='string' && x) : [];
-      if(!objectId && sh.productId && fallbackObjId) objectId = fallbackObjId;
-      if(!employeeIds.length && sh.employeeId) employeeIds = [sh.employeeId];
-      employeeIds = [...new Set(employeeIds)];
-      if(!objectId || !employeeIds.length) return null;
-      return {
-        id: sh.id||uid(), date: sh.date, objectId, employeeIds,
-        notes: String(sh.notes||''), completed: sh.completed === true,
-        completedAt: validDate(sh.completedAt) ? sh.completedAt : null,
-        completedById: sh.completedById||null,
-      };
-    }).filter(Boolean);
-  }
-  if(Array.isArray(p.attendance)){
-    s.attendance = p.attendance.filter(item=>item && item.employeeId && validDate(item.date)).map(item=>({
-      id: item.id||uid(), employeeId: String(item.employeeId), mode: item.mode==='workshop'?'workshop':'field',
-      objectId: item.objectId||null, date: item.date, startedAt: String(item.startedAt||''),
-      endedAt: item.endedAt ? String(item.endedAt) : null,
-    }));
-  }
-  if(Array.isArray(p.audit)){
-    s.audit = p.audit.slice(-500);
-  }
-  if(p.rates && typeof p.rates==='object'){
-    ['visit','resp','service','shopShift','manager'].forEach(k=>{
-      const v = num(p.rates[k]);
-      if(isFinite(v) && v>=0) s.rates[k] = v;
-    });
-  }
-  if(isLegacyManagerRate) s.rates.manager = 0;
-  return s;
-}
-function loadState(){
-  if(App.remoteState) return sanitizeState(App.remoteState) || newState();
-  return newState();
-}
-function saveState(){
-  if(App.user){
-    api('/state', {method:'PUT', body:JSON.stringify(App.state)})
-      .then(()=>$('#saveDot')?.classList.remove('save-dot--err'))
-      .catch(error=>{ console.error(error); $('#saveDot')?.classList.add('save-dot--err'); toast('Не удалось сохранить данные на сервере','err'); });
-  }
-}
-function scheduleSave(){ clearTimeout(saveState._s); saveState._s = setTimeout(saveState, 300); }
-
-/* ============================================================
-   APP STATE
-   ============================================================ */
-const App = {
-  state: newState(),
-  user: null,
-  remoteState: null,
-  users: [],
-  tab: 'jobs',
-  period: { start: '', end: '' },
-};
-
-/* ============================================================
-   ACCESSORS
-   ============================================================ */
-const objById = id => App.state.objects.find(o=>o.id===id);
-const empById = id => App.state.employees.find(e=>e.id===id);
-const empByRole = role => App.state.employees.filter(e=>e.role===role && e.active!==false);
-const objName = id => objById(id)?.name || '—';
-const empName = id => empById(id)?.name || '—';
-const jobById = id => App.state.jobs.find(j=>j.id===id);
-const shiftById = id => App.state.shifts.find(s=>s.id===id);
-
-function myEmployee(){
-  if(!App.user) return null;
-  return App.state.employees.find(e=>e.phone===App.user.phone) || null;
-}
-function isInJob(job, empId){
-  return !!empId && Array.isArray(job.assignees) && job.assignees.includes(empId);
-}
-function isInShift(shift, empId){
-  return !!empId && Array.isArray(shift.employeeIds) && shift.employeeIds.includes(empId);
+  if (!u){ DB.session = null; save(); return null; }
+  return u;
 }
 
-/* ============================================================
-   CALCULATIONS
-   ============================================================ */
-function calcPayroll(periodStart, periodEnd){
-  const {start, end} = normalizePeriod(periodStart, periodEnd);
-  const rows = [];
-  const jobsByEmployee = new Map();
-  const shiftsByEmployee = new Map();
-  const periodJobs = App.state.jobs.filter(j=>j.date>=start && j.date<=end);
-  const periodShifts = App.state.shifts.filter(s=>s.date>=start && s.date<=end);
-
-  periodJobs.forEach(job=>{
-    (job.assignees||[]).forEach(employeeId=>{
-      const jobs = jobsByEmployee.get(employeeId) || [];
-      jobs.push(job);
-      jobsByEmployee.set(employeeId, jobs);
-    });
-  });
-  periodShifts.forEach(shift=>{
-    (shift.employeeIds||[]).forEach(employeeId=>{
-      const shifts = shiftsByEmployee.get(employeeId) || [];
-      shifts.push(shift);
-      shiftsByEmployee.set(employeeId, shifts);
-    });
-  });
-  const managerBonuses = periodJobs
-    .filter(job=>num(job.managerBonus)>0)
-    .reduce((sum, job)=>sum+num(job.managerBonus), 0);
-
-  for(const emp of App.state.employees){
-    if(!emp.active) continue;
-
-    if(emp.role==='field'){
-      const empJobs = jobsByEmployee.get(emp.id) || [];
-      let visitDays=0, respVisitDays=0, serviceDays=0;
-      empJobs.forEach(j=>{
-        if(j.type==='service') serviceDays++;
-        else {
-          visitDays++;
-          if(j.responsibleId === emp.id) respVisitDays++;
-        }
-      });
-      const visitNonResp = visitDays - respVisitDays;
-      const total = serviceDays*App.state.rates.service
-                  + visitNonResp*App.state.rates.visit
-                  + respVisitDays*App.state.rates.resp;
-      rows.push({emp, serviceDays, visitDays:visitNonResp, respVisitDays, shiftsCount:0, total});
-    } else if(emp.role==='workshop'){
-      const empShifts = shiftsByEmployee.get(emp.id) || [];
-      const shiftsCount = empShifts.length;
-      const total = shiftsCount * App.state.rates.shopShift;
-      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount, total});
-    } else if(emp.role==='manager'){
-      const days = daysBetween(start, end);
-      const total = days * App.state.rates.manager + managerBonuses;
-      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount:0, bonuses:managerBonuses, total});
-    } else {
-      rows.push({emp, serviceDays:0, visitDays:0, respVisitDays:0, shiftsCount:0, bonuses:0, total:0});
-    }
-  }
-  return rows;
+function canAccess(user, tabId){
+  if (!user) return false;
+  if (tabId === 'settings') return user.role === 'admin';
+  var def = ROLES_DEF[user.role];
+  if (!def) return false;
+  if (def.tabs === 'all') return true;
+  return def.tabs.indexOf(tabId) !== -1;
 }
 
-function daysBetween(s, e){
-  if(!validDate(s) || !validDate(e)) return 0;
-  const a = new Date(s+'T00:00:00'), b = new Date(e+'T00:00:00');
-  if(isNaN(a) || isNaN(b) || b<a) return 0;
-  return Math.round((b-a)/86400000)+1;
-}
-function normalizePeriod(s, e){
-  if(!validDate(s)) s = todayISO();
-  if(!validDate(e)) e = s;
-  if(e < s){ const t=s; s=e; e=t; }
-  return {start:s, end:e};
-}
-
-/* ============================================================
-   HELPERS for crew display
-   ============================================================ */
-function crewNames(job){
-  return (job.assignees||[]).map(id=>({id, name: empName(id), resp: job.responsibleId===id}));
-}
-function crewShort(job){
-  const crew = crewNames(job);
-  if(!crew.length) return '—';
-  const resp = crew.find(c=>c.resp);
-  const others = crew.length - 1;
-  return resp
-    ? `${esc(resp.name)}${others?` +${others}`:''}`
-    : crew.map(c=>esc(c.name)).join(', ');
-}
-function crewBadges(job){
-  const crew = crewNames(job);
-  if(!crew.length) return '<span class="muted">—</span>';
-  return `<div class="crew">${crew.map(c=>
-    `<span class="crew__m ${c.resp?'crew__m--resp':''}">${esc(c.name)}</span>`
-  ).join('')}</div>`;
-}
-function shiftCrewBadges(shift){
-  const ids = shift.employeeIds || [];
-  if(!ids.length) return '<span class="muted">—</span>';
-  return `<div class="crew">${ids.map(id=>
-    `<span class="crew__m">${esc(empName(id))}</span>`
-  ).join('')}</div>`;
-}
-
-/* ============================================================
-   VIEWS — JOBS (Выезды)
-   ============================================================ */
-function renderJobs(){
-  const me = myEmployee();
-  let list = App.state.jobs.slice();
-  if(me?.type==='field' && userRoles(App.user).includes('employee')) list = list.filter(j=>isInJob(j, me?.id));
-
-  const q = ($('#jobSearch')?.value || '').toLowerCase().trim();
-  const pF = $('#jobPeriodFilter')?.value || 'all';
-  const archiveF = $('#jobArchiveFilter')?.value || 'active';
-  if(pF !== 'all') list = list.filter(j => vyezdDayStatus(j) === pF);
-  if(archiveF === 'active') list = list.filter(j => !j.archived);
-  if(archiveF === 'archived') list = list.filter(j => j.archived);
-  if(q) list = list.filter(j=>{
-    const o = objById(j.objectId);
-    const crewStr = (j.assignees||[]).map(id=>empName(id)).join(' ');
-    return (j.title+objName(j.objectId)+(o?.address||'')+crewStr).toLowerCase().includes(q);
-  });
-
-  list.sort((a,b)=> b.date.localeCompare(a.date));
-
-  if(!list.length){
-    $('#jobsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">🚚</div><div>Выездов нет</div>
-      <div style="margin-top:12px;font-size:12px">Нажмите «+ Выезд», чтобы создать</div>
-    </div></div>`;
-    return;
-  }
-
-  const rows = list.map(j=>{
-    const o = objById(j.objectId);
-    const typeLbl = JOB_TYPE[j.type];
-    const meInGroup = isInJob(j, me?.id);
-    const daySt = vyezdDayStatus(j);
-    let actions = '';
-    if(daySt==='today' && !j.checkin && meInGroup){
-      actions += `<button class="btn btn--xs btn--p" data-checkin="${j.id}">Чек-ин</button>`;
-    }
-    if(daySt==='today' && j.checkin && !j.checkout && meInGroup){
-      actions += `<button class="btn btn--xs" data-checkout="${j.id}">Чек-аут</button>`;
-    }
-    actions += `<button class="btn btn--xs" data-view-job="${j.id}">👁</button>`;
-    if(isAtLeast(App.user,'manager')){
-      actions += `<button class="btn btn--xs" data-archive-job="${j.id}">${j.archived?'Вернуть':'В архив'}</button>`;
-      actions += `<button class="btn btn--xs icobtn--d" data-del-job="${j.id}">✕</button>`;
-    }
-    const expCnt = (j.expenses||[]).length;
-    return `<tr>
-      <td>
-        <div class="title">${esc(j.title)}</div>
-        <div class="sub">${esc(o?.code||'')} · ${esc(o?.name||'—')}</div>
-      </td>
-      <td>${esc(o?.address||'—')}</td>
-      <td>${crewBadges(j)}</td>
-      <td>
-        <div>${fmtDate(j.date)}</div>
-        <div style="margin-top:3px">${vyezdDayBadge(daySt)}</div>
-      </td>
-      <td><span class="b b--muted">${typeLbl}</span></td>
-      <td class="right">${expCnt ? `${expCnt} шт.` : '—'}</td>
-      <td class="actions">${actions}</td>
-    </tr>`;
-  }).join('');
-
-  $('#jobsList').innerHTML = `<div class="card" style="padding:0">
-    <div class="tbl-wrap"><table class="tbl">
-      <thead><tr>
-        <th>Выезд</th><th>Адрес</th><th>Группа</th><th>Дата</th>
-        <th>Тип</th><th>Расходы</th><th></th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-  </div>`;
-}
-
-/* ============================================================
-   VIEWS — WORKSHOP
-   ============================================================ */
-function renderWorkshop(){
-  const me = myEmployee();
-  let shifts = App.state.shifts.slice();
-  if(me?.type==='workshop' && userRoles(App.user).includes('employee')){
-    shifts = shifts.filter(s=>isInShift(s, me?.id));
-  }
-
-  const q = ($('#shiftSearch')?.value || '').toLowerCase().trim();
-  const archiveF = $('#shiftArchiveFilter')?.value || 'active';
-  if(archiveF === 'active') shifts = shifts.filter(s=>!s.completed);
-  if(archiveF === 'completed') shifts = shifts.filter(s=>s.completed);
-  if(q) shifts = shifts.filter(s=>{
-    const crew = (s.employeeIds||[]).map(id=>empName(id)).join(' ');
-    return (objName(s.objectId)+' '+crew).toLowerCase().includes(q);
-  });
-
-  shifts.sort((a,b)=> b.date.localeCompare(a.date));
-
-  const monthStart = todayISO().slice(0,7) + '-01';
-  const monthEnd = iso(new Date(new Date().getFullYear(), new Date().getMonth()+1, 0));
-  const monthShifts = shifts.filter(s=>s.date>=monthStart && s.date<=monthEnd);
-
-  const shiftsCount = monthShifts.length;
-  const personShifts = monthShifts.reduce((a,s)=>a + (s.employeeIds?.length||0), 0);
-  const cost = personShifts * App.state.rates.shopShift;
-  const uniqueEmps = new Set();
-  monthShifts.forEach(s=>(s.employeeIds||[]).forEach(id=>uniqueEmps.add(id)));
-
-  $('#shopKpis').innerHTML = `
-    <div class="kpi"><div class="kpi__l">Смен за месяц</div><div class="kpi__v acc">${shiftsCount}</div></div>
-    <div class="kpi"><div class="kpi__l">Человеко-смен</div><div class="kpi__v">${personShifts}</div></div>
-    <div class="kpi"><div class="kpi__l">Стоимость труда</div><div class="kpi__v">${money(cost)}</div></div>
-    <div class="kpi"><div class="kpi__l">Сотрудников занято</div><div class="kpi__v">${uniqueEmps.size}</div></div>
-  `;
-
-  if(!shifts.length){
-    $('#shiftsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">🏭</div><div>Смен нет</div>
-      <div style="margin-top:12px;font-size:12px">Нажмите «+ Смена», чтобы создать</div>
-    </div></div>`;
-    return;
-  }
-
-  const rows = shifts.map(sh=>{
-    const cnt = (sh.employeeIds||[]).length;
-    const shiftCost = cnt * App.state.rates.shopShift;
-    let actions = isAtLeast(App.user,'manager')
-      ? `<button class="btn btn--xs icobtn--d" data-del-shift="${sh.id}">✕</button>`
-      : '';
-    if(isAtLeast(App.user,'manager') || userRoles(App.user).includes('workshopChief')){
-      actions = `<button class="btn btn--xs" data-complete-shift="${sh.id}">${sh.completed?'Вернуть':'Выполнено'}</button>` + actions;
-    }
-    return `<tr>
-      <td>${fmtDate(sh.date)}</td>
-      <td>
-        <div class="title">${esc(objName(sh.objectId))}</div>
-        <div class="sub">${esc(objById(sh.objectId)?.code||'')}</div>
-      </td>
-      <td>${shiftCrewBadges(sh)}</td>
-      <td class="right">${cnt} чел.</td>
-      <td class="right"><b>${money(shiftCost)}</b></td>
-      <td class="actions">${actions}</td>
-    </tr>`;
-  }).join('');
-
-  $('#shiftsList').innerHTML = `<div class="card" style="padding:0">
-    <div class="tbl-wrap"><table class="tbl">
-      <thead><tr>
-        <th>Дата</th><th>Объект</th><th>Группа</th>
-        <th>Кол-во</th><th>Стоимость</th><th></th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-  </div>`;
-}
-
-/* ============================================================
-   VIEWS — OBJECTS
-   ============================================================ */
-function renderObjects(){
-  let list = App.state.objects.slice();
-  const q = ($('#objSearch')?.value || '').toLowerCase().trim();
-  const typeF = $('#objTypeFilter')?.value || 'all';
-  if(typeF!=='all') list = list.filter(o=>o.type===typeF);
-  if(q) list = list.filter(o=>
-    (o.name+o.address+o.code+o.contact).toLowerCase().includes(q));
-
-  if(!list.length){
-    $('#objectsList').innerHTML = `<div class="card"><div class="empty">
-      <div class="empty__i">📍</div><div>Объектов нет</div>
-    </div></div>`;
-    return;
-  }
-
-  const today = todayISO();
-  const cards = list.map(o=>{
-    const t = OBJ_TYPES[o.type];
-    const jobs = App.state.jobs.filter(j=>j.objectId===o.id);
-    const shifts = App.state.shifts.filter(s=>s.objectId===o.id);
-    const todayJobs = jobs.filter(j => j.date === today).length;
-    return `<div class="obj-card" data-view-obj="${o.id}" style="border-left-color:${t.color}">
-      <div class="obj-card__h">
-        <div class="obj-card__ico" style="background:${t.color}22;color:${t.color}">${t.ico}</div>
-        <div style="flex:1;min-width:0">
-          <div class="obj-card__name">${esc(o.name)}</div>
-          <div class="obj-card__code">${esc(o.code)} · ${t.label}</div>
-        </div>
-        <span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'Актив':o.status==='paused'?'Пауза':'Закрыт'}</span>
-      </div>
-      <div class="obj-card__addr">📍 ${esc(o.address)}</div>
-      <div class="obj-card__meta">
-        <div>👤 ${esc(o.contact||'—')}</div>
-        <div>🚚 <b>${jobs.length}</b> выездов</div>
-        <div>📅 сегодня: <b>${todayJobs}</b></div>
-        <div>🏭 <b>${shifts.length}</b> смен</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  $('#objectsList').innerHTML = `<div class="obj-grid">${cards}</div>`;
-}
-
-/* ============================================================
-   VIEWS — FINANCE
-   ============================================================ */
-function renderFinance(){
-  const { start, end } = App.period;
-  const {start:s, end:e} = normalizePeriod(start, end);
-  App.period = {start:s, end:e};
-
-  $('#periodStart').value = s;
-  $('#periodEnd').value = e;
-
-  const allExpenses = [];
-  App.state.jobs.forEach(j=>{
-    if(j.date < s || j.date > e) return;
-    (j.expenses||[]).forEach(x=>allExpenses.push({...x, jobId:j.id, jobTitle:j.title, objectId:j.objectId, jobDate:j.date}));
-  });
-
-  const pendingExp = allExpenses.filter(x=>x.status==='pending');
-  const approvedExp = allExpenses.filter(x=>x.status==='approved');
-  const paidExp = allExpenses.filter(x=>x.status==='paid');
-
-  const shopPersonShifts = App.state.shifts
-    .filter(sh=>sh.date>=s && sh.date<=e)
-    .reduce((a,sh)=>a + (sh.employeeIds?.length||0), 0);
-  const shopCost = shopPersonShifts * App.state.rates.shopShift;
-
-  const payroll = calcPayroll(s, e);
-  const payrollSum = payroll.reduce((a,r)=>a+r.total,0);
-
-  const totalCost = shopCost + payrollSum;
-
-  $('#finKpis').innerHTML = `
-    <div class="kpi"><div class="kpi__l">Расходов оплачено</div><div class="kpi__v err">${paidExp.length}</div></div>
-    <div class="kpi"><div class="kpi__l">ФОТ за период</div><div class="kpi__v">${money(payrollSum)}</div></div>
-    <div class="kpi"><div class="kpi__l">Цех (${shopPersonShifts} чел-смен)</div><div class="kpi__v">${money(shopCost)}</div></div>
-    <div class="kpi"><div class="kpi__l">Итого затрат</div><div class="kpi__v">${money(totalCost)}</div></div>
-  `;
-
-  let pendingHtml = '';
-  if(pendingExp.length){
-    pendingHtml = pendingExp.map(x=>{
-      const o = objById(x.objectId);
-      return `<tr>
-        <td>${fmtDate(x.jobDate)}</td>
-        <td><b>${esc(x.category)}</b><div class="sub">${esc(x.comment||'')}</div></td>
-        <td>${esc(o?.name||'—')}<div class="sub">${esc(x.jobTitle||'')}</div></td>
-        <td class="actions">
-          <button class="btn btn--xs btn--ok" data-approve="${x.jobId}|${x.id}">✓</button>
-          <button class="btn btn--xs icobtn--d" data-reject="${x.jobId}|${x.id}">✕</button>
-        </td>
-      </tr>`;
-    }).join('');
-  } else {
-    pendingHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет расходов на утверждении</td></tr>';
-  }
-
-  let approvedHtml = '';
-  if(approvedExp.length){
-    approvedHtml = approvedExp.map(x=>{
-      const o = objById(x.objectId);
-      return `<tr>
-        <td>${fmtDate(x.jobDate)}</td>
-        <td>${esc(x.category)}<div class="sub">${esc(x.comment||'')}</div></td>
-        <td>${esc(o?.name||'—')}</td>
-        <td class="actions">
-          <button class="btn btn--xs btn--p" data-pay-exp="${x.jobId}|${x.id}">Оплатить</button>
-        </td>
-      </tr>`;
-    }).join('');
-  } else {
-    approvedHtml = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Нет утверждённых расходов</td></tr>';
-  }
-
-  const payrollHtml = payroll.filter(r=>r.total>0).map(r=>{
-    let detail = '';
-    if(r.emp.role==='field'){
-      const parts = [];
-      if(r.serviceDays) parts.push(`Сервис: ${r.serviceDays}×${money(App.state.rates.service)}`);
-      if(r.visitDays) parts.push(`Выезд: ${r.visitDays}×${money(App.state.rates.visit)}`);
-      if(r.respVisitDays) parts.push(`Отв.: ${r.respVisitDays}×${money(App.state.rates.resp)}`);
-      detail = parts.join(' · ') || '—';
-    } else if(r.emp.role==='workshop'){
-      detail = `${r.shiftsCount} × ${money(App.state.rates.shopShift)}`;
-    } else if(r.emp.role==='manager'){
-      detail = `${daysBetween(s,e)} × ${money(App.state.rates.manager)}${r.bonuses ? ` · Доплаты: ${money(r.bonuses)}` : ''}`;
-    } else {
-      detail = 'Без ставки';
-    }
-    const roleLbl = ROLES[r.emp.role]?.label || r.emp.role;
-    return `<tr>
-      <td><b>${esc(r.emp.name)}</b><div class="sub">${roleLbl}</div></td>
-      <td style="font-size:11.5px;color:var(--muted)">${detail}</td>
-      <td class="right"><b style="font-size:14px">${money(r.total)}</b></td>
-    </tr>`;
-  }).join('');
-
-  $('#financeContent').innerHTML = `
-    <div class="card no-print">
-      <h3>⏳ На утверждении (${pendingExp.length})</h3>
-      <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
-        <tbody>${pendingHtml}</tbody>
-      </table></div>
-    </div>
-
-    <div class="card no-print">
-      <h3>✅ Утверждено (${approvedExp.length})</h3>
-      <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th>Дата</th><th>Статья и описание</th><th>Объект</th><th></th></tr></thead>
-        <tbody>${approvedHtml}</tbody>
-      </table></div>
-    </div>
-
-    <div class="card">
-      <h3>💰 Расчёт зарплаты за период ${fmtDate(s)} — ${fmtDate(e)}</h3>
-      ${payroll.filter(r=>r.total>0).length ? `
-        <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>Сотрудник</th><th>Расчёт</th><th style="text-align:right">К оплате</th></tr></thead>
-          <tbody>${payrollHtml}</tbody>
-          <tfoot><tr style="background:var(--soft)">
-            <td colspan="2"><b>Итого ФОТ</b></td>
-            <td class="right"><b style="font-size:15px">${money(payrollSum)}</b></td>
-          </tr></tfoot>
-        </table></div>
-      ` : '<div class="empty"><div class="empty__i">💰</div><div>Рабочих дней за период нет</div></div>'}
-    </div>
-  `;
-}
-
-/* ============================================================
-   VIEWS — ADMIN
-   ============================================================ */
-function renderAdmin(){
-  const r = App.state.rates;
-  $('#rateVisit').value = r.visit;
-  $('#rateResp').value = r.resp;
-  $('#rateService').value = r.service;
-  $('#rateShopShift').value = r.shopShift;
-  $('#rateManager').value = r.manager;
-
-  const emps = App.state.employees;
-  $('#empList').innerHTML = emps.length ? emps.map(e=>`<div class="card" style="margin:0 0 6px;padding:10px">
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input type="text" class="f__i" style="flex:2;min-width:140px" value="${esc(e.name)}" data-emp-name="${e.id}">
-      <select class="f__i" style="flex:1;min-width:110px" data-emp-role="${e.id}">
-        <option value="field" ${e.type==='field'?'selected':''}>Монтажник</option>
-        <option value="workshop" ${e.type==='workshop'?'selected':''}>Сотрудник цеха</option>
-      </select>
-      <select class="f__i" style="flex:1;min-width:120px" data-emp-status="${e.id}">
-        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${e.workerStatus===value?'selected':''}>${label}</option>`).join('')}
-      </select>
-      <button type="button" class="btn btn--xs icobtn--d" data-del-emp="${e.id}">✕</button>
-    </div>
-  </div>`).join('') : '<div class="empty" style="padding:20px">Сотрудников нет</div>';
-
-  const users = loadUsers();
-  users.sort((a,b)=>Math.max(...userRoles(b).map(roleRank))-Math.max(...userRoles(a).map(roleRank))||a.name.localeCompare(b.name));
-  $('#usersList').innerHTML = users.length ? users.map(u=>{
-    const isMe = u.phone === App.user?.phone;
-    const roleOpts = USER_ROLE_KEYS.map(k=>`<option value="${k}" ${userRoles(u).includes(k)?'selected':''}>${ROLES[k].label}</option>`).join('');
-    return `<div class="card" style="margin:0 0 6px;padding:10px">
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <div style="flex:2;min-width:150px">
-          <div style="font-weight:700">${esc(u.name)}${isMe?' <span class="b b--info">Вы</span>':''}</div>
-          <div style="font-size:12px;color:var(--muted)">${esc(u.phone)}</div>
-        </div>
-        <select class="f__i" multiple style="flex:1;min-width:160px" data-user-roles="${esc(u.phone)}" ${isMe?'disabled':''}>${roleOpts}</select>
-        <button type="button" class="btn btn--xs" data-reset-pin="${esc(u.phone)}">🔑 Пароль</button>
-        ${isMe ? '' : `<button type="button" class="btn btn--xs ${u.status==='blocked'?'btn--ok':'icobtn--d'}" data-block-user="${esc(u.phone)}">${u.status==='blocked'?'Разблок.':'Блок.'}</button>`}
-      </div>
-    </div>`;
-  }).join('') : '<div class="empty" style="padding:20px">Пользователей нет</div>';
-}
-
-function renderAttendance(){
-  renderPersonalQr();
-  const employee = myEmployee();
-  const today = todayISO();
-  const records = App.state.attendance.filter(item=>item.employeeId===employee?.id && item.date===today);
-  const current = records.find(item=>!item.endedAt);
-  const objects = App.state.objects.filter(item=>item.status==='active');
-  const objectSelect = $('#attendanceObject');
-  if(objectSelect){
-    objectSelect.innerHTML = `<option value="">Без конкретного объекта</option>${
-      objects.map(item=>`<option value="${item.id}">${esc(item.code ? `${item.code} — ${item.name}` : item.name)}</option>`).join('')
-    }`;
-    if(current?.objectId) objectSelect.value = current.objectId;
-  }
-  $('#attendanceCurrent').innerHTML = current
-    ? `<div class="b b--ok">Сейчас отмечено: ${current.mode==='workshop'?'в цеху':'на выезде'}${current.objectId ? ` — ${esc(objName(current.objectId))}` : ''}<br><span class="muted">${esc(current.startedAt)}</span></div>`
-    : '<div class="muted">Активной отметки нет</div>';
-  $('#btnAttendanceStart').disabled = !!current;
-  $('#btnAttendanceStop').disabled = !current;
-  $('#attendanceHistory').innerHTML = records.length
-    ? records.slice().reverse().map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-        <b>${item.mode==='workshop'?'В цеху':'На выезде'}</b>${item.objectId ? ` — ${esc(objName(item.objectId))}` : ''}
-        <div class="muted">${esc(item.startedAt)} — ${esc(item.endedAt||'идёт')}</div>
-      </div>`).join('')
-    : '<div class="empty">Сегодня отметок ещё нет</div>';
-  const canEditStatuses = userRoles(App.user).includes('admin') || userRoles(App.user).includes('workshopChief');
-  $('#chiefStatusPanel').style.display = canEditStatuses ? '' : 'none';
-  if(canEditStatuses){
-    $('#chiefStatusList').innerHTML = App.state.employees.map(item=>`<div style="display:flex;gap:8px;align-items:center;margin:6px 0">
-      <span style="flex:1">${esc(item.name)}</span>
-      <select class="f__i" data-chief-status="${item.id}">
-        ${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].map(([value,label])=>`<option value="${value}" ${item.workerStatus===value?'selected':''}>${label}</option>`).join('')}
-      </select>
-    </div>`).join('');
-  }
-}
-
-async function renderPersonalQr(){
-  const host = $('#personalQr');
-  if(!host || !userRoles(App.user).includes('employee')) return;
+function initAuth(){
   try {
-    const {link, image} = await api('/auth/attendance-qr');
-    host.innerHTML = `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <img src="${esc(image)}" alt="Персональный QR-код" width="160" height="160">
-      <div><b>Ваш персональный QR</b><div class="muted" style="max-width:360px;word-break:break-all">${esc(link)}</div></div>
-    </div>`;
-  } catch(error) {
-    host.textContent = error.message;
+    if (getCurrentUser()) showMainApp();
+    else showAuthScreen();
+  } catch (e){
+    console.error('initAuth error:', e);
+    alert('Ошибка при запуске приложения:\n' + e.message);
   }
 }
 
-function attendanceNow(){
-  return new Date().toLocaleString('ru-RU');
+function showAuthScreen(){
+  $('#authScreen').hidden = false;
+  $('#mainApp').hidden = true;
+  $('#loginError').textContent = '';
+  $('#regError').textContent = '';
 }
 
-function closeExpiredAttendance(){
-  const today = todayISO();
-  let changed = false;
-  App.state.attendance.forEach(item=>{
-    if(item.date < today && !item.endedAt){
-      item.endedAt = 'Закрыта автоматически';
-      changed = true;
-    }
+function showMainApp(){
+  $('#authScreen').hidden = true;
+  $('#mainApp').hidden = false;
+  updateHeader();
+  var user = getCurrentUser();
+  if (!canAccess(user, activeTab)) activeTab = 'dash';
+  renderApp();
+}
+
+function updateHeader(){
+  var user = getCurrentUser();
+  if (!user) return;
+  $('#userName').textContent = user.name || formatPhone(user.phone);
+  var roleDef = ROLES_DEF[user.role];
+  $('#userRole').textContent = roleDef ? roleDef.label : user.role;
+}
+
+function switchAuthTab(which){
+  var isLogin = which === 'login';
+  $('#tabLogin').classList.toggle('active', isLogin);
+  $('#tabRegister').classList.toggle('active', !isLogin);
+  $('#loginForm').hidden = !isLogin;
+  $('#registerForm').hidden = isLogin;
+  $('#loginError').textContent = '';
+  $('#regError').textContent = '';
+}
+
+$('#tabLogin').addEventListener('click', function(){ switchAuthTab('login'); });
+$('#tabRegister').addEventListener('click', function(){ switchAuthTab('register'); });
+
+$('#loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var err = $('#loginError');
+  err.textContent = '';
+
+  var phoneRaw = $('#loginPhone').value;
+  var pass = $('#loginPass').value;
+  var phone = normalizePhone(phoneRaw);
+
+  console.log('[login] phoneRaw:', phoneRaw, '→ phone:', phone);
+
+  if (!phoneRaw || !phone || phone.length !== 12){
+    err.textContent = 'Введите корректный номер телефона';
+    return;
+  }
+  if (!pass){ err.textContent = 'Введите пароль'; return; }
+
+  serverAuth('login', { phone: phone, password: pass }).then(function(payload){
+    window.__serverAuthToken = payload.token;
+    safeSetItem('stroy_server_token', payload.token);
+    return loadServerState().then(function(){ DB.session = payload.user.id; save(); showMainApp(); });
+  }).catch(function(){
+    var user = null;
+    for (var i = 0; i < DB.users.length; i++) if (DB.users[i].phone === phone){ user = DB.users[i]; break; }
+    if (!user){ err.textContent = 'Пользователь с таким телефоном не найден'; return; }
+    if (user.passHash !== hashPassword(pass)){ err.textContent = 'Неверный пароль'; return; }
+    DB.session = user.id; save(); showMainApp();
   });
-  if(changed) saveState();
+});
+
+$('#registerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var err = $('#regError');
+  err.textContent = '';
+
+  var phoneRaw = $('#regPhone').value;
+  var name = $('#regName').value.trim();
+  var pass = $('#regPass').value;
+  var pass2 = $('#regPass2').value;
+  var phone = normalizePhone(phoneRaw);
+
+  console.log('[register] phoneRaw:', phoneRaw, '→ phone:', phone, 'name:', name);
+
+  if (!phone || phone.length !== 12){
+    err.textContent = 'Введите корректный номер телефона';
+    return;
+  }
+  if (!name){ err.textContent = 'Укажите ФИО'; return; }
+  if (!pass || pass.length < 6){ err.textContent = 'Пароль должен содержать минимум 6 символов'; return; }
+  if (pass !== pass2){ err.textContent = 'Пароли не совпадают'; return; }
+  serverAuth('register', { phone: phone, name: name, password: pass }).then(function(payload){
+    window.__serverAuthToken = payload.token;
+    safeSetItem('stroy_server_token', payload.token);
+    return loadServerState().then(function(){ DB.session = payload.user.id; save(); showMainApp(); });
+  }).catch(function(){
+    for (var i = 0; i < DB.users.length; i++) if (DB.users[i].phone === phone){ err.textContent = 'Пользователь с таким телефоном уже зарегистрирован'; return; }
+    var user = { id: uid(), phone: phone, name: name, passHash: hashPassword(pass), role: 'worker', createdAt: today() };
+    DB.users.push(user); DB.session = user.id; save(); showMainApp();
+  });
+});
+
+$('#quickAdminBtn').addEventListener('click', function(){
+  var admin = null;
+  for (var i = 0; i < DB.users.length; i++){
+    if (DB.users[i].role === 'admin'){ admin = DB.users[i]; break; }
+  }
+  if (!admin){
+    alert('Администратор не найден. Сбрасываю данные...');
+    DB = seed();
+    save();
+    admin = DB.users[0];
+  }
+  DB.session = admin.id;
+  save();
+  showMainApp();
+});
+
+$('#logoutBtn').addEventListener('click', function(){
+  if (!confirm('Выйти из системы?')) return;
+  DB.session = null;
+  window.__serverAuthToken = null;
+  safeSetItem('stroy_server_token', '');
+  save();
+  showAuthScreen();
+});
+
+/* =========================================================
+   БИЗНЕС-ЛОГИКА
+   ========================================================= */
+var PAY_LABEL = { day: 'Дневная ставка', piece: 'Сдельная', salary: 'Оклад', premium: 'Только премия' };
+var ROLES = ['Цех', 'Монтажник', 'Менеджер', 'Бухгалтер', 'Начальник цеха', 'Проектировщик'];
+var STATUSES = ['Новый', 'В работе', 'Завершён', 'Отменён'];
+
+function findById(arr, id){
+  for (var i = 0; i < arr.length; i++){ if (arr[i].id === id) return arr[i]; }
+  return null;
+}
+function empName(id){ var e = findById(DB.employees, id); return e ? e.name : '—'; }
+function objName(id){ var o = findById(DB.objects, id); return o ? o.name : '—'; }
+function vehName(id){
+  var v = findById(DB.vehicles, id);
+  return v ? v.plate + ' · ' + v.model : '—';
+}
+function tripExpense(t){
+  return num(t.fuel) + num(t.materials) + num(t.other);
+}
+function costsFor(objectId){
+  var sum = 0, i;
+  for (i = 0; i < DB.costs.length; i++){
+    if (DB.costs[i].objectId === objectId) sum += num(DB.costs[i].amount);
+  }
+  for (i = 0; i < DB.trips.length; i++){
+    if (DB.trips[i].objectId === objectId) sum += tripExpense(DB.trips[i]);
+  }
+  return sum;
+}
+function paymentsFor(objectId){
+  var sum = 0;
+  for (var i = 0; i < DB.payments.length; i++){
+    if (DB.payments[i].objectId === objectId) sum += num(DB.payments[i].amount);
+  }
+  return sum;
+}
+
+function daysFor(emp, from, to){
+  var i, total = 0;
+  if (emp.role === 'Монтажник'){
+    for (i = 0; i < DB.trips.length; i++){
+      var t = DB.trips[i];
+      if (!inR(t.date, from, to)) continue;
+      var inCrew = (t.crew || []).indexOf(emp.id) !== -1;
+      if (t.seniorId === emp.id || inCrew) total += 1;
+    }
+    return total;
+  }
+  for (i = 0; i < DB.timesheet.length; i++){
+    var ts = DB.timesheet[i];
+    if (ts.empId === emp.id && inR(ts.date, from, to)){
+      total += num(nn(ts.days, 1));
+    }
+  }
+  return total;
+}
+
+function calcSalary(from, to){
+  var result = [];
+  for (var i = 0; i < DB.employees.length; i++){
+    var e = DB.employees[i];
+    var r = { emp: e, days: 0, base: 0, piece: 0, premium: 0, total: 0, notes: [] };
+    r.days = daysFor(e, from, to);
+
+    if (e.payType === 'day'){
+      r.base = r.days * num(e.rate);
+      r.notes.push(r.days + ' дн. × ' + fmtN(e.rate) + ' ₽');
+    }
+    if (e.payType === 'piece'){
+      var pieceSum = 0;
+      for (var k = 0; k < DB.output.length; k++){
+        var o = DB.output[k];
+        if (o.empId !== e.id) continue;
+        if (!inR(o.date, from, to)) continue;
+        var w = findById(DB.works, o.workId);
+        if (w) pieceSum += num(w.rate) * num(o.qty);
+      }
+      r.piece = pieceSum;
+      r.notes.push('сдельно: ' + fmt(r.piece));
+    }
+    if (e.payType === 'salary'){
+      r.base = num(e.salary);
+      r.notes.push('оклад ' + fmt(r.base));
+    }
+
+    if (num(e.premiumPct) > 0){
+      var objs = [];
+      for (var m = 0; m < DB.objects.length; m++){
+        var obj = DB.objects[m];
+        var match = false;
+        if (e.role === 'Менеджер') match = (obj.managerId === e.id);
+        else if (e.role === 'Проектировщик') match = (obj.designerId === e.id);
+        else match = (obj.managerId === e.id || obj.designerId === e.id);
+        if (match && inR(obj.closedAt, from, to)) objs.push(obj);
+      }
+      var sum = 0;
+      for (var n = 0; n < objs.length; n++) sum += num(objs[n].amount);
+      r.premium = sum * num(e.premiumPct) / 100;
+      r.notes.push('премия ' + e.premiumPct + '% от ' + fmt(sum) + ' (' + objs.length + ' об.)');
+    }
+
+    r.total = r.base + r.piece + r.premium;
+    result.push(r);
+  }
+  return result;
+}
+
+/* =========================================================
+   UI-ХЕЛПЕРЫ
+   ========================================================= */
+function badge(s){
+  var map = { 'Новый': 'b-new', 'В работе': 'b-work', 'Завершён': 'b-done', 'Отменён': 'b-cancel' };
+  return '<span class="badge ' + (map[s] || 'b-new') + '">' + esc(s) + '</span>';
+}
+
+function table(cols, rows){
+  if (!rows.length) return '<div class="empty">Нет записей</div>';
+  var html = '<div class="table-wrap"><table><thead><tr>';
+  for (var i = 0; i < cols.length; i++) html += '<th>' + cols[i].t + '</th>';
+  html += '</tr></thead><tbody>';
+  for (var r = 0; r < rows.length; r++){
+    html += '<tr>';
+    for (var c = 0; c < cols.length; c++){
+      html += '<td>' + cols[c].f(rows[r]) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function miniTable(cols, rows, emptyText){
+  if (!rows.length) return '<div class="sub" style="padding:8px 0">' + (emptyText || 'Нет записей') + '</div>';
+  var html = '<table class="mini"><thead><tr>';
+  for (var i = 0; i < cols.length; i++) html += '<th>' + cols[i].t + '</th>';
+  html += '</tr></thead><tbody>';
+  for (var r = 0; r < rows.length; r++){
+    html += '<tr>';
+    for (var c = 0; c < cols.length; c++){
+      html += '<td>' + cols[c].f(rows[r]) + '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+/* =========================================================
+   МОДАЛЬНОЕ ОКНО
+   ========================================================= */
+function openForm(title, fields, data, onSave){
+  var dlg = $('#modal');
+  $('#dlgTitle').textContent = title;
+  var body = $('#dlgBody');
+
+  var html = '';
+  for (var i = 0; i < fields.length; i++){
+    var f = fields[i];
+    var v = (data && data[f.key] !== undefined && data[f.key] !== null) ? data[f.key] : nn(f.def, '');
+
+    if (f.type === 'select'){
+      var opts = '';
+      for (var j = 0; j < f.options.length; j++){
+        var opt = f.options[j];
+        var sel = String(v) === String(opt.v) ? 'selected' : '';
+        opts += '<option value="' + esc(opt.v) + '" ' + sel + '>' + esc(opt.t) + '</option>';
+      }
+      html += '<label class="fld">' + esc(f.label) + '<select data-key="' + f.key + '">' + opts + '</select></label>';
+    } else if (f.type === 'textarea'){
+      html += '<label class="fld">' + esc(f.label) + '<textarea data-key="' + f.key + '" rows="3">' + esc(v) + '</textarea></label>';
+    } else if (f.type === 'checks'){
+      var arr = Array.isArray(v) ? v : [];
+      var checksHtml = '';
+      for (var c = 0; c < f.options.length; c++){
+        var o = f.options[c];
+        var checked = arr.indexOf(o.v) !== -1 ? 'checked' : '';
+        checksHtml += '<label class="chk"><input type="checkbox" data-check="' + f.key + '" value="' + esc(o.v) + '" ' + checked + '> ' + esc(o.t) + '</label>';
+      }
+      html += '<div class="fld">' + esc(f.label) + '<div class="checks">' + checksHtml + '</div></div>';
+    } else {
+      var step = f.step ? ' step="' + f.step + '"' : '';
+      html += '<label class="fld">' + esc(f.label) + '<input data-key="' + f.key + '" type="' + (f.type || 'text') + '" value="' + esc(v) + '"' + step + '></label>';
+    }
+  }
+  body.innerHTML = html;
+
+  $('#dlgSave').onclick = function(){
+    var out = {};
+    var inputs = body.querySelectorAll('[data-key]');
+    for (var i = 0; i < inputs.length; i++){
+      var inp = inputs[i];
+      out[inp.getAttribute('data-key')] = inp.type === 'number' ? num(inp.value) : inp.value;
+    }
+    var checks = body.querySelectorAll('[data-check]');
+    for (var c = 0; c < checks.length; c++){
+      var chk = checks[c];
+      var key = chk.getAttribute('data-check');
+      if (!out[key]) out[key] = [];
+      if (chk.checked) out[key].push(chk.value);
+    }
+    dlg.close();
+    onSave(out);
+  };
+
+  dlg.showModal();
+}
+
+/* =========================================================
+   ФОРМЫ
+   ========================================================= */
+function empOptions(withEmpty){
+  var arr = withEmpty ? [{ v: '', t: '— не назначен —' }] : [];
+  for (var i = 0; i < DB.employees.length; i++){
+    var e = DB.employees[i];
+    arr.push({ v: e.id, t: e.name + ' · ' + e.role });
+  }
+  return arr;
+}
+function objOptions(withEmpty){
+  var arr = withEmpty ? [{ v: '', t: '— без объекта —' }] : [];
+  for (var i = 0; i < DB.objects.length; i++){
+    var o = DB.objects[i];
+    arr.push({ v: o.id, t: o.name });
+  }
+  return arr;
+}
+
+function formEmployee(e){
+  var isNew = !e;
+  e = e || { id: uid(), name: '', role: 'Цех', payType: 'day', rate: 0, salary: 0, premiumPct: 0, phone: '' };
+  openForm(isNew ? 'Новый сотрудник' : 'Сотрудник', [
+    { key: 'name', label: 'ФИО', type: 'text' },
+    { key: 'phone', label: 'Телефон', type: 'text' },
+    { key: 'role', label: 'Роль', type: 'select', options: ROLES.map(function(r){ return { v: r, t: r }; }) },
+    { key: 'payType', label: 'Тип оплаты', type: 'select', options: [
+      { v: 'day', t: 'Дневная ставка' },
+      { v: 'piece', t: 'Сдельная' },
+      { v: 'salary', t: 'Оклад' },
+      { v: 'premium', t: 'Только премия' }
+    ]},
+    { key: 'rate', label: 'Ставка в день, ₽', type: 'number' },
+    { key: 'salary', label: 'Оклад в месяц, ₽', type: 'number' },
+    { key: 'premiumPct', label: 'Премия, % от суммы объекта', type: 'number', step: '0.1' }
+  ], e, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) e[k] = data[k]; }
+    if (isNew) DB.employees.push(e);
+    save(); renderApp();
+  });
+}
+
+function formObject(o){
+  var isNew = !o;
+  o = o || { id: uid(), name: '', address: '', phone: '', comment: '', status: 'Новый',
+             amount: 0, managerId: '', designerId: '', closedAt: '' };
+  openForm(isNew ? 'Новый объект' : 'Объект', [
+    { key: 'name', label: 'Наименование', type: 'text' },
+    { key: 'address', label: 'Адрес', type: 'text' },
+    { key: 'phone', label: 'Телефон заказчика', type: 'text' },
+    { key: 'comment', label: 'Комментарий', type: 'textarea' },
+    { key: 'status', label: 'Статус', type: 'select', options: STATUSES.map(function(s){ return { v: s, t: s }; }) },
+    { key: 'amount', label: 'Сумма договора, ₽', type: 'number' },
+    { key: 'managerId', label: 'Менеджер', type: 'select', options: empOptions(true) },
+    { key: 'designerId', label: 'Проектировщик', type: 'select', options: empOptions(true) },
+    { key: 'closedAt', label: 'Дата закрытия', type: 'date' }
+  ], o, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) o[k] = data[k]; }
+    if (isNew) DB.objects.push(o);
+    save(); renderApp();
+  });
+}
+
+function formTimesheet(t){
+  var isNew = !t;
+  t = t || { id: uid(), empId: '', date: today(), days: 1, objectId: '', note: '' };
+  openForm(isNew ? 'Отметка в табеле' : 'Отметка в табеле', [
+    { key: 'empId', label: 'Сотрудник', type: 'select', options: empOptions(false) },
+    { key: 'date', label: 'Дата', type: 'date' },
+    { key: 'days', label: 'Кол-во дней', type: 'number', step: '0.5' },
+    { key: 'objectId', label: 'Объект', type: 'select', options: objOptions(true) },
+    { key: 'note', label: 'Комментарий', type: 'text' }
+  ], t, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) t[k] = data[k]; }
+    if (isNew) DB.timesheet.push(t);
+    save(); renderApp();
+  });
+}
+
+function formTrip(t){
+  var isNew = !t;
+  t = t || { id: uid(), date: today(), objectId: '', seniorId: '', crew: [],
+             vehicleId: '', driverId: '', fuel: 0, materials: 0, other: 0 };
+  var montOpts = [];
+  for (var i = 0; i < DB.employees.length; i++){
+    if (DB.employees[i].role === 'Монтажник'){
+      montOpts.push({ v: DB.employees[i].id, t: DB.employees[i].name });
+    }
+  }
+  openForm(isNew ? 'Новый выезд' : 'Выезд', [
+    { key: 'date', label: 'Дата', type: 'date' },
+    { key: 'objectId', label: 'Объект', type: 'select', options: objOptions(true) },
+    { key: 'seniorId', label: 'Старший (управляет расходами)', type: 'select',
+      options: [{ v: '', t: '—' }].concat(montOpts) },
+    { key: 'crew', label: 'Состав бригады', type: 'checks', options: montOpts },
+    { key: 'vehicleId', label: 'Машина', type: 'select',
+      options: [{ v: '', t: '— пешком —' }].concat(DB.vehicles.map(function(v){ return { v: v.id, t: v.plate + ' · ' + v.model }; })) },
+    { key: 'driverId', label: 'Водитель', type: 'select', options: empOptions(true) },
+    { key: 'fuel', label: 'Топливо, ₽', type: 'number' },
+    { key: 'materials', label: 'Материалы, ₽', type: 'number' },
+    { key: 'other', label: 'Прочие расходы, ₽', type: 'number' }
+  ], t, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) t[k] = data[k]; }
+    if (isNew) DB.trips.push(t);
+    save(); renderApp();
+  });
+}
+
+function formWork(w){
+  var isNew = !w;
+  w = w || { id: uid(), name: '', rate: 0 };
+  openForm(isNew ? 'Новая расценка' : 'Расценка', [
+    { key: 'name', label: 'Работа / изделие', type: 'text' },
+    { key: 'rate', label: 'Расценка за единицу, ₽', type: 'number' }
+  ], w, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) w[k] = data[k]; }
+    if (isNew) DB.works.push(w);
+    save(); renderApp();
+  });
+}
+
+function formOutput(o){
+  var isNew = !o;
+  o = o || { id: uid(), empId: '', workId: '', qty: 1, date: today(), objectId: '' };
+  var empOpts = [];
+  for (var i = 0; i < DB.employees.length; i++){
+    if (DB.employees[i].role === 'Цех'){
+      empOpts.push({ v: DB.employees[i].id, t: DB.employees[i].name });
+    }
+  }
+  openForm(isNew ? 'Новая выработка' : 'Выработка', [
+    { key: 'empId', label: 'Сотрудник цеха', type: 'select', options: empOpts },
+    { key: 'workId', label: 'Работа', type: 'select',
+      options: DB.works.map(function(w){ return { v: w.id, t: w.name + ' — ' + fmtN(w.rate) + ' ₽' }; }) },
+    { key: 'qty', label: 'Количество', type: 'number' },
+    { key: 'date', label: 'Дата', type: 'date' },
+    { key: 'objectId', label: 'Объект', type: 'select', options: objOptions(true) }
+  ], o, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) o[k] = data[k]; }
+    if (isNew) DB.output.push(o);
+    save(); renderApp();
+  });
+}
+
+function formVehicle(v){
+  var isNew = !v;
+  v = v || { id: uid(), plate: '', model: '', driverId: '' };
+  openForm(isNew ? 'Новая машина' : 'Машина', [
+    { key: 'plate', label: 'Госномер', type: 'text' },
+    { key: 'model', label: 'Модель', type: 'text' },
+    { key: 'driverId', label: 'Водитель', type: 'select', options: empOptions(true) }
+  ], v, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) v[k] = data[k]; }
+    if (isNew) DB.vehicles.push(v);
+    save(); renderApp();
+  });
+}
+
+function formCost(c, objectId){
+  var isNew = !c;
+  c = c || { id: uid(), objectId: objectId || '', date: today(), type: 'Материалы', amount: 0, note: '' };
+  openForm(isNew ? 'Новый расход' : 'Расход', [
+    { key: 'objectId', label: 'Объект', type: 'select', options: objOptions(false) },
+    { key: 'date', label: 'Дата', type: 'date' },
+    { key: 'type', label: 'Тип расхода', type: 'select', options:
+      ['Материалы', 'Топливо', 'Инструмент', 'Зарплата', 'Накладные', 'Прочее'].map(function(x){ return { v: x, t: x }; }) },
+    { key: 'amount', label: 'Сумма, ₽', type: 'number' },
+    { key: 'note', label: 'Комментарий', type: 'text' }
+  ], c, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) c[k] = data[k]; }
+    if (isNew) DB.costs.push(c);
+    save(); renderApp();
+  });
+}
+
+function formPayment(p, objectId){
+  var isNew = !p;
+  p = p || { id: uid(), objectId: objectId || '', date: today(), amount: 0, note: '' };
+  openForm(isNew ? 'Поступление оплаты' : 'Оплата', [
+    { key: 'objectId', label: 'Объект', type: 'select', options: objOptions(false) },
+    { key: 'date', label: 'Дата', type: 'date' },
+    { key: 'amount', label: 'Сумма, ₽', type: 'number' },
+    { key: 'note', label: 'Комментарий', type: 'text' }
+  ], p, function(data){
+    for (var k in data){ if (data.hasOwnProperty(k)) p[k] = data[k]; }
+    if (isNew) DB.payments.push(p);
+    save(); renderApp();
+  });
+}
+
+/* =========================================================
+   ЭКРАНЫ
+   ========================================================= */
+function renderDash(){
+  var user = getCurrentUser();
+  if (!user) return '';
+  if (user.role === 'installer') return renderDashInstaller();
+  if (user.role === 'worker')    return renderDashWorker();
+  return renderDashFull();
+}
+
+function renderDashFull(){
+  var objs = DB.objects;
+  var revenue = 0, paid = 0, spent = 0, i;
+  for (i = 0; i < objs.length; i++) revenue += num(objs[i].amount);
+  for (i = 0; i < DB.payments.length; i++) paid += num(DB.payments[i].amount);
+  for (i = 0; i < DB.costs.length; i++) spent += num(DB.costs[i].amount);
+  for (i = 0; i < DB.trips.length; i++) spent += tripExpense(DB.trips[i]);
+  var profit = paid - spent;
+  var inWork = 0, done = 0;
+  for (i = 0; i < objs.length; i++){
+    if (objs[i].status === 'В работе') inWork++;
+    if (objs[i].status === 'Завершён') done++;
+  }
+
+  var sal = calcSalary(DB.settings.from, DB.settings.to);
+  var fot = 0;
+  for (i = 0; i < sal.length; i++) fot += sal[i].total;
+
+  var byRole = [];
+  for (i = 0; i < ROLES.length; i++){
+    var r = ROLES[i];
+    var count = 0, sum = 0;
+    for (var j = 0; j < DB.employees.length; j++) if (DB.employees[j].role === r) count++;
+    for (var k = 0; k < sal.length; k++) if (sal[k].emp.role === r) sum += sal[k].total;
+    if (count > 0) byRole.push({ role: r, count: count, sum: sum });
+  }
+
+  var objRows = objs.map(function(o){
+    return {
+      name: o.name, address: o.address, status: o.status, amount: o.amount,
+      paid: paymentsFor(o.id), spent: costsFor(o.id), profit: paymentsFor(o.id) - costsFor(o.id)
+    };
+  });
+
+  return '' +
+  '<div class="head"><h2>Дашборд</h2></div>' +
+  '<div class="cards">' +
+    '<div class="card"><div class="k">Объектов</div><div class="v">' + objs.length + '</div><div class="s">в работе: ' + inWork + ' · завершено: ' + done + '</div></div>' +
+    '<div class="card"><div class="k">Сумма договоров</div><div class="v blue">' + fmt(revenue) + '</div><div class="s">портфель заказов</div></div>' +
+    '<div class="card"><div class="k">Поступило оплат</div><div class="v green">' + fmt(paid) + '</div><div class="s">кассовый приход</div></div>' +
+    '<div class="card"><div class="k">Расходы</div><div class="v red">' + fmt(spent) + '</div><div class="s">материалы + выезды</div></div>' +
+    '<div class="card"><div class="k">Прибыль (касса)</div><div class="v ' + (profit >= 0 ? 'green' : 'red') + '">' + fmt(profit) + '</div><div class="s">оплаты − расходы</div></div>' +
+    '<div class="card"><div class="k">ФОТ за период</div><div class="v">' + fmt(fot) + '</div><div class="s">' + DB.settings.from + ' → ' + DB.settings.to + '</div></div>' +
+    '<div class="card"><div class="k">Выездов</div><div class="v">' + DB.trips.length + '</div><div class="s">бригад монтажников</div></div>' +
+  '</div>' +
+  '<h3>Фонд оплаты труда по ролям</h3>' +
+  table([
+    { t: 'Роль', f: function(r){ return '<b>' + esc(r.role) + '</b>'; } },
+    { t: 'Сотрудников', f: function(r){ return r.count; } },
+    { t: 'Начислено за период', f: function(r){ return '<b>' + fmt(r.sum) + '</b>'; } }
+  ], byRole) +
+  '<h3>Объекты — краткая сводка</h3>' +
+  table([
+    { t: 'Объект', f: function(r){ return '<b>' + esc(r.name) + '</b><div class="sub">' + esc(r.address) + '</div>'; } },
+    { t: 'Статус', f: function(r){ return badge(r.status); } },
+    { t: 'Договор', f: function(r){ return fmt(r.amount); } },
+    { t: 'Оплачено', f: function(r){ return fmt(r.paid); } },
+    { t: 'Расходы', f: function(r){ return fmt(r.spent); } },
+    { t: 'Прибыль', f: function(r){ return '<b style="color:' + (r.profit >= 0 ? 'var(--ok)' : 'var(--bad)') + '">' + fmt(r.profit) + '</b>'; } }
+  ], objRows);
+}
+
+function renderDashInstaller(){
+  var trips = DB.trips;
+  var totalExp = 0;
+  var vehiclesSet = {};
+  for (var i = 0; i < trips.length; i++){
+    totalExp += tripExpense(trips[i]);
+    if (trips[i].vehicleId) vehiclesSet[trips[i].vehicleId] = true;
+  }
+  var vehicles = Object.keys(vehiclesSet).length;
+
+  var sorted = trips.slice().sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); });
+  var recent = sorted.slice(0, 8);
+
+  return '' +
+  '<div class="head"><h2>Дашборд</h2></div>' +
+  '<div class="cards">' +
+    '<div class="card"><div class="k">Выездов всего</div><div class="v">' + trips.length + '</div><div class="s">бригад монтажников</div></div>' +
+    '<div class="card"><div class="k">Расходы по выездам</div><div class="v red">' + fmt(totalExp) + '</div><div class="s">топливо · материалы · прочее</div></div>' +
+    '<div class="card"><div class="k">Машин задействовано</div><div class="v">' + vehicles + '</div><div class="s">из автопарка</div></div>' +
+  '</div>' +
+  '<h3>Последние выезды</h3>' +
+  table([
+    { t: 'Дата', f: function(r){ return esc(r.date); } },
+    { t: 'Объект', f: function(r){ return '<b>' + esc(r.objectId ? objName(r.objectId) : '—') + '</b>'; } },
+    { t: 'Старший', f: function(r){ return esc(empName(r.seniorId)); } },
+    { t: 'Машина', f: function(r){ return esc(r.vehicleId ? vehName(r.vehicleId) : '—'); } },
+    { t: 'Расход', f: function(r){ return fmt(tripExpense(r)); } }
+  ], recent);
+}
+
+function renderDashWorker(){
+  var ts = DB.timesheet;
+  var totalDays = 0;
+  for (var i = 0; i < ts.length; i++) totalDays += num(nn(ts[i].days, 1));
+
+  var output = DB.output;
+  var totalPiece = 0;
+  for (var j = 0; j < output.length; j++){
+    var w = findById(DB.works, output[j].workId);
+    if (w) totalPiece += num(w.rate) * num(output[j].qty);
+  }
+
+  var sortedTs = ts.slice().sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); });
+  var recentTs = sortedTs.slice(0, 8);
+
+  return '' +
+  '<div class="head"><h2>Дашборд</h2></div>' +
+  '<div class="cards">' +
+    '<div class="card"><div class="k">Дней отмечено</div><div class="v">' + fmtN(totalDays) + '</div><div class="s">в табеле цеха</div></div>' +
+    '<div class="card"><div class="k">Записей выработки</div><div class="v">' + output.length + '</div><div class="s">по сдельным расценкам</div></div>' +
+    '<div class="card"><div class="k">Выработано (сдельно)</div><div class="v green">' + fmt(totalPiece) + '</div><div class="s">без дневных ставок</div></div>' +
+  '</div>' +
+  '<h3>Последние отметки в табеле</h3>' +
+  table([
+    { t: 'Дата', f: function(r){ return esc(r.date); } },
+    { t: 'Сотрудник', f: function(r){ return esc(empName(r.empId)); } },
+    { t: 'Дней', f: function(r){ return num(nn(r.days, 1)); } },
+    { t: 'Объект', f: function(r){ return r.objectId ? esc(objName(r.objectId)) : '—'; } },
+    { t: 'Комментарий', f: function(r){ return esc(r.note || ''); } }
+  ], recentTs);
+}
+
+function renderObjects(){
+  var rows = DB.objects.map(function(o){
+    return {
+      id: o.id, name: o.name, address: o.address, phone: o.phone, comment: o.comment,
+      status: o.status, amount: o.amount,
+      manager: empName(o.managerId), designer: empName(o.designerId),
+      paid: paymentsFor(o.id), spent: costsFor(o.id)
+    };
+  });
+  return '' +
+  '<div class="head"><h2>Объекты</h2><button class="btn primary" data-action="obj-add">+ Объект</button></div>' +
+  table([
+    { t: 'Наименование', f: function(r){ return '<b>' + esc(r.name) + '</b><div class="sub">' + esc(r.comment || '') + '</div>'; } },
+    { t: 'Адрес', f: function(r){ return esc(r.address); } },
+    { t: 'Заказчик', f: function(r){ return esc(r.phone); } },
+    { t: 'Статус', f: function(r){ return badge(r.status); } },
+    { t: 'Сумма', f: function(r){ return '<b>' + fmt(r.amount) + '</b>'; } },
+    { t: 'Оплачено', f: function(r){ return fmt(r.paid); } },
+    { t: 'Расходы', f: function(r){ return fmt(r.spent); } },
+    { t: 'Менеджер / Проектировщик', f: function(r){ return esc(r.manager) + '<div class="sub">' + esc(r.designer) + '</div>'; } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="obj-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="obj-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], rows);
+}
+
+function renderStaff(){
+  return '' +
+  '<div class="head"><h2>Сотрудники</h2><button class="btn primary" data-action="emp-add">+ Сотрудник</button></div>' +
+  table([
+    { t: 'ФИО', f: function(r){ return '<b>' + esc(r.name) + '</b><div class="sub">' + esc(r.phone || '') + '</div>'; } },
+    { t: 'Роль', f: function(r){ return esc(r.role); } },
+    { t: 'Тип оплаты', f: function(r){ return esc(PAY_LABEL[r.payType] || r.payType); } },
+    { t: 'Ставка/день', f: function(r){ return r.payType === 'day' ? fmt(r.rate) : '—'; } },
+    { t: 'Оклад', f: function(r){ return r.payType === 'salary' ? fmt(r.salary) : '—'; } },
+    { t: 'Премия', f: function(r){ return num(r.premiumPct) > 0 ? r.premiumPct + '%' : '—'; } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="emp-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="emp-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], DB.employees);
 }
 
 function renderTimesheet(){
-  const rows = App.state.attendance.slice().sort((a,b)=>`${b.date} ${b.startedAt}`.localeCompare(`${a.date} ${a.startedAt}`));
-  $('#timesheetList').innerHTML = rows.length ? `<div class="tbl-wrap"><table class="tbl">
-    <thead><tr><th>Дата</th><th>Сотрудник</th><th>Где работает</th><th>Объект</th><th>Статус рабочего</th><th>Время</th></tr></thead>
-    <tbody>${rows.map(item=>{
-      const employee = empById(item.employeeId);
-      return `<tr><td>${fmtDate(item.date)}</td><td>${esc(employee?.name||'—')}</td>
-        <td>${item.mode==='workshop'?'Цех':'Монтаж'}</td><td>${esc(objName(item.objectId))}</td>
-        <td>${[['responsible','Ответственный'],['worker','Рабочий'],['trainee','Стажер']].find(([value])=>value===employee?.workerStatus)?.[1]||'—'}</td>
-        <td>${esc(item.startedAt)} — ${esc(item.endedAt||'открыта')}</td></tr>`;
-    }).join('')}</tbody>
-  </table></div>` : '<div class="empty">Записей табеля нет</div>';
+  var rows = DB.timesheet.slice().sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); });
+  return '' +
+  '<div class="head"><h2>Табель цеха</h2><button class="btn primary" data-action="ts-add">+ Отметка</button></div>' +
+  table([
+    { t: 'Дата', f: function(r){ return esc(r.date); } },
+    { t: 'Сотрудник', f: function(r){ return '<b>' + esc(empName(r.empId)) + '</b>'; } },
+    { t: 'Дней', f: function(r){ return num(nn(r.days, 1)); } },
+    { t: 'Объект', f: function(r){ return r.objectId ? esc(objName(r.objectId)) : '—'; } },
+    { t: 'Комментарий', f: function(r){ return esc(r.note || ''); } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="ts-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="ts-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], rows);
 }
 
-async function renderAudit(){
-  try {
-    const result = await api('/audit');
-    const rows = result.audit || [];
-    $('#auditList').innerHTML = rows.length ? rows.map(item=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)">
-      <b>${esc(item.action)}</b><div class="muted">${esc(item.created_at||'')} · ${esc(item.actor_name||'—')} → ${esc(item.target_name||'система')}</div>
-      <div>${esc(JSON.stringify(item.details||{}))}</div>
-    </div>`).join('') : '<div class="empty">Записей аудита нет</div>';
-  } catch(error) {
-    toast(error.message,'err');
+function renderTrips(){
+  var rows = DB.trips.slice().sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); });
+  var totalExp = 0;
+  var vehSet = {};
+  for (var i = 0; i < rows.length; i++){
+    totalExp += tripExpense(rows[i]);
+    if (rows[i].vehicleId) vehSet[rows[i].vehicleId] = true;
   }
+  return '' +
+  '<div class="head"><h2>Выезды монтажников</h2><button class="btn primary" data-action="trip-add">+ Выезд</button></div>' +
+  '<div class="cards">' +
+    '<div class="card"><div class="k">Всего выездов</div><div class="v">' + rows.length + '</div></div>' +
+    '<div class="card"><div class="k">Расходы по выездам</div><div class="v red">' + fmt(totalExp) + '</div></div>' +
+    '<div class="card"><div class="k">Машин задействовано</div><div class="v">' + Object.keys(vehSet).length + '</div></div>' +
+  '</div>' +
+  table([
+    { t: 'Дата', f: function(r){ return esc(r.date); } },
+    { t: 'Объект', f: function(r){ return '<b>' + esc(r.objectId ? objName(r.objectId) : '—') + '</b>'; } },
+    { t: 'Старший', f: function(r){ return '<b>' + esc(empName(r.seniorId)) + '</b><div class="sub">управляет расходами</div>'; } },
+    { t: 'Бригада', f: function(r){ return (r.crew || []).map(function(id){ return esc(empName(id)); }).join(', ') || '—'; } },
+    { t: 'Машина', f: function(r){ return esc(r.vehicleId ? vehName(r.vehicleId) : '—'); } },
+    { t: 'Водитель', f: function(r){ return esc(r.driverId ? empName(r.driverId) : '—'); } },
+    { t: 'Топливо', f: function(r){ return fmt(r.fuel); } },
+    { t: 'Материалы', f: function(r){ return fmt(r.materials); } },
+    { t: 'Прочее', f: function(r){ return fmt(r.other); } },
+    { t: 'Итого', f: function(r){ return '<b>' + fmt(tripExpense(r)) + '</b>'; } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="trip-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="trip-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], rows);
 }
 
-/* ============================================================
-   NAV
-   ============================================================ */
-function switchTab(name){
-  if(!can(App.user, name)) return;
-  App.tab = name;
-  $$('.tab').forEach(t=>t.classList.toggle('hid', t.dataset.tab!==name));
-  $$('.bottom-nav__btn').forEach(b=>b.classList.toggle('active', b.dataset.tabBtn===name));
-  try{ localStorage.setItem(KS.tab, name); }catch(_){}
-  renderCurrent();
-}
-function renderCurrent(){
-  if(App.tab==='jobs') renderJobs();
-  else if(App.tab==='attendance') renderAttendance();
-  else if(App.tab==='timesheet') renderTimesheet();
-  else if(App.tab==='audit') renderAudit();
-  else if(App.tab==='workshop') renderWorkshop();
-  else if(App.tab==='objects') renderObjects();
-  else if(App.tab==='finance') renderFinance();
-  else if(App.tab==='admin') renderAdmin();
-}
-
-function applyUserUI(){
-  const badge = $('#userBadge');
-  const roles = userRoles(App.user);
-  const role = ROLES[roles[0]] || ROLES.employee;
-  badge.textContent = `${App.user.name} · ${roles.map(value=>ROLES[value]?.label||value).join(', ')}`;
-  badge.className = 'user-badge ' + (role.cls || '');
-  badge.onclick = showMyStats;
-  $('#btnLogout').classList.toggle('hid', userRoles(App.user).includes('admin'));
-  $$('.bottom-nav__btn').forEach(b=>{
-    b.classList.toggle('hid', !can(App.user, b.dataset.tabBtn));
-  });
-}
-
-/* ============================================================
-   CREW PICKER
-   ============================================================ */
-const crewPick = { selected: new Set(), resp: null };
-
-function renderCrewPicker(fieldEmps){
-  if(!fieldEmps.length){
-    return '<div class="crew-pick__empty">Нет выездных сотрудников. Добавьте в разделе «Админ» → «Сотрудники».</div>';
-  }
-  return `<div class="crew-pick" id="crewPickList">
-    ${fieldEmps.map(e=>{
-      const checked = crewPick.selected.has(e.id);
-      const isResp = crewPick.resp === e.id;
-      return `<div class="crew-pick__row ${isResp?'is-resp':''}" data-crew-row="${e.id}">
-        <input type="checkbox" class="crew-pick__chk" data-crew-chk="${e.id}" ${checked?'checked':''}>
-        <label class="crew-pick__name" data-crew-name="${e.id}">${esc(e.name)}</label>
-        <label class="crew-pick__resp-lbl">
-          <input type="radio" name="crewResp" value="${e.id}" ${isResp?'checked':''} ${checked?'':'disabled'}>
-          <span>⭐ Ответственный</span>
-        </label>
-      </div>`;
-    }).join('')}
-  </div>
-  <div class="crew-hint">Отметьте участников. Звёздочкой выберите ответственного среди отмеченных.</div>`;
-}
-function refreshCrewPicker(){
-  const fieldEmps = empByRole('field');
-  if(crewPick.resp && !crewPick.selected.has(crewPick.resp)) crewPick.resp = null;
-  if(!crewPick.resp && crewPick.selected.size===1) crewPick.resp = [...crewPick.selected][0];
-  const host = $('#crewPickHost');
-  if(host) host.innerHTML = renderCrewPicker(fieldEmps);
-  const counter = $('#crewCount');
-  if(counter) counter.textContent = `Выбрано: ${crewPick.selected.size}`;
-}
-function bindCrewPicker(){
-  const host = $('#crewPickHost');
-  if(!host) return;
-  host.addEventListener('change', e=>{
-    if(e.target.matches('[data-crew-chk]')){
-      const id = e.target.dataset.crewChk;
-      if(e.target.checked) crewPick.selected.add(id);
-      else { crewPick.selected.delete(id); if(crewPick.resp === id) crewPick.resp = null; }
-      refreshCrewPicker();
-    }
-    if(e.target.matches('input[name="crewResp"]')){
-      crewPick.resp = e.target.value;
-      refreshCrewPicker();
-    }
-  });
-  host.addEventListener('click', e=>{
-    const nameLbl = e.target.closest('[data-crew-name]');
-    if(nameLbl && !e.target.matches('input')){
-      const id = nameLbl.dataset.crewName;
-      const chk = host.querySelector(`[data-crew-chk="${id}"]`);
-      if(chk){ chk.checked = !chk.checked; chk.dispatchEvent(new Event('change', {bubbles:true})); }
-    }
-  });
-}
-
-/* ============================================================
-   MODAL — NEW VYEZD
-   ============================================================ */
-function modalNewJob(preObjId){
-  const objects = App.state.objects.filter(o=>o.status==='active');
-  const fieldEmps = empByRole('field');
-  if(!objects.length){ toast('Сначала создайте объект','err'); return; }
-  if(!fieldEmps.length){ toast('Сначала добавьте выездных сотрудников в Админ → Сотрудники','err'); return; }
-
-  crewPick.selected = new Set();
-  crewPick.resp = null;
-
-  openModal(`
-    <div class="modal__h"><h3>Новый выезд</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
-    <div class="modal__b">
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Объект *</span>
-        <select id="njObj" class="f__i">
-          ${objects.map(o=>`<option value="${o.id}" ${o.id===preObjId?'selected':''}>${esc(o.code)} — ${esc(o.name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Группа монтажников <span id="crewCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Выбрано: 0</span></span>
-        <div id="crewPickHost"></div>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Название работ</span>
-        <input type="text" id="njTitle" class="f__i" placeholder="Монтаж, ТО, диагностика...">
-      </div>
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Дата</span>
-          <input type="date" id="njDate" class="f__i" value="${todayISO()}"></label>
-        <label class="f"><span class="f__l">Тип</span>
-          <select id="njType" class="f__i">
-            <option value="visit">Выезд</option>
-            <option value="service">Сервис</option>
-          </select></label>
-        <label class="f"><span class="f__l">Приоритет</span>
-          <select id="njPriority" class="f__i">
-            <option value="normal">Обычный</option>
-            <option value="high">Высокий</option>
-            <option value="urgent">Срочно</option>
-          </select></label>
-      </div>
-      ${isAtLeast(App.user,'manager') ? `<div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Доплата менеджеру, ₽</span>
-          <input type="number" id="njManagerBonus" class="f__i" min="0" step="100" value="0"></label>
-        <label class="f"><span class="f__l">Основание доплаты</span>
-          <input type="text" id="njManagerBonusNote" class="f__i" placeholder="Описание дополнительной работы"></label>
-      </div>` : ''}
-      <div class="f">
-        <span class="f__l">Заметки</span>
-        <textarea id="njNotes" class="f__i" placeholder="Пропуск, особенности, что взять с собой..."></textarea>
-      </div>
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="njSave">Создать</button>
-    </div>
-  `, true);
-
-  refreshCrewPicker();
-  bindCrewPicker();
-
-  $('#njSave').onclick = () => {
-    const objId = $('#njObj').value;
-    const date = $('#njDate').value;
-    const assignees = [...crewPick.selected];
-    const responsibleId = crewPick.resp;
-
-    if(!objId || !validDate(date)){ toast('Заполните поля','err'); return; }
-    if(!assignees.length){ toast('Выберите хотя бы одного монтажника','err'); return; }
-    if(!responsibleId){ toast('Выберите ответственного','err'); return; }
-    if(!assignees.includes(responsibleId)){ toast('Ответственный должен быть в группе','err'); return; }
-
-    App.state.jobs.push({
-      id: uid(), objectId: objId, date,
-      assignees, responsibleId,
-      title: $('#njTitle').value.trim() || 'Работы на объекте',
-      type: $('#njType').value,
-      priority: $('#njPriority').value,
-      managerBonus: num($('#njManagerBonus')?.value),
-      managerBonusNote: $('#njManagerBonusNote')?.value.trim() || '',
-      checkin: null, checkout: null, photos: [], expenses: [],
-      notes: $('#njNotes').value.trim(),
-      history: [
-        {when: todayISO(), what: `Выезд создан. Группа: ${assignees.map(id=>empName(id)).join(', ')}`}
-      ],
-    });
-    saveState(); closeModal(); renderJobs();
-    toast('Выезд создан');
-  };
-}
-
-/* ============================================================
-   MODAL — VIEW VYEZD
-   ============================================================ */
-function modalViewJob(id){
-  const j = jobById(id); if(!j) return;
-  const o = objById(j.objectId);
-  const me = myEmployee();
-  const meInGroup = isInJob(j, me?.id);
-  const daySt = vyezdDayStatus(j);
-  const expHtml = (j.expenses||[]).length
-    ? j.expenses.map(x=>{
-        const st = EXP_STATUS[x.status];
-        return `<div class="exp-item">
-          <span style="font-weight:600;flex:1">${esc(x.category)}</span>
-          <span class="muted" style="flex:1;font-size:12px">${esc(x.comment||'')}</span>
-          <span class="b b--${st[1]}" style="flex-shrink:0">${st[0]}</span>
-          ${x.status==='pending' && meInGroup && daySt==='today' ? `<button class="btn btn--xs icobtn--d" data-del-exp="${j.id}|${x.id}">✕</button>` : ''}
-        </div>`;
-      }).join('')
-    : '<div class="muted" style="padding:10px;font-size:12px">Расходов нет</div>';
-
-  const photosHtml = (j.photos||[]).length
-    ? `<div class="photos">${j.photos.map(p=>`<img src="${esc(p)}" onclick="document.getElementById('lightImg').src=this.src;document.getElementById('lightBox').classList.remove('hid')">`).join('')}</div>`
-    : '<div class="muted" style="font-size:12px;padding:6px 0">Фото нет</div>';
-
-  // Редактировать может: менеджер+ или участник в день выезда
-  const canEdit = isAtLeast(App.user,'manager') || (meInGroup && daySt==='today');
-  // Добавлять расходы: в день выезда (участник) или менеджер всегда
-  const canAddExp = (meInGroup && daySt==='today') || isAtLeast(App.user,'manager');
-  // Фото — тот же принцип
-  const canAddPhoto = canEdit;
-
-  const crew = crewNames(j);
-  const crewHtml = crew.length ? `<div class="crew" style="max-width:none">${crew.map(c=>
-    `<span class="crew__m ${c.resp?'crew__m--resp':''}">${esc(c.name)}</span>`
-  ).join('')}</div>` : '<span class="muted">Не назначена</span>';
-
-  // Кнопки в футере
-  let footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>`;
-  if(daySt==='today' && !j.checkin && meInGroup){
-    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-      <button class="btn btn--p" data-checkin="${j.id}">Чек-ин</button>`;
-  }
-  if(daySt==='today' && j.checkin && !j.checkout && meInGroup){
-    footerBtns = `<button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-      <button class="btn" data-checkout="${j.id}">Чек-аут</button>`;
-  }
-
-  openModal(`
-    <div class="modal__h">
-      <h3>${esc(j.title)}</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button>
-    </div>
-    <div class="modal__b">
-      <div class="meta" style="margin-bottom:14px">
-        <div><div class="f__l">Объект</div><div><b>${esc(o?.name||'—')}</b></div></div>
-        <div><div class="f__l">Дата</div><div>${fmtDate(j.date)} ${vyezdDayBadge(daySt)}</div></div>
-        <div><div class="f__l">Тип</div><div>${JOB_TYPE[j.type]}</div></div>
-      </div>
-
-      <div class="f__l" style="margin-bottom:6px">Группа монтажников (${crew.length})</div>
-      <div style="margin-bottom:14px">${crewHtml}</div>
-
-      <div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">
-        📍 ${esc(o?.address||'—')}
-        ${o?.contact?`<div style="margin-top:4px">👤 ${esc(o.contact)} ${o.phone?'· '+esc(o.phone):''}</div>`:''}
-      </div>
-
-      ${o?.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">🔑 Доступ:</b> ${esc(o.access)}</div>` : ''}
-      ${j.checkin ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:12.5px">🕐 Чек-ин: ${esc(j.checkin.time)} ${j.checkin.byId?`<span class="muted">(${esc(empName(j.checkin.byId))})</span>`:''} <span class="muted">(${j.checkin.lat.toFixed(3)}, ${j.checkin.lng.toFixed(3)})</span></div>` : ''}
-      ${j.checkout ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:12.5px">✅ Чек-аут: ${esc(j.checkout.time)} ${j.checkout.byId?`<span class="muted">(${esc(empName(j.checkout.byId))})</span>`:''}</div>` : ''}
-      ${j.notes ? `<div style="padding:10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">${esc(j.notes)}</div>` : ''}
-      ${j.managerBonus ? `<div style="padding:10px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:8px;margin-bottom:14px;font-size:13px">
-        <b>Доплата менеджеру:</b> ${money(j.managerBonus)}${j.managerBonusNote ? `<div class="muted" style="margin-top:4px">${esc(j.managerBonusNote)}</div>` : ''}
-      </div>` : ''}
-
-      <div class="f__l" style="margin-bottom:6px">Расходы (${(j.expenses||[]).length})</div>
-      ${expHtml}
-      ${canAddExp ? `<button type="button" class="btn btn--sm" style="margin-top:8px" data-add-exp="${j.id}">+ Добавить расход</button>` : ''}
-
-      <div class="f__l" style="margin:16px 0 6px">Фотоотчёт (${(j.photos||[]).length})</div>
-      ${photosHtml}
-      ${canAddPhoto ? `<label class="padd no-print">+ Фото<input type="file" id="jobPhotoInput" accept="image/*" multiple></label>` : ''}
-
-      ${(j.history||[]).length ? `<div class="f__l" style="margin:16px 0 6px">История</div>
-        <div class="timeline">
-          ${j.history.slice().reverse().map(h=>`<div class="tl"><div class="tl__w">${esc(h.when)}</div><div class="tl__t">${esc(h.what)}</div></div>`).join('')}
-        </div>` : ''}
-    </div>
-    <div class="modal__f">${footerBtns}</div>
-  `, true);
-
-  $('#jobPhotoInput')?.addEventListener('change', async e=>{
-    const files = [...e.target.files]; e.target.value = '';
-    for(const f of files){
-      if(f.size > 15*1024*1024){ toast(`${f.name} > 15 МБ`,'err'); continue; }
-      try{
-        const data = await compressImg(f);
-        const jj = jobById(id);
-        if(jj) { jj.photos = jj.photos||[]; jj.photos.push(data); }
-      }catch(err){ toast('Фото: '+(err.message||err),'err'); }
-    }
-    saveState(); closeModal(); modalViewJob(id);
-  });
-}
-
-/* ============================================================
-   MODAL — VIEW OBJECT
-   ============================================================ */
-function modalViewObject(id){
-  const o = objById(id); if(!o) return;
-  const t = OBJ_TYPES[o.type];
-  const jobs = App.state.jobs.filter(j=>j.objectId===id);
-  const shifts = App.state.shifts.filter(s=>s.objectId===id);
-  const today = todayISO();
-  const todayJobs = jobs.filter(j => j.date === today).length;
-  const shopPersonShifts = shifts.reduce((a,s)=>a + (s.employeeIds?.length||0), 0);
-  const shopCost = shopPersonShifts * App.state.rates.shopShift;
-
-  openModal(`
-    <div class="modal__h">
-      <h3>${t.ico} ${esc(o.name)}</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button>
-    </div>
-    <div class="modal__b">
-      <div class="meta" style="margin-bottom:14px">
-        <div><div class="f__l">Код</div><div style="font-family:monospace">${esc(o.code)}</div></div>
-        <div><div class="f__l">Тип</div><div>${t.label}</div></div>
-        <div><div class="f__l">Статус</div><div><span class="b b--${o.status==='active'?'ok':'muted'}">${o.status==='active'?'Актив':o.status==='paused'?'Пауза':'Закрыт'}</span></div></div>
-        <div><div class="f__l">Ответственный</div><div>${esc(empName(o.responsibleId))}</div></div>
-      </div>
-      <div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">📍 ${esc(o.address)}</div>
-      ${o.contact ? `<div style="padding:8px 10px;background:var(--soft);border-radius:8px;margin-bottom:8px;font-size:13px">👤 ${esc(o.contact)} ${o.phone?'· '+esc(o.phone):''}</div>` : ''}
-      ${o.access ? `<div style="padding:10px;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;margin-bottom:14px;font-size:12.5px"><b style="color:var(--warn)">🔑 Доступ:</b> ${esc(o.access)}</div>` : ''}
-      ${o.notes ? `<div style="padding:10px;background:var(--soft);border-radius:8px;margin-bottom:14px;font-size:13px">${esc(o.notes)}</div>` : ''}
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-        <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Выездов всего</div>
-          <div style="font-size:18px;font-weight:800">${jobs.length}</div>
-        </div>
-        <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Сегодня</div>
-          <div style="font-size:18px;font-weight:800;color:var(--accent)">${todayJobs}</div>
-        </div>
-        <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Расходы выездов</div>
-          <div style="font-size:14px;font-weight:800;color:var(--danger)">${jobs.reduce((sum,j)=>sum+(j.expenses||[]).length,0)} шт.</div>
-        </div>
-        <div style="padding:10px;background:var(--soft);border-radius:8px">
-          <div class="f__l">Смен цеха / стоимость</div>
-          <div style="font-size:14px;font-weight:800;color:var(--danger)">${shifts.length} / ${money(shopCost)}</div>
-        </div>
-      </div>
-
-      ${jobs.length ? `<div class="f__l" style="margin-bottom:6px">Выезды на объекте</div>
-        <div class="tbl-wrap" style="margin-bottom:14px"><table class="tbl">
-          <thead><tr><th>Дата</th><th>Выезд</th><th>Группа</th></tr></thead>
-          <tbody>${jobs.slice().reverse().slice(0,8).map(j=>{
-            const daySt = vyezdDayStatus(j);
-            return `<tr>
-              <td>${fmtDate(j.date)}<div style="margin-top:3px">${vyezdDayBadge(daySt)}</div></td>
-              <td>${esc(j.title)}</td>
-              <td>${crewShort(j)}</td>
-            </tr>`;
-          }).join('')}</tbody>
-        </table></div>` : ''}
-
-      ${shifts.length ? `<div class="f__l" style="margin-bottom:6px">Смены цеха</div>
-        <div class="tbl-wrap" style="margin-bottom:14px"><table class="tbl">
-          <thead><tr><th>Дата</th><th>Группа</th><th>Стоимость</th></tr></thead>
-          <tbody>${shifts.slice().reverse().slice(0,8).map(sh=>{
-            const cnt = sh.employeeIds?.length||0;
-            const cost = cnt * App.state.rates.shopShift;
-            return `<tr>
-              <td>${fmtDate(sh.date)}</td>
-              <td>${shiftCrewBadges(sh)}</td>
-              <td><b>${money(cost)}</b></td>
-            </tr>`;
-          }).join('')}</tbody>
-        </table></div>` : ''}
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-      ${isAtLeast(App.user,'manager') ? `
-        <button class="btn icobtn--d" data-del-obj="${o.id}">Удалить</button>
-        <button class="btn btn--p" data-new-job-obj="${o.id}">+ Выезд</button>
-      ` : ''}
-    </div>
-  `, true);
-}
-
-/* ============================================================
-   MODAL — ADD EXPENSE
-   ============================================================ */
-function modalAddExpense(jobId){
-  const j = jobById(jobId); if(!j) return;
-  const me = myEmployee();
-  openModal(`
-    <div class="modal__h"><h3>Расход по выезду</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
-    <div class="modal__b">
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Статья *</span>
-        <select id="expCat" class="f__i">
-          ${EXP_CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('')}
-        </select>
-      </div>
-      <div class="f">
-        <span class="f__l">Описание для утверждения *</span>
-        <textarea id="expNote" class="f__i" placeholder="Что было сделано или приобретено, для какого объекта и зачем"></textarea>
-      </div>
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="expSave">Добавить</button>
-    </div>
-  `);
-  $('#expSave').onclick = () => {
-    const comment = $('#expNote').value.trim();
-    if(!comment){ toast('Добавьте описание','err'); return; }
-    const jj = jobById(jobId);
-    jj.expenses = jj.expenses||[];
-    jj.expenses.push({
-      id: uid(),
-      category: $('#expCat').value,
-      amount: 0,
-      comment,
-      status: 'pending',
-      date: todayISO(),
-      byId: me?.id || null,
-    });
-    saveState(); closeModal(); modalViewJob(jobId);
-    toast('Расход добавлен');
-  };
-}
-
-/* ============================================================
-   MODAL — NEW SHIFT
-   ============================================================ */
-function modalNewShift(){
-  const objects = App.state.objects.filter(o=>o.status==='active');
-  const emps = empByRole('workshop');
-  if(!objects.length){ toast('Сначала создайте объект','err'); return; }
-  if(!emps.length){ toast('Сначала добавьте сотрудников цеха','err'); return; }
-
-  const selected = new Set();
-
-  openModal(`
-    <div class="modal__h"><h3>Новая смена цеха</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
-    <div class="modal__b">
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Объект *</span>
-        <select id="nsObj" class="f__i">
-          ${objects.map(o=>`<option value="${o.id}">${esc(o.code)} — ${esc(o.name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Группа <span id="nsCount" class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">Выбрано: 0</span></span>
-        <div class="crew-pick" id="nsCrew">
-          ${emps.map(e=>`
-            <div class="crew-pick__row" data-ns-row="${e.id}">
-              <input type="checkbox" class="crew-pick__chk" data-ns-chk="${e.id}">
-              <label class="crew-pick__name" data-ns-name="${e.id}">${esc(e.name)}</label>
-            </div>
-          `).join('')}
-        </div>
-        <div class="crew-hint">Отметьте одного или нескольких сотрудников цеха.</div>
-      </div>
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Дата</span>
-          <input type="date" id="nsDate" class="f__i" value="${todayISO()}"></label>
-      </div>
-      <div class="f">
-        <span class="f__l">Заметки</span>
-        <textarea id="nsNotes" class="f__i" placeholder="Что делали"></textarea>
-      </div>
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="nsSave">Создать</button>
-    </div>
-  `);
-
-  const updateCount = ()=>{
-    const c = document.getElementById('nsCount');
-    if(c) c.textContent = `Выбрано: ${selected.size}`;
-  };
-
-  const crewEl = document.getElementById('nsCrew');
-  crewEl.addEventListener('change', e=>{
-    if(e.target.matches('[data-ns-chk]')){
-      const id = e.target.dataset.nsChk;
-      if(e.target.checked) selected.add(id);
-      else selected.delete(id);
-      updateCount();
-    }
-  });
-  crewEl.addEventListener('click', e=>{
-    const nameLbl = e.target.closest('[data-ns-name]');
-    if(nameLbl && !e.target.matches('input')){
-      const id = nameLbl.dataset.nsName;
-      const chk = crewEl.querySelector(`[data-ns-chk="${id}"]`);
-      if(chk){ chk.checked = !chk.checked; chk.dispatchEvent(new Event('change', {bubbles:true})); }
-    }
-  });
-
-  $('#nsSave').onclick = () => {
-    const objectId = $('#nsObj').value;
-    const date = $('#nsDate').value;
-    const employeeIds = [...selected];
-
-    if(!objectId || !validDate(date)){ toast('Заполните поля','err'); return; }
-    if(!employeeIds.length){ toast('Выберите хотя бы одного сотрудника','err'); return; }
-
-    App.state.shifts.push({
-      id: uid(),
-      date,
-      objectId,
-      employeeIds,
-      notes: $('#nsNotes').value.trim(),
-    });
-    saveState(); closeModal(); renderWorkshop();
-    toast(`Смена создана (${employeeIds.length} чел.)`);
-  };
-}
-
-/* ============================================================
-   MODAL — NEW OBJECT
-   ============================================================ */
-function modalNewObject(){
-  const managers = App.state.employees.filter(e=>['manager','admin'].includes(e.role));
-  openModal(`
-    <div class="modal__h"><h3>Новый объект</h3><button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
-    <div class="modal__b">
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Код</span>
-          <input type="text" id="noCode" class="f__i" placeholder="OBJ-001"></label>
-        <label class="f"><span class="f__l">Тип</span>
-          <select id="noType" class="f__i">
-            ${Object.entries(OBJ_TYPES).map(([k,v])=>`<option value="${k}">${v.ico} ${v.label}</option>`).join('')}
-          </select></label>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Название *</span>
-        <input type="text" id="noName" class="f__i" placeholder="БЦ «Ромашка»" required>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">Адрес *</span>
-        <input type="text" id="noAddr" class="f__i" placeholder="Москва, ул. Ленина, 5">
-      </div>
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Контактное лицо</span>
-          <input type="text" id="noContact" class="f__i"></label>
-        <label class="f"><span class="f__l">Телефон</span>
-          <input type="text" id="noPhone" class="f__i"></label>
-      </div>
-      <div class="f" style="margin-bottom:12px">
-        <span class="f__l">🔑 Доступ</span>
-        <textarea id="noAccess" class="f__i" placeholder="Пропуск, код домофона, охрана..."></textarea>
-      </div>
-      <div class="meta" style="margin-bottom:12px">
-        <label class="f"><span class="f__l">Ответственный</span>
-          <select id="noResp" class="f__i">
-            <option value="">— не выбран —</option>
-            ${managers.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
-          </select></label>
-      </div>
-      <div class="f">
-        <span class="f__l">Заметки</span>
-        <textarea id="noNotes" class="f__i"></textarea>
-      </div>
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Отмена</button>
-      <button class="btn btn--p" id="noSave">Создать</button>
-    </div>
-  `);
-
-  $('#noSave').onclick = () => {
-    const name = $('#noName').value.trim();
-    const address = $('#noAddr').value.trim();
-    if(!name || !address){ toast('Заполните название и адрес','err'); return; }
-    App.state.objects.push({
-      id: uid(), code: $('#noCode').value.trim() || 'OBJ-'+Math.floor(Math.random()*900+100),
-      name, type: $('#noType').value, status: 'active', address,
-      contact: $('#noContact').value.trim(), phone: $('#noPhone').value.trim(),
-      access: $('#noAccess').value.trim(),
-      responsibleId: $('#noResp').value || null,
-      notes: $('#noNotes').value.trim(), photos: [],
-      history: [{when: todayISO(), what:'Объект добавлен'}],
-    });
-    saveState(); closeModal(); renderObjects();
-    toast('Объект создан');
-  };
-}
-
-/* ============================================================
-   MODAL — MY STATS
-   ============================================================ */
-function showMyStats(){
-  const me = myEmployee();
-  if(!me){ toast('Ваш профиль не найден в списке сотрудников','err'); return; }
-  const {start, end} = App.period;
-  const {start:s, end:e} = normalizePeriod(start, end);
-  const payroll = calcPayroll(s, e);
-  const row = payroll.find(r=>r.emp.id===me.id);
-
-  openModal(`
-    <div class="modal__h"><h3>Мои показатели</h3>
-      <button class="icobtn" onclick="document.getElementById('modalRoot').classList.add('hid')">✕</button></div>
-    <div class="modal__b">
-      <div style="margin-bottom:12px">
-        <div class="f__l">Сотрудник</div>
-        <div style="font-size:16px;font-weight:700">${esc(me.name)}</div>
-        <div class="muted" style="font-size:12px">${ROLES[me.role]?.label}</div>
-      </div>
-      <div style="margin-bottom:12px">
-        <div class="f__l">Период</div>
-        <div>${fmtDate(s)} — ${fmtDate(e)}</div>
-      </div>
-      ${row ? `
-        ${row.emp.role==='field' ? `
-          <div style="margin-bottom:12px">
-            <div class="f__l">Выезды (участник): ${row.visitDays}</div>
-            <div class="f__l">Сервис: ${row.serviceDays}</div>
-            <div class="f__l">Ответственный: ${row.respVisitDays}</div>
-          </div>` : ''}
-        ${row.emp.role==='workshop' ? `
-          <div style="margin-bottom:12px">
-            <div class="f__l">Смен: ${row.shiftsCount}</div>
-          </div>` : ''}
-        <div style="padding:12px;background:var(--soft);border-radius:9px;font-size:16px;font-weight:800;color:var(--accent)">
-          К оплате: ${money(row.total)}
-        </div>
-      ` : '<div class="empty">Рабочих дней за период нет</div>'}
-    </div>
-    <div class="modal__f">
-      <button class="btn" onclick="document.getElementById('modalRoot').classList.add('hid')">Закрыть</button>
-    </div>
-  `);
-}
-
-/* ============================================================
-   ACTIONS (delegated)
-   ============================================================ */
-document.addEventListener('click', async e=>{
-  const t = e.target;
-
-  const navBtn = t.closest('[data-tab-btn]');
-  if(navBtn){ switchTab(navBtn.dataset.tabBtn); return; }
-
-  if(t.id==='btnLogout'){ handleLogout(); return; }
-  if(t.id==='btnTheme'){ toggleTheme(); return; }
-
-  const ci = t.closest('[data-checkin]');
-  if(ci){ e.preventDefault(); doCheckIn(ci.dataset.checkin); return; }
-  const co = t.closest('[data-checkout]');
-  if(co){ e.preventDefault(); doCheckOut(co.dataset.checkout); return; }
-
-  const vj = t.closest('[data-view-job]');
-  if(vj){ e.preventDefault(); modalViewJob(vj.dataset.viewJob); return; }
-
-  const dj = t.closest('[data-del-job]');
-  if(dj){
-    if(!confirm('Удалить выезд?')) return;
-    App.state.jobs = App.state.jobs.filter(j=>j.id!==dj.dataset.delJob);
-    saveState(); renderJobs(); closeModal(); toast('Удалено'); return;
-  }
-
-  const aj = t.closest('[data-archive-job]');
-  if(aj){
-    const job = jobById(aj.dataset.archiveJob);
-    if(!job || !isAtLeast(App.user,'manager')) return;
-    job.archived = !job.archived;
-    job.archivedAt = job.archived ? todayISO() : null;
-    job.history = job.history||[];
-    job.history.push({when:todayISO(), what: job.archived ? 'Выезд перенесён в архив' : 'Выезд возвращён из архива'});
-    saveState(); renderJobs(); toast(job.archived ? 'Выезд в архиве' : 'Выезд восстановлен');
-    return;
-  }
-
-  const ds = t.closest('[data-del-shift]');
-  if(ds){
-    if(!confirm('Удалить смену?')) return;
-    App.state.shifts = App.state.shifts.filter(s=>s.id!==ds.dataset.delShift);
-    saveState(); renderWorkshop(); toast('Удалено'); return;
-  }
-
-  const cs = t.closest('[data-complete-shift]');
-  if(cs){
-    const shift = shiftById(cs.dataset.completeShift);
-    if(!shift || !(isAtLeast(App.user,'manager') || userRoles(App.user).includes('workshopChief'))) return;
-    const employee = myEmployee();
-    shift.completed = !shift.completed;
-    shift.completedAt = shift.completed ? todayISO() : null;
-    shift.completedById = shift.completed ? (employee?.id || null) : null;
-    saveState(); renderWorkshop();
-    toast(shift.completed ? 'Объект отмечен выполненным' : 'Объект возвращён в работу');
-    return;
-  }
-
-  if(t.id==='btnNewJob'){ modalNewJob(); return; }
-  if(t.id==='btnNewShift'){ modalNewShift(); return; }
-  if(t.id==='btnNewObj'){ modalNewObject(); return; }
-  if(t.id==='btnAttendanceStart'){
-    const employee = myEmployee();
-    if(!employee){ toast('Для аккаунта не найден сотрудник','err'); return; }
-    if(App.state.attendance.some(item=>item.employeeId===employee.id && !item.endedAt)){
-      toast('Сначала завершите текущую отметку','err'); return;
-    }
-    App.state.attendance.push({
-      id: uid(), employeeId: employee.id, mode: $('#attendanceMode').value,
-      objectId: $('#attendanceObject').value || null, date: todayISO(),
-      startedAt: attendanceNow(), endedAt: null,
-    });
-    saveState(); renderAttendance(); toast('Отметка сохранена'); return;
-  }
-  if(t.id==='btnAttendanceStop'){
-    const employee = myEmployee();
-    const current = App.state.attendance.find(item=>item.employeeId===employee?.id && !item.endedAt);
-    if(!current){ toast('Активной отметки нет','err'); return; }
-    current.endedAt = attendanceNow();
-    saveState(); renderAttendance(); toast('Отметка завершена'); return;
-  }
-
-  const vo = t.closest('[data-view-obj]');
-  if(vo){ e.preventDefault(); modalViewObject(vo.dataset.viewObj); return; }
-
-  const dobj = t.closest('[data-del-obj]');
-  if(dobj){
-    if(!confirm('Удалить объект? Связанные выезды и смены останутся без объекта.')) return;
-    App.state.objects = App.state.objects.filter(o=>o.id!==dobj.dataset.delObj);
-    saveState(); closeModal(); renderObjects(); toast('Удалено'); return;
-  }
-
-  const njo = t.closest('[data-new-job-obj]');
-  if(njo){
-    const objId = njo.dataset.newJobObj;
-    closeModal();
-    setTimeout(()=>modalNewJob(objId), 100);
-    return;
-  }
-
-  const ae = t.closest('[data-add-exp]');
-  if(ae){ modalAddExpense(ae.dataset.addExp); return; }
-
-  const de = t.closest('[data-del-exp]');
-  if(de){
-    const [jobId, expId] = de.dataset.delExp.split('|');
-    const jj = jobById(jobId);
-    if(jj){ jj.expenses = (jj.expenses||[]).filter(x=>x.id!==expId); saveState(); modalViewJob(jobId); toast('Удалено'); }
-    return;
-  }
-
-  const ap = t.closest('[data-approve]');
-  if(ap){
-    const [jobId, expId] = ap.dataset.approve.split('|');
-    const jj = jobById(jobId);
-    const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='approved'; saveState(); renderFinance(); toast('Утверждено'); }
-    return;
-  }
-  const rj = t.closest('[data-reject]');
-  if(rj){
-    const [jobId, expId] = rj.dataset.reject.split('|');
-    const jj = jobById(jobId);
-    const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='rejected'; saveState(); renderFinance(); toast('Отклонено','err'); }
-    return;
-  }
-  const pe = t.closest('[data-pay-exp]');
-  if(pe){
-    const [jobId, expId] = pe.dataset.payExp.split('|');
-    const jj = jobById(jobId);
-    const ex = jj?.expenses?.find(x=>x.id===expId);
-    if(ex){ ex.status='paid'; saveState(); renderFinance(); toast('Оплачено'); }
-    return;
-  }
-
-  if(t.id==='btnSaveRates'){
-    const r = App.state.rates;
-    r.visit = num($('#rateVisit').value);
-    r.resp = num($('#rateResp').value);
-    r.service = num($('#rateService').value);
-    r.shopShift = num($('#rateShopShift').value);
-    r.manager = num($('#rateManager').value);
-    saveState(); renderFinance(); toast('Ставки сохранены'); return;
-  }
-  if(t.id==='btnResetRates'){
-    if(!confirm('Сбросить ставки к стандартным?')) return;
-    App.state.rates = { ...DEFAULT_RATES };
-    saveState(); renderAdmin(); renderFinance(); toast('Ставки сброшены'); return;
-  }
-
-  if(t.id==='empNewAdd'){
-    const name = $('#empNewName').value.trim();
-    const role = $('#empNewRole').value;
-    if(!name){ toast('Введите ФИО','err'); return; }
-    if(App.state.employees.some(e=>normName(e.name)===normName(name))){ toast('Уже существует','err'); return; }
-    App.state.employees.push({
-      id: uid(), name, role, type: role, workerStatus:'worker', phone:'', email:'', salary:0,
-      hireDate: todayISO(), active: true,
-    });
-    saveState(); $('#empNewName').value=''; renderAdmin(); toast('Добавлено'); return;
-  }
-
-  const deemp = t.closest('[data-del-emp]');
-  if(deemp){
-    if(!confirm('Удалить сотрудника?')) return;
-    App.state.employees = App.state.employees.filter(e=>e.id!==deemp.dataset.delEmp);
-    saveState(); renderAdmin(); toast('Удалено'); return;
-  }
-
-  const bu = t.closest('[data-block-user]');
-  if(bu){
-    const users = loadUsers().map(user=>({...user}));
-    const u = users.find(x=>x.phone===bu.dataset.blockUser);
-    if(!u || u.phone===App.user.phone) return;
-    if(!confirm(`${u.status==='blocked'?'Разблокировать':'Заблокировать'} ${u.name}?`)) return;
-    u.status = u.status==='blocked' ? 'active' : 'blocked';
-    try {
-      await saveUsers(users);
-      renderAdmin(); toast(u.status==='blocked'?'Заблокирован':'Разблокирован');
-    } catch(error) {
-      renderAdmin(); toast(error.message,'err');
-    }
-    return;
-  }
-
-  const rp = t.closest('[data-reset-pin]');
-  if(rp){
-    const users = loadUsers();
-    const u = users.find(x=>x.phone===rp.dataset.resetPin);
-    if(!u) return;
-    const newPassword = prompt(`Новый пароль для «${u.name}»:`);
-    if(!newPassword || newPassword.length<4){ toast('Слишком короткий пароль','err'); return; }
-    try{
-      await api(`/users/${encodeURIComponent(u.id)}/reset-pin`, {
-        method:'POST',
-        body:JSON.stringify({password:newPassword}),
-      });
-      toast('PIN обновлён');
-    }catch(err){ toast('Ошибка: '+(err.message||err),'err'); }
-    return;
-  }
-
-  if(t.id==='btnPrintReport'){ window.print(); return; }
-  if(t.id==='btnCsvReport'){ exportCSV(); return; }
-
-  const preset = t.closest('[data-preset]');
-  if(preset){ applyPreset(preset.dataset.preset); return; }
-});
-
-async function doCheckIn(jobId){
-  const j = jobById(jobId); if(!j) return;
-  if(vyezdDayStatus(j) !== 'today'){
-    toast('Чек-ин возможен только в день выезда','err');
-    return;
-  }
-  const me = myEmployee();
-  const proceed = (coords) => {
-    j.checkin = {
-      time: new Date().toLocaleString('ru-RU'),
-      lat: coords.lat, lng: coords.lng,
-      byId: me?.id || null,
+function renderWorks(){
+  var outRows = DB.output.slice().sort(function(a, b){ return (b.date || '').localeCompare(a.date || ''); }).map(function(o){
+    var w = findById(DB.works, o.workId);
+    return {
+      id: o.id, date: o.date, qty: o.qty, objectId: o.objectId,
+      emp: empName(o.empId), work: w || {},
+      sum: w ? num(w.rate) * num(o.qty) : 0
     };
-    j.history = j.history||[];
-    j.history.push({when: todayISO(), what: `Чек-ин: ${me?.name||'—'}`});
-    const o = objById(j.objectId);
-    if(o){
-      o.history = o.history||[];
-      o.history.push({when: todayISO(), what: `Чек-ин: ${me?.name||'—'} — ${j.title}`});
+  });
+  return '' +
+  '<div class="head"><h2>Сдельные работы</h2><div style="display:flex;gap:8px">' +
+    '<button class="btn" data-action="work-add">+ Расценка</button>' +
+    '<button class="btn primary" data-action="out-add">+ Выработка</button>' +
+  '</div></div>' +
+  '<h3>Справочник расценок</h3>' +
+  table([
+    { t: 'Работа / изделие', f: function(r){ return '<b>' + esc(r.name) + '</b>'; } },
+    { t: 'Расценка', f: function(r){ return '<b>' + fmt(r.rate) + '</b>'; } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="work-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="work-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], DB.works) +
+  '<h3>Выработка сотрудников</h3>' +
+  table([
+    { t: 'Дата', f: function(r){ return esc(r.date); } },
+    { t: 'Сотрудник', f: function(r){ return '<b>' + esc(r.emp) + '</b>'; } },
+    { t: 'Работа', f: function(r){ return esc(r.work.name || '—'); } },
+    { t: 'Кол-во', f: function(r){ return num(r.qty); } },
+    { t: 'Объект', f: function(r){ return r.objectId ? esc(objName(r.objectId)) : '—'; } },
+    { t: 'К начислению', f: function(r){ return '<b>' + fmt(r.sum) + '</b>'; } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="out-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="out-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], outRows);
+}
+
+function renderFleet(){
+  var rows = DB.vehicles.map(function(v){
+    var trips = 0, fuel = 0;
+    for (var i = 0; i < DB.trips.length; i++){
+      if (DB.trips[i].vehicleId === v.id){ trips++; fuel += num(DB.trips[i].fuel); }
     }
-    saveState(); closeModal(); renderJobs();
-    toast('Чек-ин выполнен');
-  };
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
-      p=>proceed({lat:p.coords.latitude, lng:p.coords.longitude}),
-      ()=>proceed({lat:0, lng:0}),
-      {timeout:5000}
-    );
-  } else proceed({lat:0, lng:0});
-}
-function doCheckOut(jobId){
-  const j = jobById(jobId); if(!j) return;
-  if(vyezdDayStatus(j) !== 'today'){
-    toast('Чек-аут возможен только в день выезда','err');
-    return;
-  }
-  const me = myEmployee();
-  j.checkout = { time: new Date().toLocaleString('ru-RU'), byId: me?.id || null };
-  j.history = j.history||[];
-  j.history.push({when: todayISO(), what: `Чек-аут: ${me?.name||'—'}`});
-  saveState(); closeModal(); renderJobs();
-  toast('Чек-аут выполнен');
+    return { id: v.id, plate: v.plate, model: v.model, driverId: v.driverId, trips: trips, fuel: fuel };
+  });
+  return '' +
+  '<div class="head"><h2>Автопарк</h2><button class="btn primary" data-action="veh-add">+ Машина</button></div>' +
+  table([
+    { t: 'Госномер', f: function(r){ return '<b>' + esc(r.plate) + '</b>'; } },
+    { t: 'Модель', f: function(r){ return esc(r.model); } },
+    { t: 'Водитель', f: function(r){ return esc(r.driverId ? empName(r.driverId) : '—'); } },
+    { t: 'Выездов', f: function(r){ return r.trips; } },
+    { t: 'Топливо, ₽', f: function(r){ return fmt(r.fuel); } },
+    { t: '', f: function(r){ return '<div class="row-actions"><button class="btn xs" data-action="veh-edit" data-id="' + r.id + '">✎</button><button class="btn xs danger" data-action="veh-del" data-id="' + r.id + '">✕</button></div>'; } }
+  ], rows);
 }
 
-/* ============================================================
-   INPUT
-   ============================================================ */
-document.addEventListener('input', e=>{
-  const t = e.target;
-  if(t.id==='jobSearch'){ renderJobs(); return; }
-  if(t.id==='shiftSearch'){ renderWorkshop(); return; }
-  if(t.id==='objSearch'){ renderObjects(); return; }
+function renderFinance(){
+  var html = '';
+  for (var i = 0; i < DB.objects.length; i++){
+    var o = DB.objects[i];
+    var paid = paymentsFor(o.id);
+    var spent = costsFor(o.id);
+    var profit = paid - spent;
+    var pays = DB.payments.filter(function(p){ return p.objectId === o.id; });
+    var costs = DB.costs.filter(function(c){ return c.objectId === o.id; });
+    var trips = DB.trips.filter(function(t){ return t.objectId === o.id; });
+    var tripTotal = 0;
+    for (var k = 0; k < trips.length; k++) tripTotal += tripExpense(trips[k]);
 
-  const en = t.closest('[data-emp-name]');
-  if(en){
-    const emp = App.state.employees.find(x=>x.id===en.dataset.empName);
-    if(emp){ emp.name = en.value; scheduleSave(); }
-    return;
+    html += '<div class="panel">' +
+      '<div class="panel-head">' +
+        '<div><b>' + esc(o.name) + '</b><div class="sub">' + esc(o.address) + ' · ' + badge(o.status) + '</div></div>' +
+        '<div class="money">' +
+          '<span>Договор: <b>' + fmt(o.amount) + '</b></span>' +
+          '<span>Оплачено: <b>' + fmt(paid) + '</b></span>' +
+          '<span>Расходы: <b>' + fmt(spent) + '</b></span>' +
+          '<span class="profit">Прибыль: <b>' + fmt(profit) + '</b></span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="two-col">' +
+        '<div><div class="sub-head">Оплаты от заказчика <button class="btn xs" data-action="pay-add" data-obj="' + o.id + '">+</button></div>' +
+        miniTable([
+          { t: 'Дата', f: function(r){ return esc(r.date); } },
+          { t: 'Сумма', f: function(r){ return '<b>' + fmt(r.amount) + '</b>'; } },
+          { t: 'Комм.', f: function(r){ return esc(r.note || ''); } },
+          { t: '', f: function(r){ return '<button class="btn xs danger" data-action="pay-del" data-id="' + r.id + '">✕</button>'; } }
+        ], pays, 'Оплат нет') +
+        '</div>' +
+        '<div><div class="sub-head">Расходы <button class="btn xs" data-action="cost-add" data-obj="' + o.id + '">+</button></div>' +
+        miniTable([
+          { t: 'Дата', f: function(r){ return esc(r.date); } },
+          { t: 'Тип', f: function(r){ return esc(r.type); } },
+          { t: 'Сумма', f: function(r){ return '<b>' + fmt(r.amount) + '</b>'; } },
+          { t: '', f: function(r){ return '<button class="btn xs danger" data-action="cost-del" data-id="' + r.id + '">✕</button>'; } }
+        ], costs, 'Прямых расходов нет') +
+        (trips.length ? '<div class="sub" style="margin-top:8px">+ расходы выездов: <b>' + fmt(tripTotal) + '</b></div>' : '') +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
+  return '<div class="head"><h2>Финансы по объектам</h2></div>' + (html || '<div class="empty">Объектов пока нет</div>');
+}
+
+function renderSalary(){
+  var from = DB.settings.from;
+  var to = DB.settings.to;
+  var rows = calcSalary(from, to);
+  var total = 0;
+  for (var i = 0; i < rows.length; i++) total += rows[i].total;
+
+  var tableRows = rows.map(function(r){
+    return {
+      emp: r.emp, days: r.days, base: r.base, piece: r.piece, premium: r.premium, total: r.total,
+      notes: r.notes,
+      payLabel: PAY_LABEL[r.emp.payType] || r.emp.payType
+    };
+  });
+
+  var cols = [
+    { t: 'Сотрудник', f: function(r){ return '<b>' + esc(r.emp.name) + '</b><div class="sub">' + esc(r.emp.role) + '</div>'; } },
+    { t: 'Тип оплаты', f: function(r){ return esc(r.payLabel); } },
+    { t: 'Дней', f: function(r){ return r.days; } },
+    { t: 'База', f: function(r){ return fmt(r.base); } },
+    { t: 'Сдельно', f: function(r){ return fmt(r.piece); } },
+    { t: 'Премия', f: function(r){ return fmt(r.premium); } },
+    { t: 'Итого', f: function(r){ return '<b>' + fmt(r.total) + '</b>'; } },
+    { t: 'Расшифровка', f: function(r){ return '<span class="sub">' + esc(r.notes.join(' · ')) + '</span>'; } }
+  ];
+
+  var html = table(cols, tableRows);
+  html = html.replace('</tbody>',
+    '<tr class="total-row"><td colspan="6">ИТОГО ФОТ за период</td><td colspan="2">' + fmt(total) + '</td></tr></tbody>');
+
+  return '' +
+  '<div class="head"><h2>Расчёт зарплаты</h2></div>' +
+  '<div class="period">' +
+    '<label>Период с<input type="date" data-period="from" value="' + from + '"></label>' +
+    '<label>по<input type="date" data-period="to" value="' + to + '"></label>' +
+    '<div class="sub" style="margin-left:auto">Дни считаются из табеля цеха и из выездов монтажников.<br>Премия — % от суммы объектов, закрытых в периоде.</div>' +
+  '</div>' +
+  '<div class="cards">' +
+    '<div class="card"><div class="k">ФОТ за период</div><div class="v blue">' + fmt(total) + '</div></div>' +
+    '<div class="card"><div class="k">Дневные ставки</div><div class="v">' + fmt(rows.reduce(function(s, r){ return s + r.base; }, 0)) + '</div></div>' +
+    '<div class="card"><div class="k">Сдельно</div><div class="v">' + fmt(rows.reduce(function(s, r){ return s + r.piece; }, 0)) + '</div></div>' +
+    '<div class="card"><div class="k">Премии</div><div class="v green">' + fmt(rows.reduce(function(s, r){ return s + r.premium; }, 0)) + '</div></div>' +
+  '</div>' +
+  html;
+}
+
+function renderSettings(){
+  var me = getCurrentUser();
+  if (!me || me.role !== 'admin'){
+    return '<div class="head"><h2>Настройки</h2></div><div class="empty">Раздел доступен только администратору</div>';
+  }
+
+  var rows = DB.users.map(function(u){
+    return {
+      id: u.id, phone: u.phone, name: u.name, role: u.role, createdAt: u.createdAt,
+      isSelf: u.id === me.id
+    };
+  });
+  var adminCount = 0;
+  for (var i = 0; i < DB.users.length; i++) if (DB.users[i].role === 'admin') adminCount++;
+
+  function roleOptionsHtml(current){
+    var html = '';
+    for (var key in ROLES_DEF){
+      if (!ROLES_DEF.hasOwnProperty(key)) continue;
+      html += '<option value="' + key + '"' + (current === key ? ' selected' : '') + '>' + ROLES_DEF[key].label + '</option>';
+    }
+    return html;
+  }
+
+  var rolesRightsHtml = '';
+  for (var key in ROLES_DEF){
+    if (!ROLES_DEF.hasOwnProperty(key)) continue;
+    var def = ROLES_DEF[key];
+    var tabsTitle = def.tabs === 'all' ? 'все разделы' : def.tabs.map(function(t){
+      var found = null;
+      for (var i = 0; i < TABS.length; i++) if (TABS[i].id === t) found = TABS[i];
+      return found ? found.title : t;
+    }).join(', ');
+    rolesRightsHtml += '<tr><td><b>' + def.label + '</b></td><td>' + tabsTitle + '</td></tr>';
+  }
+
+  return '' +
+  '<div class="head"><h2>Настройки</h2></div>' +
+  '<div class="panel">' +
+    '<div class="panel-head">' +
+      '<div><b>Пользователи и роли</b><div class="sub">Назначайте роли зарегистрировавшимся. Роль определяет доступ к разделам.</div></div>' +
+      '<div class="sub">Всего: <b>' + DB.users.length + '</b> · админов: <b>' + adminCount + '</b></div>' +
+    '</div>' +
+    table([
+      { t: 'Телефон', f: function(r){ return '<b>' + esc(formatPhone(r.phone)) + '</b>' + (r.isSelf ? ' <span class="badge b-done">вы</span>' : ''); } },
+      { t: 'Имя', f: function(r){ return esc(r.name); } },
+      { t: 'Роль', f: function(r){
+        return '<select class="role-select" data-role-for="' + r.id + '"' + (r.isSelf ? ' disabled' : '') + '>' + roleOptionsHtml(r.role) + '</select>';
+      } },
+      { t: 'Дата регистрации', f: function(r){ return esc(r.createdAt || '—'); } },
+      { t: '', f: function(r){ return r.isSelf ? '' : '<div class="row-actions"><button class="btn xs danger" data-action="user-del" data-id="' + r.id + '">✕</button></div>'; } }
+    ], rows) +
+  '</div>' +
+  '<div class="panel" style="margin-top:18px">' +
+    '<b>Права по ролям</b>' +
+    '<div class="sub" style="margin:6px 0 12px">К каким разделам есть доступ у каждой роли</div>' +
+    '<div class="table-wrap"><table><thead><tr><th>Роль</th><th>Доступные разделы</th></tr></thead><tbody>' + rolesRightsHtml + '</tbody></table></div>' +
+  '</div>' +
+  '<div class="panel" style="margin-top:18px">' +
+    '<b>Опасная зона</b>' +
+    '<div class="sub" style="margin:6px 0 12px">Сброс всех данных к демо-набору.</div>' +
+    '<button class="btn danger" data-action="reset">Сбросить демо-данные</button>' +
+  '</div>';
+}
+
+/* =========================================================
+   РОУТЕР
+   ========================================================= */
+var TABS = [
+  { id: 'dash',      title: 'Дашборд',            render: renderDash },
+  { id: 'objects',   title: 'Объекты',            render: renderObjects },
+  { id: 'staff',     title: 'Сотрудники',         render: renderStaff },
+  { id: 'timesheet', title: 'Табель цеха',        render: renderTimesheet },
+  { id: 'trips',     title: 'Выезды монтажников', render: renderTrips },
+  { id: 'works',     title: 'Сдельные работы',    render: renderWorks },
+  { id: 'fleet',     title: 'Автопарк',           render: renderFleet },
+  { id: 'finance',   title: 'Финансы',            render: renderFinance },
+  { id: 'salary',    title: 'Расчёт зарплаты',    render: renderSalary },
+  { id: 'settings',  title: 'Настройки',          render: renderSettings }
+];
+
+var activeTab = 'dash';
+
+function renderApp(){
+  var user = getCurrentUser();
+  if (!user){ showAuthScreen(); return; }
+
+  var visible = [];
+  for (var i = 0; i < TABS.length; i++){
+    if (canAccess(user, TABS[i].id)) visible.push(TABS[i]);
+  }
+
+  var navHtml = '';
+  for (var j = 0; j < visible.length; j++){
+    var v = visible[j];
+    navHtml += '<button class="' + (v.id === activeTab ? 'active' : '') + '" data-tab="' + v.id + '">' + v.title + '</button>';
+  }
+  $('#nav').innerHTML = navHtml;
+
+  var tab = null;
+  for (var k = 0; k < visible.length; k++){
+    if (visible[k].id === activeTab){ tab = visible[k]; break; }
+  }
+  if (!tab && visible.length){ tab = visible[0]; activeTab = tab.id; }
+
+  $('#app').innerHTML = tab ? tab.render() : '<div class="empty">Нет доступных разделов</div>';
+  updateHeader();
+}
+
+/* =========================================================
+   СОБЫТИЯ
+   ========================================================= */
+$('#nav').addEventListener('click', function(e){
+  var b = e.target.closest('[data-tab]');
+  if (!b) return;
+  activeTab = b.getAttribute('data-tab');
+  renderApp();
 });
 
-document.addEventListener('change', async e=>{
-  const t = e.target;
-  if(t.id==='jobPeriodFilter' || t.id==='jobArchiveFilter'){ renderJobs(); return; }
-  if(t.id==='shiftArchiveFilter'){ renderWorkshop(); return; }
-  if(t.id==='objTypeFilter'){ renderObjects(); return; }
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-action]');
+  if (!b) return;
+  var action = b.getAttribute('data-action');
+  var fn = ACTIONS[action];
+  if (fn){ e.preventDefault(); fn({ id: b.getAttribute('data-id'), obj: b.getAttribute('data-obj') }); }
+});
 
-  if(t.id==='periodStart' || t.id==='periodEnd'){
-    let s = $('#periodStart').value;
-    let e2 = $('#periodEnd').value;
-    if(validDate(s) && validDate(e2)){
-      App.period = normalizePeriod(s, e2);
-      renderFinance();
-    }
+document.addEventListener('change', function(e){
+  var el = e.target;
+
+  if (el.getAttribute('data-period')){
+    DB.settings[el.getAttribute('data-period')] = el.value;
+    save(); renderApp();
     return;
   }
 
-  const cs = t.closest('[data-chief-status]');
-  if(cs){
-    if(!userRoles(App.user).includes('admin') && !userRoles(App.user).includes('workshopChief')) return;
-    const emp = App.state.employees.find(x=>x.id===cs.dataset.chiefStatus);
-    if(!emp || emp.workerStatus===cs.value) return;
-    const oldStatus = emp.workerStatus;
-    emp.workerStatus = cs.value;
-    App.state.audit.push({
-      id: uid(), action:'worker.status.changed', actorId:App.user?.id||null,
-      targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
-    });
-    saveState(); renderAttendance(); toast('Статус рабочего обновлён');
-    return;
-  }
+  if (el.getAttribute('data-role-for')){
+    var userId = el.getAttribute('data-role-for');
+    var newRole = el.value;
+    var target = findById(DB.users, userId);
+    if (!target) return;
 
-  const er = t.closest('[data-emp-role]');
-  if(er){
-    const emp = App.state.employees.find(x=>x.id===er.dataset.empRole);
-    if(emp){
-      emp.type = er.value;
-      emp.role = er.value;
-      saveState(); renderAdmin(); toast('Тип сотрудника обновлён');
-      const account = App.users.find(user=>user.phone===emp.phone);
-      if(account && userRoles(App.user).includes('admin')){
-        api(`/users/${encodeURIComponent(account.id)}/regenerate-qr`, {method:'POST'})
-          .catch(error=>toast(error.message,'err'));
+    if (target.role === 'admin' && newRole !== 'admin'){
+      var adminCount = 0;
+      for (var i = 0; i < DB.users.length; i++) if (DB.users[i].role === 'admin') adminCount++;
+      if (adminCount <= 1){
+        alert('Нельзя снять роль администратора с последнего администратора.');
+        el.value = 'admin';
+        return;
       }
     }
-    return;
-  }
+    target.role = newRole;
+    save();
 
-  const es = t.closest('[data-emp-status]');
-  if(es){
-    const emp = App.state.employees.find(x=>x.id===es.dataset.empStatus);
-    if(emp){
-      const oldStatus = emp.workerStatus;
-      emp.workerStatus = es.value;
-      App.state.audit.push({
-        id: uid(), action:'worker.status.changed', actorId: App.user?.id||null,
-        targetId: emp.id, before: oldStatus, after: emp.workerStatus, at: attendanceNow(),
-      });
-      saveState(); renderAdmin(); toast('Статус рабочего обновлён');
-    }
-    return;
-  }
-
-  const ur = t.closest('[data-user-roles]');
-  if(ur){
-    const phone = ur.dataset.userRoles;
-    const users = loadUsers().map(user=>({...user}));
-    const u = users.find(x=>x.phone===phone);
-    if(!u) return;
-    if(u.phone===App.user.phone) return;
-    u.roles = [...ur.selectedOptions].map(option=>option.value);
-    if(!u.roles.length){ renderAdmin(); toast('Назначьте хотя бы одну роль','err'); return; }
-    u.role = u.roles[0];
-    try {
-      await saveUsers(users);
-      renderAdmin();
-      toast('Роль обновлена');
-    } catch(error) {
-      renderAdmin();
-      toast(error.message,'err');
-    }
-    return;
+    el.style.transition = 'background .3s';
+    el.style.background = '#e7f7ee';
+    setTimeout(function(){ el.style.background = ''; }, 600);
   }
 });
 
-/* ============================================================
-   THEME
-   ============================================================ */
-function toggleTheme(){
-  const cur = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = cur;
-  try{ localStorage.setItem(KS.theme, cur); }catch(_){}
-}
-(function initTheme(){
-  try{
-    const saved = localStorage.getItem(KS.theme);
-    if(saved==='dark' || (!saved && matchMedia('(prefers-color-scheme:dark)').matches)){
-      document.documentElement.dataset.theme = 'dark';
-    }
-  }catch(_){}
-})();
+/* =========================================================
+   ДЕЙСТВИЯ
+   ========================================================= */
+var ACTIONS = {
+  'reset': function(){
+    if (!confirm('Сбросить ВСЕ данные к демо-набору?')) return;
+    DB = seed();
+    DB.session = null;
+    save();
+    showAuthScreen();
+  },
 
-/* ============================================================
-   PRESETS
-   ============================================================ */
-function applyPreset(kind){
-  const now = new Date();
-  let start, end;
-  if(kind==='week'){
-    const day = now.getDay() || 7;
-    const mon = new Date(now); mon.setDate(now.getDate() - day + 1);
-    start = iso(mon); end = iso(new Date());
-  } else if(kind==='month'){
-    start = iso(new Date(now.getFullYear(), now.getMonth(), 1)); end = iso(now);
-  } else if(kind==='prevMonth'){
-    start = iso(new Date(now.getFullYear(), now.getMonth()-1, 1));
-    end = iso(new Date(now.getFullYear(), now.getMonth(), 0));
+  'obj-add':  function(){ formObject(); },
+  'obj-edit': function(d){ formObject(findById(DB.objects, d.id)); },
+  'obj-del':  function(d){
+    if (!confirm('Удалить объект?')) return;
+    DB.objects = DB.objects.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'emp-add':  function(){ formEmployee(); },
+  'emp-edit': function(d){ formEmployee(findById(DB.employees, d.id)); },
+  'emp-del':  function(d){
+    if (!confirm('Удалить сотрудника?')) return;
+    DB.employees = DB.employees.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'ts-add':  function(){ formTimesheet(); },
+  'ts-edit': function(d){ formTimesheet(findById(DB.timesheet, d.id)); },
+  'ts-del':  function(d){
+    if (!confirm('Удалить отметку?')) return;
+    DB.timesheet = DB.timesheet.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'trip-add':  function(){ formTrip(); },
+  'trip-edit': function(d){ formTrip(findById(DB.trips, d.id)); },
+  'trip-del':  function(d){
+    if (!confirm('Удалить выезд?')) return;
+    DB.trips = DB.trips.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'work-add':  function(){ formWork(); },
+  'work-edit': function(d){ formWork(findById(DB.works, d.id)); },
+  'work-del':  function(d){
+    if (!confirm('Удалить расценку?')) return;
+    DB.works = DB.works.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'out-add':  function(){ formOutput(); },
+  'out-edit': function(d){ formOutput(findById(DB.output, d.id)); },
+  'out-del':  function(d){
+    if (!confirm('Удалить выработку?')) return;
+    DB.output = DB.output.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'veh-add':  function(){ formVehicle(); },
+  'veh-edit': function(d){ formVehicle(findById(DB.vehicles, d.id)); },
+  'veh-del':  function(d){
+    if (!confirm('Удалить машину?')) return;
+    DB.vehicles = DB.vehicles.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'cost-add':  function(d){ formCost(null, d.obj); },
+  'cost-del':  function(d){
+    if (!confirm('Удалить расход?')) return;
+    DB.costs = DB.costs.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'pay-add':   function(d){ formPayment(null, d.obj); },
+  'pay-del':   function(d){
+    if (!confirm('Удалить оплату?')) return;
+    DB.payments = DB.payments.filter(function(x){ return x.id !== d.id; });
+    save(); renderApp();
+  },
+
+  'user-del': function(d){
+    var me = getCurrentUser();
+    if (!me || me.role !== 'admin') return;
+    if (d.id === me.id){ alert('Нельзя удалить собственную запись.'); return; }
+    var target = findById(DB.users, d.id);
+    if (!target) return;
+    var adminCount = 0;
+    for (var i = 0; i < DB.users.length; i++) if (DB.users[i].role === 'admin') adminCount++;
+    if (target.role === 'admin' && adminCount <= 1){ alert('Нельзя удалить последнего администратора.'); return; }
+    if (!confirm('Удалить пользователя «' + target.name + '» (' + formatPhone(target.phone) + ')?')) return;
+    DB.users = DB.users.filter(function(u){ return u.id !== d.id; });
+    save(); renderApp();
   }
-  if(start && end){ App.period = {start, end}; renderFinance(); }
-}
-
-/* ============================================================
-   CSV EXPORT
-   ============================================================ */
-function csvEscape(v){
-  let s = String(v??'');
-  if(/^[=+\-@\t\r]/.test(s)) s = "'"+s;
-  if(/[;"\r\n]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
-  return s;
-}
-function exportCSV(){
-  const {start, end} = normalizePeriod(App.period.start, App.period.end);
-
-  const rows = [['Сотрудник','Роль','Период','Сервис,дн','Выезд,дн','Отв.,дн','Смен (цех)','К оплате,₽']];
-  calcPayroll(start, end).forEach(r=>{
-    rows.push([
-      r.emp.name, ROLES[r.emp.role]?.label || r.emp.role,
-      start+' — '+end,
-      r.serviceDays, r.visitDays, r.respVisitDays,
-      r.shiftsCount || 0,
-      r.total.toFixed(2).replace('.',','),
-    ]);
-  });
-
-  rows.push([]);
-  rows.push(['Выезды']);
-  rows.push(['Дата','Объект','Выезд','Группа','Ответственный','Тип']);
-  App.state.jobs.filter(j=>j.date>=start && j.date<=end).forEach(j=>{
-    rows.push([
-      j.date, objName(j.objectId), j.title,
-      (j.assignees||[]).map(id=>empName(id)).join(', '),
-      empName(j.responsibleId), JOB_TYPE[j.type],
-    ]);
-  });
-
-  rows.push([]);
-  rows.push(['Смены цеха']);
-  rows.push(['Дата','Объект','Группа','Кол-во человек','Стоимость,₽']);
-  App.state.shifts.filter(s=>s.date>=start && s.date<=end).forEach(sh=>{
-    const cnt = sh.employeeIds?.length||0;
-    rows.push([
-      sh.date, objName(sh.objectId),
-      (sh.employeeIds||[]).map(id=>empName(id)).join(', '),
-      cnt,
-      (cnt*App.state.rates.shopShift).toFixed(2).replace('.',','),
-    ]);
-  });
-
-  const csv = '\uFEFF' + rows.map(r=>r.map(csvEscape).join(';')).join('\r\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `Отчёт_${start}_${end}.csv`;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-  toast('CSV скачан');
-}
-
-/* ============================================================
-   IMAGE COMPRESSION
-   ============================================================ */
-function compressImg(file, maxSide=1200, quality=0.72){
-  return new Promise((res, rej)=>{
-    const reader = new FileReader();
-    reader.onerror = ()=>rej(new Error('Не удалось прочитать файл'));
-    reader.onload = e=>{
-      const img = new Image();
-      img.onerror = ()=>rej(new Error('Формат не поддерживается'));
-      img.onload = ()=>{
-        let w = img.width, h = img.height;
-        if(w > maxSide || h > maxSide){
-          if(w >= h){ h = Math.round(h*maxSide/w); w = maxSide; }
-          else { w = Math.round(w*maxSide/h); h = maxSide; }
-        }
-        const c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        let out = c.toDataURL('image/jpeg', quality);
-        while(out.length > 300*1024 && quality > 0.3){
-          quality -= 0.1;
-          out = c.toDataURL('image/jpeg', quality);
-        }
-        res(out);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-/* ============================================================
-   LOGOUT
-   ============================================================ */
-function handleLogout(){
-  if(!confirm('Выйти?')) return;
-  api('/auth/logout').finally(()=>{ App.user = null; location.reload(); });
-}
-
-/* ============================================================
-   AUTH SCREEN
-   ============================================================ */
-$$('.auth__tab').forEach(b=>b.onclick = ()=>{
-  const tab = b.dataset.auth;
-  $$('.auth__tab').forEach(x=>x.classList.toggle('active', x.dataset.auth===tab));
-  $('#loginForm').classList.toggle('hid', tab!=='login');
-  $('#registerForm').classList.toggle('hid', tab!=='register');
-  $('#loginErr').textContent=''; $('#regErr').textContent='';
-});
-
-$('#loginForm').onsubmit = async (e)=>{
-  e.preventDefault();
-  const err = $('#loginErr'); err.textContent = '';
-  const phone = normalizePhone($('#loginPhone').value);
-  const password = $('#loginPin').value;
-  if(!phone){ err.textContent = 'Некорректный телефон'; return; }
-  if(!password || password.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
-  try{
-    const result = await api('/auth/login', {method:'POST', body:JSON.stringify({phone, password})});
-    const state = await api('/state');
-    await startApp(result.user, state);
-  }catch(ex){ err.textContent = ex.message; return; }
 };
 
-$('#registerForm').onsubmit = async (e)=>{
-  e.preventDefault();
-  const err = $('#regErr'); err.textContent = '';
-  const phone = normalizePhone($('#regPhone').value);
-  const name = $('#regName').value.trim();
-  const p1 = $('#regPin').value;
-  const p2 = $('#regPin2').value;
-  if(!phone){ err.textContent = 'Некорректный телефон'; return; }
-  if(!name){ err.textContent = 'Введите имя'; return; }
-  if(p1.length<4){ err.textContent = 'Пароль — минимум 4 символа'; return; }
-  if(p1!==p2){ err.textContent = 'Пароль не совпадает'; return; }
-  try{
-    const result = await api('/auth/register', {method:'POST', body:JSON.stringify({phone, name, password:p1})});
-    const state = await api('/state');
-    await startApp(result.user, state);
-    toast(result.user.role==='admin' ? 'Вы первый — назначен Администратор' : 'Регистрация успешна');
-  }catch(ex){ err.textContent = ex.message; }
-};
-
-/* ============================================================
-   START
-   ============================================================ */
-async function startApp(user, remoteState){
-  App.user = normalizeUser(user);
-  const qrToken = new URLSearchParams(location.search).get('qr');
-  if(qrToken){
-    await api('/auth/attendance-token/verify', {
-      method:'POST',
-      body:JSON.stringify({token:qrToken}),
-    });
-  }
-  App.remoteState = remoteState || await api('/state');
-  App.users = userRoles(App.user).includes('admin')
-    ? (await api('/users')).users.map(normalizeUser)
-    : [App.user];
-  App.state = loadState();
-  closeExpiredAttendance();
-  const now = new Date();
-  if(!App.period.start || !App.period.end){
-    App.period.start = iso(new Date(now.getFullYear(), now.getMonth(), 1));
-    App.period.end = iso(now);
-  }
-  $('#authScreen').classList.add('hid');
-  $('#mainApp').classList.remove('hid');
-  applyUserUI();
-
-  let savedTab = 'jobs';
-  try{ savedTab = localStorage.getItem(KS.tab) || 'jobs'; }catch(_){}
-  const allowed = [...new Set(userRoles(App.user).flatMap(role=>PERMS[role]||[]))];
-  if(!allowed.includes(savedTab)) savedTab = allowed[0] || 'jobs';
-  if(new URLSearchParams(location.search).get('mode')==='attendance' && allowed.includes('attendance')){
-    savedTab = 'attendance';
-  }
-  switchTab(savedTab);
+/* =========================================================
+   СТАРТ
+   ========================================================= */
+try {
+  window.__serverAuthToken = safeGetItem('stroy_server_token') || '';
+  loadServerState().catch(function(){ return false; }).then(function(){
+    initAuth();
+    console.log('[СтройГрупп] Приложение запущено. Пользователей:', DB.users.length);
+  });
+} catch (e){
+  console.error('Ошибка запуска:', e);
+  alert('Ошибка при запуске приложения:\n' + e.message + '\n\nОткройте консоль (F12) для подробностей.');
 }
-
-(async function(){
-  try{
-    const result = await api('/auth/me');
-    const state = await api('/state');
-    await startApp(result.user, state);
-  }catch(_){
-    $('#authScreen').classList.remove('hid');
-  }
-})();
-
-window.addEventListener('beforeunload', ()=>{
-  clearTimeout(saveState._s);
-  try{ saveState(); }catch(_){}
-});
-
-})();
 </script>
 </body>
 </html>

@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: object-uchet
+    name: stroygroup
     runtime: node
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
+    disk:
+      name: stroygroup-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
